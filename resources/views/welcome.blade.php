@@ -25,18 +25,27 @@
 
                 <div class="residuos-hero__actions animate-slide-down">
                     @if(Route::has('login'))
-                    @auth
-                        <a href="{{ url('/dashboard') }}"
-                        class="btn-login btn-login--panel">
-                        PANEL
-                    </a>
-                    @else
-                        <a href="{{ route('login') }}"
-                        class="btn-login">
-                        INICIAR SESIÓN
-                    </a>
-                    @endauth
-            @endif
+                        @auth
+                            <a
+                                href="{{ url('/dashboard') }}"
+                                class="btn-login btn-login--panel">
+                                PANEL
+                            </a>
+                        @else
+                            <a
+                                href="{{ route('login') }}"
+                                class="btn-login">
+                                INICIAR SESIÓN
+                            </a>
+                            @if (Route::has('register'))
+                                <a
+                                    href="{{ route('register') }}"
+                                    class="btn-login m-3">
+                                    Register
+                                </a>
+                            @endif
+                        @endauth
+                    @endif
                 </div>
             </div>
 
