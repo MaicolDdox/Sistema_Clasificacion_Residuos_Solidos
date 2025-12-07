@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\Area;
 
 class AreaSeeder extends Seeder
 {
@@ -12,6 +12,18 @@ class AreaSeeder extends Seeder
      */
     public function run(): void
     {
-        //PARA SEMBRAR LAS AREAS PRODUCTIVAS
+        $areas = [
+            'Area Agricola',
+            'Area Ambiental',
+            'Area infraestructura',
+            'Area Pecuaria',
+        ];
+
+        foreach ($areas as $name) {
+            Area::firstOrCreate(
+                ['name' => $name],
+                ['description' => null]
+            );
+        }
     }
 }
