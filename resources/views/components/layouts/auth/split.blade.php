@@ -34,12 +34,6 @@
                     </a>
                     <div class="flex justify-center">
                         <img
-                            src="{{ asset('img/imagen1.png') }}"
-                            alt="Logo Sistema de Clasificacion de Residuos (modo claro)"
-                            class="h-16 w-auto object-contain drop-shadow logo-theme-light"
-                            loading="lazy"
-                        />
-                        <img
                             src="{{ asset('img/logoTipo-mode-dark.png') }}"
                             alt="Logo Sistema de Clasificacion de Residuos (modo oscuro)"
                             class="h-16 w-auto object-contain drop-shadow logo-theme-dark"

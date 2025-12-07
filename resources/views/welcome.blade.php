@@ -1,47 +1,89 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>SCR - Gestión de Residuos</title>
 
-        <title>SCR</title>
+    <!-- Tailwind CSS -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-        {{-- styles --}}
-        @vite(['resources/css/app.css', 'resources/js/app.js'])
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-        {{-- Alpina.js --}}
-        <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.2/dist/cdn.min.js"></script>
+    <!-- AOS.js CDN -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+</head>
 
-    </head>
-    <body class="residuos-body">
-        <header class="residuos-hero animate-fade-in">
-            <div class="residuos-hero__top">
-                <div class="animate-slide-down">
-                    <p style="font-weight:600; letter-spacing:0.05em;">Centro Formativo La Angostura</p>
-                    <small style="opacity:0.9;">Control de residuos sólidos</small>
+<body
+    class="min-h-screen bg-gradient-to-br from-slate-50 via-white to-emerald-50/30 antialiased"
+    style="font-family: 'Inter', sans-serif;"
+>
+    <!-- Header / Hero Section -->
+    <header class="relative overflow-hidden">
+        <!-- Background con gradiente verde translúcido profesional -->
+        <div class="absolute inset-0 bg-gradient-to-br from-emerald-600/90 via-emerald-700/85 to-teal-800/90"></div>
+
+        <!-- Elementos decorativos sutiles -->
+        <div class="absolute top-0 right-0 w-96 h-96 bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/2"></div>
+
+        <div class="relative z-10 px-6 py-8 lg:px-12">
+            <!-- Top Bar -->
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 mb-12">
+                <!-- Info Institucional -->
+                <div
+                    class="text-white"
+                    data-aos="fade-down"
+                    data-aos-delay="100"
+                >
+                    <p class="text-sm font-semibold tracking-wider uppercase opacity-90">
+                        Centro Formativo La Angostura
+                    </p>
+                    <p class="text-xs font-light tracking-wide opacity-70 mt-1">
+                        Control de residuos sólidos
+                    </p>
                 </div>
 
-                <h1 class="residuos-hero__title animate-slide-up">Clasificación de Residuos</h1>
-
-                <div class="residuos-hero__actions animate-slide-down">
+                <!-- Botones de Autenticación -->
+                <div
+                    class="flex items-center gap-4"
+                    data-aos="fade-down"
+                    data-aos-delay="200"
+                >
                     @if(Route::has('login'))
                         @auth
                             <a
                                 href="{{ url('/dashboard') }}"
-                                class="btn-login btn-login--panel">
-                                PANEL
+                                class="group relative inline-flex items-center gap-2 px-6 py-3 bg-white/95 backdrop-blur-sm text-emerald-700 font-semibold text-sm uppercase tracking-wider rounded-lg shadow-lg shadow-emerald-900/20 hover:bg-white hover:shadow-xl hover:shadow-emerald-900/25 hover:-translate-y-0.5 transition-all duration-300"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                                </svg>
+                                Panel
                             </a>
                         @else
                             <a
                                 href="{{ route('login') }}"
-                                class="btn-login">
-                                INICIAR SESIÓN
+                                class="group relative inline-flex items-center gap-2 px-6 py-3 bg-white/95 backdrop-blur-sm text-emerald-700 font-semibold text-sm uppercase tracking-wider rounded-lg shadow-lg shadow-emerald-900/20 hover:bg-white hover:shadow-xl hover:shadow-emerald-900/25 hover:-translate-y-0.5 transition-all duration-300"
+                            >
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                                </svg>
+                                Iniciar Sesión
                             </a>
                             @if (Route::has('register'))
                                 <a
                                     href="{{ route('register') }}"
-                                    class="btn-login m-3">
-                                    Register
+                                    class="group relative inline-flex items-center gap-2 px-6 py-3 bg-white/10 backdrop-blur-sm border border-white/30 text-white font-semibold text-sm uppercase tracking-wider rounded-lg hover:bg-white/20 hover:border-white/50 hover:-translate-y-0.5 transition-all duration-300"
+                                >
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
+                                    </svg>
+                                    Registrarse
                                 </a>
                             @endif
                         @endauth
@@ -49,78 +91,254 @@
                 </div>
             </div>
 
-            <div class="residuos-logo-center animate-scale-in">
-                <img
-                    src="{{ asset('img/LOGO S.C.R.jpg') }}"
-                    alt="Control de Residuos La Angostura"
-                    class="residuos-logo-image" />
+            <!-- Título Principal -->
+            <div class="text-center mb-8" data-aos="fade-up" data-aos-delay="300">
+                <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white uppercase tracking-widest drop-shadow-lg">
+                    Clasificación de Residuos
+                </h1>
             </div>
-        </header>
 
-        <main class="residuos-content">
-            <section class="residuos-cards">
-                <article
-                    class="residuos-card animate-card-in"
-                    style="animation-delay: 0.1s;">
-                    <h3>Introducción</h3>
-                    <p>
-                        Este software está enfocado en la recepción de la información sobre la generación, clasificación y control de residuos del Centro de Formación Agroindustrial - La Angostura.
-                        El sistema está desarrollado para expedir un reporte de registros de los volúmenes por tipos de residuos, lo cual permite un adecuado almacenamiento de datos que permite tomar decisiones para un manejo ambiental sostenible.
-                    </p>
-                </article>
-
-                <article
-                    class="residuos-card animate-card-in"
-                    style="animation-delay: 0.2s;">
-                    <h3>Unidades y Módulos</h3>
-                    <p>
-                        En el centro de formación, las unidades productivas y áreas administrativas y de formación generan distintos tipos de residuos, los cuales son dispuestos en los puntos ecológicos y centros de acopio para su adecuada identificación y clasificación, hasta la recolección que realiza el gestor ambiental (EMAC - INCIHUILA), para su adecuada disposición final.
-                        El registro de la información permite implementar programas para disminuir la generación, reciclaje y la adecuada disposición de los residuos.
-                    </p>
-                </article>
-
-                <article
-                    class="residuos-card animate-card-in"
-                    style="animation-delay: 0.3s;">
-                    <h3>Reporte</h3>
-                    <p>
-                        El software facilita la generación de reportes por tipos de residuos semanal, mensual o anual, incluyendo un registro gráfico e indicadores que permiten realizar el análisis de la información y el seguimiento de los programas del manejo integral de los residuos sólidos generados en el centro de formación.
-                    </p>
-                </article>
-            </section>
-        </main>
-
-        <footer
-            class="residuos-footer animate-fade-in-up">
-            <section>
-                <h4>Soporte</h4>
-                <form>
-                    <input
-                        type="text"
-                        placeholder="Tu nombre"
-                        required>
-                    <input
-                        type="email"
-                        placeholder="Correo"
-                        required>
-                    <textarea
-                        rows="3"
-                        placeholder="Comentario"
-                        required></textarea>
-                    <button type="submit">Enviar</button>
-                </form>
-            </section>
-
-            <section>
-                <h4>Contacto</h4>
-                <p style="margin-bottom:0.75rem;">Síguenos en redes para mantenerte informado.</p>
-                <div class="residuos-contact">
-                    <span class="animate-bounce-in" style="animation-delay: 0.1s;">F</span>
-                    <span class="animate-bounce-in" style="animation-delay: 0.2s;">Y</span>
-                    <span class="animate-bounce-in" style="animation-delay: 0.3s;">T</span>
-                    <span class="animate-bounce-in" style="animation-delay: 0.4s;">IG</span>
+            <!-- Logo Central -->
+            <div
+                class="flex justify-center mb-8"
+                data-aos="zoom-in"
+                data-aos-delay="400"
+            >
+                <div
+                    class="relative group"
+                    x-data="{ hover: false }"
+                    @mouseenter="hover = true"
+                    @mouseleave="hover = false"
+                >
+                    <div class="absolute inset-0 bg-white rounded-full blur-xl opacity-30 group-hover:opacity-50 transition-opacity duration-500"></div>
+                    <div class="relative w-44 h-44 md:w-56 md:h-56 bg-white rounded-full p-2 shadow-2xl shadow-emerald-900/30 transform group-hover:scale-105 transition-transform duration-500">
+                        <img
+                            src="{{ asset('img/LOGO S.C.R.jpg') }}"
+                            alt="SCR - Control de Residuos La Angostura"
+                            class="w-full h-full object-cover rounded-full"
+                        />
+                    </div>
                 </div>
-            </section>
-        </footer>
-    </body>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 -mt-8 px-4 md:px-6 lg:px-8 pb-12">
+        <!-- Cards Section -->
+        <section class="max-w-7xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8">
+
+                <!-- Card 1: Introducción -->
+                <article
+                    class="group bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-emerald-500/20 shadow-xl shadow-emerald-900/5 overflow-hidden hover:shadow-2xl hover:shadow-emerald-900/10 hover:-translate-y-2 transition-all duration-500"
+                    data-aos="fade-up"
+                    data-aos-delay="100"
+                >
+                    <div class="p-6 lg:p-8">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs font-semibold uppercase tracking-wider rounded-md mb-5 group-hover:scale-105 transition-transform duration-300">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            Introducción
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed text-justify">
+                            Este software está enfocado en la recepción de la información sobre la generación, clasificación y control de residuos del Centro de Formación Agroindustrial - La Angostura. El sistema está desarrollado para expedir un reporte de registros de los volúmenes por tipos de residuos, lo cual permite un adecuado almacenamiento de datos que permite tomar decisiones para un manejo ambiental sostenible.
+                        </p>
+                    </div>
+                </article>
+
+                <!-- Card 2: Unidades y Módulos -->
+                <article
+                    class="group bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-emerald-500/20 shadow-xl shadow-emerald-900/5 overflow-hidden hover:shadow-2xl hover:shadow-emerald-900/10 hover:-translate-y-2 transition-all duration-500"
+                    data-aos="fade-up"
+                    data-aos-delay="200"
+                >
+                    <div class="p-6 lg:p-8">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs font-semibold uppercase tracking-wider rounded-md mb-5 group-hover:scale-105 transition-transform duration-300">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                            </svg>
+                            Unidades y Módulos
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed text-justify">
+                            En el centro de formación, las unidades productivas y áreas administrativas y de formación generan distintos tipos de residuos, los cuales son dispuestos en los puntos ecológicos y centros de acopio para su adecuada identificación y clasificación, hasta la recolección que realiza el gestor ambiental (EMAC - INCIHUILA), para su adecuada disposición final. El registro de la información permite implementar programas para disminuir la generación, reciclaje y la adecuada disposición de los residuos.
+                        </p>
+                    </div>
+                </article>
+
+                <!-- Card 3: Reporte -->
+                <article
+                    class="group bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-emerald-500/20 shadow-xl shadow-emerald-900/5 overflow-hidden hover:shadow-2xl hover:shadow-emerald-900/10 hover:-translate-y-2 transition-all duration-500 md:col-span-2 lg:col-span-1"
+                    data-aos="fade-up"
+                    data-aos-delay="300"
+                >
+                    <div class="p-6 lg:p-8">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs font-semibold uppercase tracking-wider rounded-md mb-5 group-hover:scale-105 transition-transform duration-300">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+                            </svg>
+                            Reporte
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed text-justify">
+                            El software facilita la generación de reportes por tipos de residuos semanal, mensual o anual, incluyendo un registro gráfico e indicadores que permiten realizar el análisis de la información y el seguimiento de los programas del manejo integral de los residuos sólidos generados en el centro de formación.
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="px-4 md:px-6 lg:px-8 pb-8">
+        <div
+            class="max-w-7xl mx-auto bg-white/90 backdrop-blur-sm rounded-2xl border border-slate-200/60 shadow-xl shadow-slate-900/5 overflow-hidden"
+            data-aos="fade-up"
+            data-aos-delay="400"
+        >
+            <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-200/60">
+                <!-- Soporte Form -->
+                <section class="p-6 lg:p-8">
+                    <h4 class="flex items-center gap-2 text-emerald-700 font-bold text-sm uppercase tracking-wider mb-6">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
+                        </svg>
+                        Soporte
+                    </h4>
+                    <form
+                        class="space-y-4"
+                        x-data="{ sending: false }"
+                        @submit.prevent="sending = true; setTimeout(() => sending = false, 2000)"
+                    >
+                        <input
+                            type="text"
+                            placeholder="Tu nombre"
+                            required
+                            class="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-300"
+                        />
+                        <input
+                            type="email"
+                            placeholder="Correo electrónico"
+                            required
+                            class="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-300"
+                        />
+                        <textarea
+                            rows="3"
+                            placeholder="Tu comentario o consulta..."
+                            required
+                            class="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-lg text-sm placeholder-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-300"
+                        ></textarea>
+                        <button
+                            type="submit"
+                            :disabled="sending"
+                            class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold text-sm uppercase tracking-wider rounded-lg shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300"
+                        >
+                            <svg x-show="!sending" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
+                            </svg>
+                            <svg x-show="sending" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                            </svg>
+                            <span x-text="sending ? 'Enviando...' : 'Enviar'"></span>
+                        </button>
+                    </form>
+                </section>
+
+                <!-- Contacto -->
+                <section class="p-6 lg:p-8">
+                    <h4 class="flex items-center gap-2 text-emerald-700 font-bold text-sm uppercase tracking-wider mb-6">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        Contacto
+                    </h4>
+                    <p class="text-slate-600 text-sm mb-6 leading-relaxed">
+                        Síguenos en redes para mantenerte informado sobre las novedades del sistema de gestión de residuos.
+                    </p>
+
+                    <!-- Social Icons -->
+                    <div class="flex items-center gap-3">
+                        <a
+                            href="#"
+                            class="group w-11 h-11 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/40 hover:-translate-y-1 hover:scale-110 transition-all duration-300"
+                            data-aos="zoom-in"
+                            data-aos-delay="500"
+                        >
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                            </svg>
+                        </a>
+                        <a
+                            href="#"
+                            class="group w-11 h-11 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/40 hover:-translate-y-1 hover:scale-110 transition-all duration-300"
+                            data-aos="zoom-in"
+                            data-aos-delay="600"
+                        >
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                            </svg>
+                        </a>
+                        <a
+                            href="#"
+                            class="group w-11 h-11 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/40 hover:-translate-y-1 hover:scale-110 transition-all duration-300"
+                            data-aos="zoom-in"
+                            data-aos-delay="700"
+                        >
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M23.953 4.57a10 10 0 01-2.825.775 4.958 4.958 0 002.163-2.723c-.951.555-2.005.959-3.127 1.184a4.92 4.92 0 00-8.384 4.482C7.69 8.095 4.067 6.13 1.64 3.162a4.822 4.822 0 00-.666 2.475c0 1.71.87 3.213 2.188 4.096a4.904 4.904 0 01-2.228-.616v.06a4.923 4.923 0 003.946 4.827 4.996 4.996 0 01-2.212.085 4.936 4.936 0 004.604 3.417 9.867 9.867 0 01-6.102 2.105c-.39 0-.779-.023-1.17-.067a13.995 13.995 0 007.557 2.209c9.053 0 13.998-7.496 13.998-13.985 0-.21 0-.42-.015-.63A9.935 9.935 0 0024 4.59z"/>
+                            </svg>
+                        </a>
+                        <a
+                            href="#"
+                            class="group w-11 h-11 bg-gradient-to-br from-emerald-500 to-emerald-600 rounded-full flex items-center justify-center text-white shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/40 hover:-translate-y-1 hover:scale-110 transition-all duration-300"
+                            data-aos="zoom-in"
+                            data-aos-delay="800"
+                        >
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/>
+                            </svg>
+                        </a>
+                    </div>
+
+                    <!-- Info adicional -->
+                    <div class="mt-8 pt-6 border-t border-slate-200/60">
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            © {{ date('Y') }} SCR - Sistema de Control de Residuos.
+                            <br/>
+                            Centro de Formación Agroindustrial La Angostura - SENA
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </footer>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Si AOS no cargó por alguna razón, no rompemos nada
+            if (typeof AOS === 'undefined') {
+                console.warn('AOS no está disponible');
+                return;
+            }
+
+            // Por si quedó algo raro de pruebas anteriores
+            sessionStorage.removeItem('welcomeAnimated');
+
+            // Nos aseguramos de que los elementos tengan estilos limpios
+            document.querySelectorAll('[data-aos]').forEach(function (el) {
+                el.style.opacity = '';
+                el.style.transform = '';
+            });
+
+            // Inicializamos AOS SIEMPRE (así vuelve la animación bonita)
+            AOS.init({
+                duration: 800,
+                easing: 'ease-out-cubic',
+                once: true,
+                offset: 50
+            });
+        });
+    </script>
+</body>
 </html>
+
