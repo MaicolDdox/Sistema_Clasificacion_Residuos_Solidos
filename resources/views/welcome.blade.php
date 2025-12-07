@@ -1,21 +1,9 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>SCR - Gestión de Residuos</title>
+    @include('partials.styles')
 
-    <!-- Tailwind CSS -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
-
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <!-- AOS.js CDN -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    @include('partials.librerias-cdn')
 </head>
 
 <body
@@ -313,6 +301,7 @@
             </div>
         </div>
     </footer>
+    @include('partials.footer-script-cdn')
         <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Si AOS no cargó por alguna razón, no rompemos nada

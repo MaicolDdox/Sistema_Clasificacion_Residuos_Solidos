@@ -1,21 +1,11 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'SCR') }}</title>
+    @include('partials.styles')
 
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700" rel="stylesheet" />
+    @include('partials.librerias-cdn')
 
-    <!-- AOS Animation Library -->
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-
-    <!-- Scripts -->
-    @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="font-sans antialiased bg-slate-50 min-h-screen">
 
@@ -75,61 +65,17 @@
                         </a>
                     </li>
 
-                    <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="200">
-                        <a
-                            href="#"
-                            class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
-                        >
-                            <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
-                                <svg class="w-[18px] h-[18px] text-slate-500 group-hover:text-emerald-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                                </svg>
-                            </span>
-                            <span class="text-sm font-medium">Áreas</span>
-                        </a>
-                    </li>
+                    {{-- CONTENIDO PARA AGREGAR LOS ITEMS DE AREAS --}}
+                    @include('components.layouts.app.menu.areas.area-list')
 
-                    <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="250">
-                        <a
-                            href="#"
-                            class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
-                        >
-                            <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
-                                <svg class="w-[18px] h-[18px] text-slate-500 group-hover:text-emerald-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
-                                </svg>
-                            </span>
-                            <span class="text-sm font-medium">Unidades Productivas</span>
-                        </a>
-                    </li>
+                    {{-- CONTENIDO PARA AGREGAR LOS ITEMS DE UNIDADES PRODUCTIVAS --}}
+                    @include('components.layouts.app.menu.unidades.unidades-list')
 
-                    <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="300">
-                        <a
-                            href="#"
-                            class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
-                        >
-                            <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
-                                <svg class="w-[18px] h-[18px] text-slate-500 group-hover:text-emerald-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                </svg>
-                            </span>
-                            <span class="text-sm font-medium">Residuos</span>
-                        </a>
-                    </li>
+                    {{-- CONTENIO PARA AGREGAR LOS ITEMS DE RESIDUOS --}}
+                    @include('components.layouts.app.menu.residuos.residuos-list')
 
-                    <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="350">
-                        <a
-                            href="#"
-                            class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
-                        >
-                            <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
-                                <svg class="w-[18px] h-[18px] text-slate-500 group-hover:text-emerald-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
-                                </svg>
-                            </span>
-                            <span class="text-sm font-medium">Roles</span>
-                        </a>
-                    </li>
+                    {{-- CONTENIDO PARA AGREGAR LOS ITEMS DE ROLES --}}
+                    @include('components.layouts.app.menu.roles.roles-list')
                 </ul>
 
                 <!-- Divider -->
@@ -153,7 +99,7 @@
                 <ul class="space-y-1">
                     <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="500">
                         <a
-                            href="#"
+                            href="{{ route('profile.edit') }}"
                             class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
                         >
                             <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
@@ -168,7 +114,6 @@
             </nav>
 
             <!-- User Section -->
-            <!-- Rediseñada la sección de usuario con botón "Salir" visible -->
             <div
                 class="p-4 border-t border-slate-100"
                 data-aos="fade-up"
@@ -211,7 +156,7 @@
     </div>
 
     <!-- AOS Script -->
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    @include('partials.footer-script-cdn')
     <!-- Script modificado para que las animaciones solo se ejecuten una vez por sesión de login -->
     <script>
         (function() {
