@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
     <head>
         @include('partials.head')
     </head>
@@ -35,8 +35,14 @@
                     <div class="flex justify-center">
                         <img
                             src="{{ asset('img/imagen1.png') }}"
-                            alt="Logo Sistema de Clasificacion de Residuos"
-                            class="h-16 w-auto object-contain drop-shadow"
+                            alt="Logo Sistema de Clasificacion de Residuos (modo claro)"
+                            class="h-16 w-auto object-contain drop-shadow logo-theme-light"
+                            loading="lazy"
+                        />
+                        <img
+                            src="{{ asset('img/logoTipo-mode-dark.png') }}"
+                            alt="Logo Sistema de Clasificacion de Residuos (modo oscuro)"
+                            class="h-16 w-auto object-contain drop-shadow logo-theme-dark"
                             loading="lazy"
                         />
                     </div>

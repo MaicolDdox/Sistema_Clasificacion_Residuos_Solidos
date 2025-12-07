@@ -84,6 +84,23 @@ body.residuos-body {
     margin: 0;
 }
 
+/* Theme-aware logo swap for auth layout */
+.logo-theme-light {
+    display: block;
+}
+
+.logo-theme-dark {
+    display: none;
+}
+
+.dark .logo-theme-light {
+    display: none;
+}
+
+.dark .logo-theme-dark {
+    display: block;
+}
+
 .residuos-hero {
     background: linear-gradient(180deg, #0f8b2c 0%, #0b6c22 100%);
     color: #fff;
