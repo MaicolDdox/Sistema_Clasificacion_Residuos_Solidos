@@ -1,15 +1,14 @@
 <?php
 
-namespace Modules\Areas\Providers;
+namespace Modules\Wastes\Providers;
 
-use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
 
 class WastesServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // Bindings específicos del módulo pueden declararse aquí.
+        // Bindings especificos del modulo pueden declararse aqui.
     }
 
     public function boot(): void
@@ -20,6 +19,5 @@ class WastesServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
         $this->loadViewsFrom($viewsPath, 'wastes');
         $this->mergeConfigFrom(__DIR__.'/../Config/config.php', 'wastes');
-
     }
 }

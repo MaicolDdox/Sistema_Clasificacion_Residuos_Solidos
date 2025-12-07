@@ -7,8 +7,8 @@ use Illuminate\Support\ServiceProvider;
 class ModulesServiceProvider extends ServiceProvider
 {
     /**
-     * Registra de forma dinámica los service providers definidos en module.json
-     * de cada módulo dentro de /modules.
+     * Registra dinamicamente los service providers definidos en module.json
+     * de cada modulo dentro de /modules.
      */
     public function register(): void
     {
@@ -36,7 +36,7 @@ class ModulesServiceProvider extends ServiceProvider
             }
 
             foreach ($manifest['providers'] as $provider) {
-                // Registrar el provider declarado por el módulo.
+                // Registrar el provider declarado por el modulo.
                 $this->app->register($provider);
             }
         }
