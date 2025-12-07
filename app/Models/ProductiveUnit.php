@@ -17,17 +17,17 @@ class ProductiveUnit extends Model
         'description',
     ];
 
-    public function areas():BelongsTo
+    public function area(): BelongsTo
     {
         return $this->belongsTo(Area::class, 'area_id');
     }
 
-    public function waste():HasMany
+    public function wastes(): HasMany
     {
         return $this->hasMany(Waste::class);
     }
 
-    public function hazardouWaste():HasMany
+    public function hazardouWastes(): HasMany
     {
         return $this->hasMany(HazardouWaste::class);
     }

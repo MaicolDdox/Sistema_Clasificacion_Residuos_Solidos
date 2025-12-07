@@ -15,7 +15,7 @@ class Area extends Model
         'description',
     ];
 
-    public function productiveUnit():HasMany
+    public function productiveUnits(): HasMany
     {
         return $this->hasMany(ProductiveUnit::class);
     }

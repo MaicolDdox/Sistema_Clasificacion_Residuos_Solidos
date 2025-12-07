@@ -19,12 +19,16 @@ class Waste extends Model
         'observations',
     ];
 
-    public function productiveUnits():BelongsTo
+    protected $casts = [
+        'entry_date' => 'datetime',
+    ];
+
+    public function productiveUnit(): BelongsTo
     {
         return $this->belongsTo(ProductiveUnit::class, 'productive_unit_id');
     }
 
-    public function users():BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }

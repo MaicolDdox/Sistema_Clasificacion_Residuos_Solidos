@@ -14,4 +14,7 @@ class HazardouWasteOutlet extends Model
         'amount',
     ];
 
+    protected $casts = [
+        'outlet_date' => 'date',
+    ];
 }

@@ -13,4 +13,8 @@ class WasteOutlet extends Model
         'outlet_date',
         'amount',
     ];
+
+    protected $casts = [
+        'outlet_date' => 'date',
+    ];
 }
