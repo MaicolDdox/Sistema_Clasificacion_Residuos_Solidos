@@ -1,14 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Areas\Http\Controllers\AreaController;
 
 Route::middleware(['web', 'auth'])->group(function () {
-
-    //=======================
-    //INGRESU TUS RUTAS AQUI
-    //=======================
-
-    //#####################################################################################
-    
-
+    Route::resource('areas', AreaController::class);
 });

@@ -1,7 +1,7 @@
 {
     "name": "Wastes",
     "alias": "Wastes",
-    "description": "Módulo de gestión de Wastes",
+    "description": "Modulo de gestion de residuos",
     "providers": [
         "Modules\\Wastes\\Providers\\WastesServiceProvider"
     ],
