@@ -26,7 +26,7 @@
                     hover:!bg-emerald-400/90 hover:shadow-lg hover:scale-[1.02]
                     focus-visible:outline-none focus-visible:ring-2
                     focus-visible:ring-emerald-300/80 focus-visible:ring-offset-2
-                    focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-900"
+                    focus-visible:ring-offset-white"
                 data-test="email-password-reset-link-button">
                 {{ __('Email password reset link') }}
             </flux:button>
