@@ -1,132 +1,240 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
-    <head>
-        @include('partials.head')
-    </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
-            <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
-            <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
-                <x-app-logo />
-            </a>
+    <title>{{ config('app.name', 'SCR') }}</title>
 
-            <flux:navlist variant="outline">
-                <flux:navlist.group :heading="__('Platform')" class="grid">
-                    <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                </flux:navlist.group>
-            </flux:navlist>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=inter:300,400,500,600,700" rel="stylesheet" />
 
-            <flux:spacer />
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
-            <flux:navlist variant="outline">
-                <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                {{ __('Repository') }}
-                </flux:navlist.item>
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+</head>
+<body class="font-sans antialiased bg-slate-50 min-h-screen">
 
-                <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                {{ __('Documentation') }}
-                </flux:navlist.item>
-            </flux:navlist>
+    <div class="flex min-h-screen">
 
-            <!-- Desktop User Menu -->
-            <flux:dropdown class="hidden lg:block" position="bottom" align="start">
-                <flux:profile
-                    :name="auth()->user()->name"
-                    :initials="auth()->user()->initials()"
-                    icon:trailing="chevrons-up-down"
-                />
+        <!-- Sidebar -->
+        <aside class="w-72 bg-white border-r border-slate-200/80 flex flex-col fixed h-full z-40">
 
-                <flux:menu class="w-[220px]">
-                    <flux:menu.radio.group>
-                        <div class="p-0 text-sm font-normal">
-                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                    <span
-                                        class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
-                                    >
-                                        {{ auth()->user()->initials() }}
-                                    </span>
-                                </span>
+            <!-- Logo Section -->
+            <div
+                class="p-6 border-b border-slate-100"
+                data-aos="fade-right"
+                data-aos-duration="600"
+            >
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50/80 border border-emerald-100 flex items-center justify-center overflow-hidden">
+                        <img
+                            src="{{ asset('img/imagen1.png') }}"
+                            alt="SCR Logo"
+                            class="w-8 h-8 object-contain"
+                        >
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-semibold text-slate-800 tracking-tight">SCR</h1>
+                        <p class="text-xs text-slate-400 font-medium">Gestión de residuos</p>
+                    </div>
+                </div>
+            </div>
 
-                                <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
-                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </flux:menu.radio.group>
+            <!-- Navigation -->
+            <nav class="flex-1 p-4 overflow-y-auto">
 
-                    <flux:menu.separator />
+                <!-- Menu Label -->
+                <p
+                    class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest px-3 mb-3"
+                    data-aos="fade-right"
+                    data-aos-duration="600"
+                    data-aos-delay="100"
+                >
+                    Menú Principal
+                </p>
 
-                    <flux:menu.radio.group>
-                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
-                    </flux:menu.radio.group>
+                <!-- Menu Items -->
+                <ul class="space-y-1">
+                    <!-- Agregado Dashboard con icono de cuadrícula/grid más coherente -->
+                    <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="150">
+                        <a
+                            href="{{ route('dashboard') }}"
+                            class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
+                        >
+                            <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
+                                <svg class="w-[18px] h-[18px] text-slate-500 group-hover:text-emerald-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                                </svg>
+                            </span>
+                            <span class="text-sm font-medium">Dashboard</span>
+                        </a>
+                    </li>
 
-                    <flux:menu.separator />
+                    <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="200">
+                        <a
+                            href="#"
+                            class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
+                        >
+                            <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
+                                <svg class="w-[18px] h-[18px] text-slate-500 group-hover:text-emerald-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                                </svg>
+                            </span>
+                            <span class="text-sm font-medium">Áreas</span>
+                        </a>
+                    </li>
 
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
-                        @csrf
-                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
-                            {{ __('Log Out') }}
-                        </flux:menu.item>
-                    </form>
-                </flux:menu>
-            </flux:dropdown>
-        </flux:sidebar>
+                    <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="250">
+                        <a
+                            href="#"
+                            class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
+                        >
+                            <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
+                                <svg class="w-[18px] h-[18px] text-slate-500 group-hover:text-emerald-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z"/>
+                                </svg>
+                            </span>
+                            <span class="text-sm font-medium">Unidades Productivas</span>
+                        </a>
+                    </li>
 
-        <!-- Mobile User Menu -->
-        <flux:header class="lg:hidden">
-            <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
+                    <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="300">
+                        <a
+                            href="#"
+                            class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
+                        >
+                            <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
+                                <svg class="w-[18px] h-[18px] text-slate-500 group-hover:text-emerald-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                                </svg>
+                            </span>
+                            <span class="text-sm font-medium">Residuos</span>
+                        </a>
+                    </li>
 
-            <flux:spacer />
+                    <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="350">
+                        <a
+                            href="#"
+                            class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
+                        >
+                            <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
+                                <svg class="w-[18px] h-[18px] text-slate-500 group-hover:text-emerald-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                                </svg>
+                            </span>
+                            <span class="text-sm font-medium">Roles</span>
+                        </a>
+                    </li>
+                </ul>
 
-            <flux:dropdown position="top" align="end">
-                <flux:profile
-                    :initials="auth()->user()->initials()"
-                    icon-trailing="chevron-down"
-                />
+                <!-- Divider -->
+                <div
+                    class="my-6 border-t border-slate-100"
+                    data-aos="fade-right"
+                    data-aos-duration="600"
+                    data-aos-delay="400"
+                ></div>
 
-                <flux:menu>
-                    <flux:menu.radio.group>
-                        <div class="p-0 text-sm font-normal">
-                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                    <span
-                                        class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
-                                    >
-                                        {{ auth()->user()->initials() }}
-                                    </span>
-                                </span>
+                <!-- Settings Label -->
+                <p
+                    class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest px-3 mb-3"
+                    data-aos="fade-right"
+                    data-aos-duration="600"
+                    data-aos-delay="450"
+                >
+                    Configuración
+                </p>
 
-                                <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
-                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </flux:menu.radio.group>
+                <ul class="space-y-1">
+                    <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="500">
+                        <a
+                            href="#"
+                            class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
+                        >
+                            <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
+                                <svg class="w-[18px] h-[18px] text-slate-500 group-hover:text-emerald-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                            </span>
+                            <span class="text-sm font-medium">Mi Perfil</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
 
-                    <flux:menu.separator />
+            <!-- User Section -->
+            <!-- Rediseñada la sección de usuario con botón "Salir" visible -->
+            <div
+                class="p-4 border-t border-slate-100"
+                data-aos="fade-up"
+                data-aos-duration="600"
+                data-aos-delay="550"
+            >
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50/80 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400/80 to-teal-500/80 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
+                        {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-slate-700 truncate">{{ Auth::user()->name ?? 'Usuario' }}</p>
+                        <p class="text-xs text-slate-400 truncate">{{ Auth::user()->email ?? 'email@ejemplo.com' }}</p>
+                    </div>
+                </div>
 
-                    <flux:menu.radio.group>
-                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
-                    </flux:menu.radio.group>
+                <!-- Botón "Salir" con icono y texto -->
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button
+                        type="submit"
+                        class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-50/80 border border-red-100 text-red-600 hover:bg-red-100 hover:border-red-200 transition-all duration-300 group"
+                    >
+                        <svg class="w-4 h-4 text-red-500 group-hover:text-red-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        <span class="text-sm font-medium">Salir</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
 
-                    <flux:menu.separator />
+        <!-- Main Content -->
+        <main class="flex-1 ml-72">
+            <div class="p-8">
+                {{ $slot }}
+            </div>
+        </main>
 
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
-                        @csrf
-                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
-                            {{ __('Log Out') }}
-                        </flux:menu.item>
-                    </form>
-                </flux:menu>
-            </flux:dropdown>
-        </flux:header>
+    </div>
 
-        {{ $slot }}
+    <!-- AOS Script -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <!-- Script modificado para que las animaciones solo se ejecuten una vez por sesión de login -->
+    <script>
+        (function() {
+            const animationKey = 'scr_sidebar_animated';
+            const hasAnimated = sessionStorage.getItem(animationKey);
 
-        @fluxScripts
-    </body>
+            if (!hasAnimated) {
+                // Primera vez en esta sesión: mostrar animaciones
+                AOS.init({
+                    once: true,
+                    easing: 'ease-out-cubic'
+                });
+                sessionStorage.setItem(animationKey, 'true');
+            } else {
+                // Ya se animó en esta sesión: desactivar animaciones
+                document.querySelectorAll('[data-aos]').forEach(function(el) {
+                    el.removeAttribute('data-aos');
+                    el.removeAttribute('data-aos-duration');
+                    el.removeAttribute('data-aos-delay');
+                });
+            }
+        })();
+    </script>
+
+</body>
 </html>
