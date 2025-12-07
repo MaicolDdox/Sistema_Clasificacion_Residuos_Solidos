@@ -32,6 +32,14 @@
                     <a href="{{ route('home') }}" class="z-20 flex flex-col items-center gap-2 font-medium lg:hidden" wire:navigate>
                         <span class="sr-only">{{ config('app.name', 'SCR') }}</span>
                     </a>
+                    <div class="flex justify-center">
+                        <img
+                            src="{{ asset('img/imagen1.png') }}"
+                            alt="Logo Sistema de Clasificacion de Residuos"
+                            class="h-16 w-auto object-contain drop-shadow"
+                            loading="lazy"
+                        />
+                    </div>
                     {{ $slot }}
                 </div>
             </div>
