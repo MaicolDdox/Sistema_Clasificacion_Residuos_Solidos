@@ -4,6 +4,7 @@ namespace Modules\ProductiveUnits\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Modules\ProductiveUnits\Models\ProductiveUnit;
 
 class ProductiveUnitController extends Controller
@@ -11,9 +12,25 @@ class ProductiveUnitController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if ($request->ajax()) {
+            $units = ProductiveUnit::with('area')->get()->map(function ($unit) {
+                return [
+                    'id'          => $unit->id,
+                    'area'        => $unit->area?->name ?? 'Sin area',
+                    'name'        => Str::limit($unit->name, 40),
+                    'description' => Str::limit($unit->description, 60),
+                    'created_at'  => $unit->created_at?->format('Y-m-d'),
+                    'updated_at'  => $unit->updated_at?->format('Y-m-d'),
+                    'acciones'    => view('ProductiveUnits::partials.productiveUnits-actions', compact('unit'))->render(),
+                ];
+            });
+
+            return response()->json(['data' => $units]);
+        }
+
+        return view('ProductiveUnits::productiveUnits-list');
     }
 
     /**
