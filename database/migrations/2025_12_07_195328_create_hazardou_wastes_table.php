@@ -16,7 +16,7 @@ return new class extends Migration
             //Relcion con unidad productiva
             $table->foreignId('productive_unit_id')
                 ->constrained('productive_units')
-                ->cascadeOnDelete('CASCADE');
+                ->cascadeOnDelete();
 
             //Relacion con el responsable del registro
             $table->foreignId('user_id')

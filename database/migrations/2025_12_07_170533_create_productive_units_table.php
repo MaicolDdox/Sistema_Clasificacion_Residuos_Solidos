@@ -16,7 +16,7 @@ return new class extends Migration
             //Relaciones con areas
             $table->foreignId('area_id')
                 ->constrained('areas')
-                ->cascadeOnDelete('CASCAADE');
+                ->cascadeOnDelete();
 
             //Campos de tabla
             $table->string('name');
