@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Areas\Http\Controllers;
 
-use App\Models\HazardouWaste;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Areas\Models\Area;
 
-class HazardouWasteController extends Controller
+class AreaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class HazardouWasteController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(HazardouWaste $hazardouWaste)
+    public function show(Area $area)
     {
         //
     }
@@ -42,7 +43,7 @@ class HazardouWasteController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(HazardouWaste $hazardouWaste)
+    public function edit(Area $area)
     {
         //
     }
@@ -50,7 +51,7 @@ class HazardouWasteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, HazardouWaste $hazardouWaste)
+    public function update(Request $request, Area $area)
     {
         //
     }
@@ -58,7 +59,7 @@ class HazardouWasteController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(HazardouWaste $hazardouWaste)
+    public function destroy(Area $area)
     {
         //
     }

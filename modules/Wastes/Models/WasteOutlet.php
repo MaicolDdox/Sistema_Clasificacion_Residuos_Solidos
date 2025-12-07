@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Wastes\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class HazardouWasteOutlet extends Model
+class WasteOutlet extends Model
 {
     use HasFactory;
 

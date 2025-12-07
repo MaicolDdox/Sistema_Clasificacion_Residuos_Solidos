@@ -3,7 +3,7 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Area;
+use Modules\Areas\Models\Area;
 
 class AreaSeeder extends Seeder
 {

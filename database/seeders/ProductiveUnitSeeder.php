@@ -3,8 +3,8 @@
 namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
-use App\Models\Area;
-use App\Models\ProductiveUnit;
+use Modules\Areas\Models\Area;
+use Modules\ProductiveUnits\Models\ProductiveUnit;
 
 class ProductiveUnitSeeder extends Seeder
 {

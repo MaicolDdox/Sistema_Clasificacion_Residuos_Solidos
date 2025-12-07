@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\ProductiveUnits\Http\Controllers;
 
-use App\Models\ProductiveUnit;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\ProductiveUnits\Models\ProductiveUnit;
 
 class ProductiveUnitController extends Controller
 {

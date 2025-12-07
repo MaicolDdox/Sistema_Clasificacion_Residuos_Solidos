@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Wastes\Http\Controllers;
 
-use App\Models\Waste;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Wastes\Models\Waste;
 
 class WasteController extends Controller
 {

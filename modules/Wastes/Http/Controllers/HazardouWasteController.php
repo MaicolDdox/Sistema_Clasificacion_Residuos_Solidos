@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace Modules\Wastes\Http\Controllers;
 
-use App\Models\HazardouWasteOutlet;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Modules\Wastes\Models\HazardouWaste;
 
-class HazardouWasteOutletController extends Controller
+class HazardouWasteController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -34,7 +35,7 @@ class HazardouWasteOutletController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(HazardouWasteOutlet $hazardouWasteOutlet)
+    public function show(HazardouWaste $hazardouWaste)
     {
         //
     }
@@ -42,7 +43,7 @@ class HazardouWasteOutletController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(HazardouWasteOutlet $hazardouWasteOutlet)
+    public function edit(HazardouWaste $hazardouWaste)
     {
         //
     }
@@ -50,7 +51,7 @@ class HazardouWasteOutletController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, HazardouWasteOutlet $hazardouWasteOutlet)
+    public function update(Request $request, HazardouWaste $hazardouWaste)
     {
         //
     }
@@ -58,7 +59,7 @@ class HazardouWasteOutletController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(HazardouWasteOutlet $hazardouWasteOutlet)
+    public function destroy(HazardouWaste $hazardouWaste)
     {
         //
     }

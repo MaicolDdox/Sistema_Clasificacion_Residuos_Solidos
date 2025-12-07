@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Models;
+namespace Modules\Areas\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\ProductiveUnits\Models\ProductiveUnit;
 
 class Area extends Model
 {

@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Models;
+namespace Modules\ProductiveUnits\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Modules\Areas\Models\Area;
+use Modules\Wastes\Models\HazardouWaste;
+use Modules\Wastes\Models\Waste;
 
 class ProductiveUnit extends Model
 {
