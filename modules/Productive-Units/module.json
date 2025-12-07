@@ -1,0 +1,13 @@
+{
+    "name": "Productive-Units",
+    "alias": "Productive-Units",
+    "description": "Módulo de gestión de Productive-Units",
+    "providers": [
+        "Modules\\Productive-Units\\Providers\\ProductiveUnitsServiceProvider"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Modules\\Productive-Units\\": ""
+        }
+    }
+}
