@@ -2,9 +2,31 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Waste extends Model
 {
-    //
+    use HasFactory;
+
+    protected $fillable = [
+        'productive_unit_id',
+        'user_id',
+        'entry_date',
+        'waste_type',
+        'amount',
+        'observations',
+    ];
+
+    public function productiveUnits():BelongsTo
+    {
+        return $this->belongsTo(ProductiveUnit::class, 'productive_unit_id');
+    }
+
+    public function users():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
 }
