@@ -13,6 +13,8 @@ return new class extends Migration
     {
         Schema::create('waste_outlets', function (Blueprint $table) {
             $table->id();
+            $table->date('outlet_date');
+            $table->bigInteger('amount');
             $table->timestamps();
         });
     }

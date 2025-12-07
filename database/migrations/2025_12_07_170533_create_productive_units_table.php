@@ -13,6 +13,14 @@ return new class extends Migration
     {
         Schema::create('productive_units', function (Blueprint $table) {
             $table->id();
+            //Relaciones con areas
+            $table->foreignId('area_id')
+                ->constrained('areas')
+                ->cascadeOnDelete('CASCAADE');
+
+            //Campos de tabla
+            $table->string('name');
+            $table->text('description')->nullable();
             $table->timestamps();
         });
     }
