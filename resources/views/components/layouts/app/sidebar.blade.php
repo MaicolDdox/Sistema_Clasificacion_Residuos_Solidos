@@ -155,6 +155,9 @@
 
     </div>
 
+    <!-- Flux Scripts (incluye Alpine.js) -->
+    @fluxScripts
+
     <!-- AOS Script -->
     @include('partials.footer-script-cdn')
     <!-- Script modificado para que las animaciones solo se ejecuten una vez por sesión de login -->
