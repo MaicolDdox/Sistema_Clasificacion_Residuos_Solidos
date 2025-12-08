@@ -1,5 +1,6 @@
 <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="300">
     <a href="#"
+        @click.prevent="openResiduesModal()"
         class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300">
         <span
             class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">

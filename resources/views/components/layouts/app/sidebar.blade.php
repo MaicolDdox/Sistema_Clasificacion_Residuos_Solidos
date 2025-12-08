@@ -7,7 +7,38 @@
     @include('partials.librerias-cdn')
 
 </head>
-<body class="font-sans antialiased bg-slate-50 min-h-screen">
+@php
+    $sidebarAreas = \Modules\Areas\Models\Area::orderBy('name')->get();
+@endphp
+<body
+    class="font-sans antialiased bg-slate-50 min-h-screen"
+    x-data="{
+        openResiduesAreaModal: false,
+        selectedAreaId: '',
+        tomSelectInstance: null,
+        initTomSelect() {
+            if (this.tomSelectInstance || !window.TomSelect) return;
+            const selectEl = this.$refs.areaSelect;
+            if (selectEl) {
+                this.tomSelectInstance = new TomSelect(selectEl, {
+                    placeholder: 'Selecciona un área',
+                    allowEmptyOption: true,
+                    maxOptions: 200,
+                    plugins: ['dropdown_input'],
+                });
+            }
+        },
+        openResiduesModal() {
+            this.openResiduesAreaModal = true;
+            this.$nextTick(() => this.initTomSelect());
+        },
+        goToUnits() {
+            if (!this.selectedAreaId) return;
+            const baseUrl = '{{ route('wastes.units.byArea', ['area' => '__AREA__']) }}';
+            window.location.href = baseUrl.replace('__AREA__', this.selectedAreaId);
+        }
+    }"
+>
 
     <div class="flex min-h-screen">
 
@@ -180,6 +211,71 @@
             }
         })();
     </script>
+
+    {{-- Modal selección de área para residuos --}}
+    <div
+        x-show="openResiduesAreaModal"
+        x-transition.opacity
+        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 px-4"
+    >
+        <div
+            class="bg-white rounded-2xl shadow-2xl w-full max-w-lg border border-slate-200"
+            x-show="openResiduesAreaModal"
+            x-transition.scale.origin-center
+        >
+            <div class="p-6 space-y-4">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.2em] text-emerald-600 font-semibold">Residuos</p>
+                        <h2 class="text-2xl font-bold text-slate-900">Selecciona el área para gestionar residuos</h2>
+                        <p class="text-sm text-slate-500 mt-1">Usa el selector para ir a las unidades productivas del área elegida.</p>
+                    </div>
+                    <button
+                        type="button"
+                        class="text-slate-400 hover:text-slate-600"
+                        @click="openResiduesAreaModal = false"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-700" for="areaSelect">Área</label>
+                    <select
+                        id="areaSelect"
+                        x-ref="areaSelect"
+                        x-model="selectedAreaId"
+                        class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
+                    >
+                        <option value="">Selecciona un área</option>
+                        @foreach($sidebarAreas as $area)
+                            <option value="{{ $area->id }}">{{ $area->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-4">
+                    <button
+                        type="button"
+                        class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 transition"
+                        @click="openResiduesAreaModal = false"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        type="button"
+                        class="px-4 py-2 rounded-lg bg-emerald-500 text-white hover:bg-emerald-400 transition disabled:opacity-60"
+                        :disabled="!selectedAreaId"
+                        @click="goToUnits()"
+                    >
+                        Ir a unidades
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 </body>
 </html>
