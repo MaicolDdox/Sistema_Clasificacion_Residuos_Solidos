@@ -8,6 +8,15 @@
                     <p class="text-sm text-slate-500">Agrupados por semanas (lunes a domingo).</p>
                 </div>
                 <div class="flex items-center gap-2">
+                    <a
+                        href="{{ route('wastes.report.resol', $unit) }}"
+                        class="inline-flex items-center gap-2 bg-emerald-100 hover:bg-emerald-200 text-emerald-700 px-4 py-2 rounded-lg transition-all duration-200"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-width="2" stroke-linecap="round" stroke-linejoin="round" d="M11 3a1 1 0 011 1v14a1 1 0 11-2 0V4a1 1 0 011-1zm5 4a1 1 0 011 1v10a1 1 0 11-2 0V8a1 1 0 011-1zm-10 6a1 1 0 011 1v4a1 1 0 11-2 0v-4a1 1 0 011-1z"/>
+                        </svg>
+                        Reporte gráfico
+                    </a>
                     <a href="{{ route('wastes.create', ['unit' => $unit->id]) }}" class="px-4 py-2 rounded-lg bg-emerald-500 text-white text-sm font-semibold hover:bg-emerald-400 transition">
                         Nuevo RESOL
                     </a>
