@@ -112,7 +112,6 @@ class AsigRoleController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     * Remueve todos los roles de un usuario (lo deja sin rol)
      */
     public function destroy($id)
     {
