@@ -9,3 +9,9 @@
 
 {{-- DataTable --}}
 <link rel="stylesheet" href="https://cdn.datatables.net/2.0.7/css/dataTables.dataTables.min.css">
+
+{{-- Alpine.js --}}
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+{{-- ApexChart.js --}}
+<script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
