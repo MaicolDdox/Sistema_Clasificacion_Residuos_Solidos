@@ -87,3 +87,8 @@ div.dataTables_wrapper div.dataTables_paginate {
     background: rgba(0, 0, 0, 0.05);
 
 }
+
+/* Alpine.js x-cloak - Oculta elementos hasta que Alpine se inicialice */
+[x-cloak] {
+    display: none !important;
+}
