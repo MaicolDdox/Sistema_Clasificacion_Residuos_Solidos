@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             ProductiveUnitSeeder::class,
             RoleSeeder::class,
             UserAndRoleSeeder::class,
+            WasteSampleSeeder::class,
         ]);
     }
 

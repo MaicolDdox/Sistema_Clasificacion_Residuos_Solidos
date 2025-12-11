@@ -32,4 +32,9 @@ Route::middleware(['auth'])->group(function () {
             ),
         )
         ->name('two-factor.show');
+
+    /* Asignacion de Roles llamando al controlador general
+            Es importante recordar que actualmente las rutas no estan protegidas y tampoco las vistas con auth()
+    */
+    Route::resource('roles', \App\Http\Controllers\AsigRoleController::class);
 });
