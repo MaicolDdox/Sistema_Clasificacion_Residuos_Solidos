@@ -32,14 +32,14 @@ class ProductiveUnitController extends Controller
                     'waste_type'  => $wasteTypeLabel,
                     'created_at'  => $unit->created_at?->format('Y-m-d'),
                     'updated_at'  => $unit->updated_at?->format('Y-m-d'),
-                    'acciones'    => view('productiveunits::partials.productiveUnits-actions', compact('unit'))->render(),
+                    'acciones'    => view('ProductiveUnits::partials.productiveUnits-actions', compact('unit'))->render(),
                 ];
             });
 
             return response()->json(['data' => $units]);
         }
 
-        return view('productiveunits::productiveUnits-list');
+        return view('ProductiveUnits::productiveUnits-list');
     }
 
     /**
@@ -48,7 +48,7 @@ class ProductiveUnitController extends Controller
     public function create()
     {
         $areas = Area::orderBy('name')->get();
-        return view('productiveunits::productiveUnits-create', compact('areas'));
+        return view('ProductiveUnits::productiveUnits-create', compact('areas'));
     }
 
     /**
@@ -75,7 +75,7 @@ class ProductiveUnitController extends Controller
     public function show(ProductiveUnit $productiveUnit)
     {
         $productiveUnit->load('area');
-        return view('productiveunits::productiveUnits-detalles', compact('productiveUnit'));
+        return view('ProductiveUnits::productiveUnits-detalles', compact('productiveUnit'));
     }
 
     /**
@@ -84,7 +84,7 @@ class ProductiveUnitController extends Controller
     public function edit(ProductiveUnit $productiveUnit)
     {
         $areas = Area::orderBy('name')->get();
-        return view('productiveunits::productiveUnits-edit', compact('productiveUnit', 'areas'));
+        return view('ProductiveUnits::productiveUnits-edit', compact('productiveUnit', 'areas'));
     }
 
     /**
