@@ -1,132 +1,284 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="dark">
-    <head>
-        @include('partials.head')
-    </head>
-    <body class="min-h-screen bg-white dark:bg-zinc-800">
-        <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
-            <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<head>
 
-            <a href="{{ route('dashboard') }}" class="me-5 flex items-center space-x-2 rtl:space-x-reverse" wire:navigate>
-                <x-app-logo />
-            </a>
+    @include('partials.styles')
 
-            <flux:navlist variant="outline">
-                <flux:navlist.group :heading="__('Platform')" class="grid">
-                    <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                </flux:navlist.group>
-            </flux:navlist>
+    @include('partials.librerias-cdn')
 
-            <flux:spacer />
+</head>
+@php
+    $sidebarAreas = \Modules\Areas\Models\Area::orderBy('name')->get();
+@endphp
+<body
+    class="font-sans antialiased bg-slate-50 min-h-screen"
+    x-data="{
+        openResiduesAreaModal: false,
+        selectedAreaId: '',
+        tomSelectInstance: null,
+        initTomSelect() {
+            if (this.tomSelectInstance || !window.TomSelect) return;
+            const selectEl = this.$refs.areaSelect;
+            if (selectEl) {
+                this.tomSelectInstance = new TomSelect(selectEl, {
+                    placeholder: 'Selecciona un área',
+                    allowEmptyOption: true,
+                    maxOptions: 200,
+                    plugins: ['dropdown_input'],
+                });
+            }
+        },
+        openResiduesModal() {
+            this.openResiduesAreaModal = true;
+            this.$nextTick(() => this.initTomSelect());
+        },
+        goToUnits() {
+            if (!this.selectedAreaId) return;
+            const baseUrl = '{{ route('wastes.units.byArea', ['area' => '__AREA__']) }}';
+            window.location.href = baseUrl.replace('__AREA__', this.selectedAreaId);
+        }
+    }"
+>
 
-            <flux:navlist variant="outline">
-                <flux:navlist.item icon="folder-git-2" href="https://github.com/laravel/livewire-starter-kit" target="_blank">
-                {{ __('Repository') }}
-                </flux:navlist.item>
+    <div class="flex min-h-screen">
 
-                <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" target="_blank">
-                {{ __('Documentation') }}
-                </flux:navlist.item>
-            </flux:navlist>
+        <!-- Sidebar -->
+        <aside class="w-72 bg-white border-r border-slate-200/80 flex flex-col fixed h-full z-40">
 
-            <!-- Desktop User Menu -->
-            <flux:dropdown class="hidden lg:block" position="bottom" align="start">
-                <flux:profile
-                    :name="auth()->user()->name"
-                    :initials="auth()->user()->initials()"
-                    icon:trailing="chevrons-up-down"
-                />
+            <!-- Logo Section -->
+            <div
+                class="p-6 border-b border-slate-100"
+                data-aos="fade-right"
+                data-aos-duration="600"
+            >
+                <div class="flex items-center gap-4">
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50/80 border border-emerald-100 flex items-center justify-center overflow-hidden">
+                        <img
+                            src="{{ asset('img/imagen1.png') }}"
+                            alt="SCR Logo"
+                            class="w-8 h-8 object-contain"
+                        >
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-semibold text-slate-800 tracking-tight">SCR</h1>
+                        <p class="text-xs text-slate-400 font-medium">Gestión de residuos</p>
+                    </div>
+                </div>
+            </div>
 
-                <flux:menu class="w-[220px]">
-                    <flux:menu.radio.group>
-                        <div class="p-0 text-sm font-normal">
-                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                    <span
-                                        class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
-                                    >
-                                        {{ auth()->user()->initials() }}
-                                    </span>
-                                </span>
+            <!-- Navigation -->
+            <nav class="flex-1 p-4 overflow-y-auto">
 
-                                <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
-                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </flux:menu.radio.group>
+                <!-- Menu Label -->
+                <p
+                    class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest px-3 mb-3"
+                    data-aos="fade-right"
+                    data-aos-duration="600"
+                    data-aos-delay="100"
+                >
+                    Menú Principal
+                </p>
 
-                    <flux:menu.separator />
+                <!-- Menu Items -->
+                <ul class="space-y-1">
+                    <!-- Agregado Dashboard con icono de cuadrícula/grid más coherente -->
+                    <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="150">
+                        <a
+                            href="{{ route('dashboard') }}"
+                            class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
+                        >
+                            <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
+                                <svg class="w-[18px] h-[18px] text-slate-500 group-hover:text-emerald-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/>
+                                </svg>
+                            </span>
+                            <span class="text-sm font-medium">Dashboard</span>
+                        </a>
+                    </li>
 
-                    <flux:menu.radio.group>
-                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
-                    </flux:menu.radio.group>
+                    {{-- CONTENIDO PARA AGREGAR LOS ITEMS DE AREAS --}}
+                    @include('components.layouts.app.menu.areas.area-list')
 
-                    <flux:menu.separator />
+                    {{-- CONTENIDO PARA AGREGAR LOS ITEMS DE UNIDADES PRODUCTIVAS --}}
+                    @include('components.layouts.app.menu.unidades.unidades-list')
 
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
-                        @csrf
-                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
-                            {{ __('Log Out') }}
-                        </flux:menu.item>
-                    </form>
-                </flux:menu>
-            </flux:dropdown>
-        </flux:sidebar>
+                    {{-- CONTENIO PARA AGREGAR LOS ITEMS DE RESIDUOS --}}
+                    @include('components.layouts.app.menu.residuos.residuos-list')
 
-        <!-- Mobile User Menu -->
-        <flux:header class="lg:hidden">
-            <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
+                    {{-- CONTENIDO PARA AGREGAR LOS ITEMS DE ROLES --}}
+                    @include('components.layouts.app.menu.roles.roles-list')
+                </ul>
 
-            <flux:spacer />
+                <!-- Divider -->
+                <div
+                    class="my-6 border-t border-slate-100"
+                    data-aos="fade-right"
+                    data-aos-duration="600"
+                    data-aos-delay="400"
+                ></div>
 
-            <flux:dropdown position="top" align="end">
-                <flux:profile
-                    :initials="auth()->user()->initials()"
-                    icon-trailing="chevron-down"
-                />
+                <!-- Settings Label -->
+                <p
+                    class="text-[10px] font-semibold text-slate-400 uppercase tracking-widest px-3 mb-3"
+                    data-aos="fade-right"
+                    data-aos-duration="600"
+                    data-aos-delay="450"
+                >
+                    Configuración
+                </p>
 
-                <flux:menu>
-                    <flux:menu.radio.group>
-                        <div class="p-0 text-sm font-normal">
-                            <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                                <span class="relative flex h-8 w-8 shrink-0 overflow-hidden rounded-lg">
-                                    <span
-                                        class="flex h-full w-full items-center justify-center rounded-lg bg-neutral-200 text-black dark:bg-neutral-700 dark:text-white"
-                                    >
-                                        {{ auth()->user()->initials() }}
-                                    </span>
-                                </span>
+                <ul class="space-y-1">
+                    <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="500">
+                        <a
+                            href="{{ route('profile.edit') }}"
+                            class="group flex items-center gap-3 px-3 py-2.5 rounded-xl text-slate-600 hover:bg-emerald-50/60 hover:text-emerald-700 transition-all duration-300"
+                        >
+                            <span class="w-9 h-9 rounded-lg bg-slate-100/80 group-hover:bg-emerald-100/80 flex items-center justify-center transition-all duration-300">
+                                <svg class="w-[18px] h-[18px] text-slate-500 group-hover:text-emerald-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                                </svg>
+                            </span>
+                            <span class="text-sm font-medium">Mi Perfil</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
 
-                                <div class="grid flex-1 text-start text-sm leading-tight">
-                                    <span class="truncate font-semibold">{{ auth()->user()->name }}</span>
-                                    <span class="truncate text-xs">{{ auth()->user()->email }}</span>
-                                </div>
-                            </div>
-                        </div>
-                    </flux:menu.radio.group>
+            <!-- User Section -->
+            <div
+                class="p-4 border-t border-slate-100"
+                data-aos="fade-up"
+                data-aos-duration="600"
+                data-aos-delay="550"
+            >
+                <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-50/80 mb-3">
+                    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-400/80 to-teal-500/80 flex items-center justify-center text-white text-sm font-semibold shadow-sm">
+                        {{ substr(Auth::user()->name ?? 'U', 0, 1) }}
+                    </div>
+                    <div class="flex-1 min-w-0">
+                        <p class="text-sm font-medium text-slate-700 truncate">{{ Auth::user()->name ?? 'Usuario' }}</p>
+                        <p class="text-xs text-slate-400 truncate">{{ Auth::user()->email ?? 'email@ejemplo.com' }}</p>
+                    </div>
+                </div>
 
-                    <flux:menu.separator />
+                <!-- Botón "Salir" con icono y texto -->
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <button
+                        type="submit"
+                        class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-red-50/80 border border-red-100 text-red-600 hover:bg-red-100 hover:border-red-200 transition-all duration-300 group"
+                    >
+                        <svg class="w-4 h-4 text-red-500 group-hover:text-red-600 transition-colors duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                        </svg>
+                        <span class="text-sm font-medium">Salir</span>
+                    </button>
+                </form>
+            </div>
+        </aside>
 
-                    <flux:menu.radio.group>
-                        <flux:menu.item :href="route('profile.edit')" icon="cog" wire:navigate>{{ __('Settings') }}</flux:menu.item>
-                    </flux:menu.radio.group>
+        <!-- Main Content -->
+        <main class="flex-1 ml-72">
+            <div class="p-8">
+                {{ $slot }}
+            </div>
+        </main>
 
-                    <flux:menu.separator />
+    </div>
 
-                    <form method="POST" action="{{ route('logout') }}" class="w-full">
-                        @csrf
-                        <flux:menu.item as="button" type="submit" icon="arrow-right-start-on-rectangle" class="w-full">
-                            {{ __('Log Out') }}
-                        </flux:menu.item>
-                    </form>
-                </flux:menu>
-            </flux:dropdown>
-        </flux:header>
+    <!-- Flux Scripts (incluye Alpine.js) -->
+    @fluxScripts
 
-        {{ $slot }}
+    <!-- AOS Script -->
+    @include('partials.footer-script-cdn')
+    <!-- Script modificado para que las animaciones solo se ejecuten una vez por sesión de login -->
+    <script>
+        (function() {
+            const animationKey = 'scr_sidebar_animated';
+            const hasAnimated = sessionStorage.getItem(animationKey);
 
-        @fluxScripts
-    </body>
+            if (!hasAnimated) {
+                // Primera vez en esta sesión: mostrar animaciones
+                AOS.init({
+                    once: true,
+                    easing: 'ease-out-cubic'
+                });
+                sessionStorage.setItem(animationKey, 'true');
+            } else {
+                // Ya se animó en esta sesión: desactivar animaciones
+                document.querySelectorAll('[data-aos]').forEach(function(el) {
+                    el.removeAttribute('data-aos');
+                    el.removeAttribute('data-aos-duration');
+                    el.removeAttribute('data-aos-delay');
+                });
+            }
+        })();
+    </script>
+
+    {{-- Modal selección de área para residuos --}}
+    <div
+        x-show="openResiduesAreaModal"
+        x-transition.opacity
+        class="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 px-4"
+    >
+        <div
+            class="bg-white rounded-2xl shadow-2xl w-full max-w-lg border border-slate-200"
+            x-show="openResiduesAreaModal"
+            x-transition.scale.origin-center
+        >
+            <div class="p-6 space-y-4">
+                <div class="flex items-start justify-between">
+                    <div>
+                        <p class="text-xs uppercase tracking-[0.2em] text-emerald-600 font-semibold">Residuos</p>
+                        <h2 class="text-2xl font-bold text-slate-900">Selecciona el área para gestionar residuos</h2>
+                        <p class="text-sm text-slate-500 mt-1">Usa el selector para ir a las unidades productivas del área elegida.</p>
+                    </div>
+                    <button
+                        type="button"
+                        class="text-slate-400 hover:text-slate-600"
+                        @click="openResiduesAreaModal = false"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-700" for="areaSelect">Área</label>
+                    <select
+                        id="areaSelect"
+                        x-ref="areaSelect"
+                        x-model="selectedAreaId"
+                        class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
+                    >
+                        <option value="">Selecciona un área</option>
+                        @foreach($sidebarAreas as $area)
+                            <option value="{{ $area->id }}">{{ $area->name }}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="flex items-center justify-end gap-3 pt-4">
+                    <button
+                        type="button"
+                        class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 transition"
+                        @click="openResiduesAreaModal = false"
+                    >
+                        Cancelar
+                    </button>
+                    <button
+                        type="button"
+                        class="px-4 py-2 rounded-lg bg-emerald-500 text-white hover:bg-emerald-400 transition disabled:opacity-60"
+                        :disabled="!selectedAreaId"
+                        @click="goToUnits()"
+                    >
+                        Ir a unidades
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
 </html>

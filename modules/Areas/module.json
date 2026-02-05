@@ -1,0 +1,13 @@
+{
+    "name": "Areas",
+    "alias": "Areas",
+    "description": "Modulo de gestion de areas",
+    "providers": [
+        "Modules\\Areas\\Providers\\AreasServiceProvider"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Modules\\Areas\\": ""
+        }
+    }
+}

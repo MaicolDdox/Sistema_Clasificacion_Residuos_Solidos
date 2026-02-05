@@ -1,6 +1,6 @@
 <x-layouts.auth>
     <div class="flex flex-col gap-6">
-        <x-auth-header :title="__('Create an account')" :description="__('Enter your details below to create your account')" />
+        <x-auth-header :title="__('Crear una cuenta')" :description="__('Ingrese sus datos a continuación para crear su cuenta')" />
 
         <!-- Session Status -->
         <x-auth-session-status class="text-center" :status="session('status')" />
@@ -11,19 +11,19 @@
             <!-- Name -->
             <flux:input
                 name="name"
-                :label="__('Name')"
+                :label="__('Nombre')"
                 :value="old('name')"
                 type="text"
                 required
                 autofocus
                 autocomplete="name"
-                :placeholder="__('Full name')"
+                :placeholder="__('Nombre Completo')"
             />
 
             <!-- Email Address -->
             <flux:input
                 name="email"
-                :label="__('Email address')"
+                :label="__('Dirección de correo electrónico')"
                 :value="old('email')"
                 type="email"
                 required
@@ -34,35 +34,43 @@
             <!-- Password -->
             <flux:input
                 name="password"
-                :label="__('Password')"
+                :label="__('Contraseña')"
                 type="password"
                 required
                 autocomplete="new-password"
-                :placeholder="__('Password')"
+                :placeholder="__('Contraseña...')"
                 viewable
             />
 
             <!-- Confirm Password -->
             <flux:input
                 name="password_confirmation"
-                :label="__('Confirm password')"
+                :label="__('Confirmar Contraseña')"
                 type="password"
                 required
                 autocomplete="new-password"
-                :placeholder="__('Confirm password')"
+                :placeholder="__('Confirmar Contraseña')"
                 viewable
             />
 
             <div class="flex items-center justify-end">
-                <flux:button type="submit" variant="primary" class="w-full">
-                    {{ __('Create account') }}
+                <flux:button
+                    type="submit"
+                    class="w-full !bg-emerald-500/80 !text-white font-semibold
+                    rounded-lg shadow-sm backdrop-blur-sm transition-all duration-200
+                    hover:!bg-emerald-400/90 hover:shadow-lg hover:scale-[1.02]
+                    focus-visible:outline-none focus-visible:ring-2
+                    focus-visible:ring-emerald-300/80 focus-visible:ring-offset-2
+                    focus-visible:ring-offset-white dark:focus-visible:ring-offset-zinc-900"
+                >
+                    {{ __('Crear una cuenta') }}
                 </flux:button>
             </div>
         </form>
 
         <div class="space-x-1 rtl:space-x-reverse text-center text-sm text-zinc-600 dark:text-zinc-400">
-            <span>{{ __('Already have an account?') }}</span>
-            <flux:link :href="route('login')" wire:navigate>{{ __('Log in') }}</flux:link>
+            <span>{{ __('Ya tienes una cuenta?') }}</span>
+            <flux:link :href="route('login')" wire:navigate>{{ __('Acceso') }}</flux:link>
         </div>
     </div>
 </x-layouts.auth>

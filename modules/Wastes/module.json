@@ -1,0 +1,13 @@
+{
+    "name": "Wastes",
+    "alias": "Wastes",
+    "description": "Modulo de gestion de residuos",
+    "providers": [
+        "Modules\\Wastes\\Providers\\WastesServiceProvider"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Modules\\Wastes\\": ""
+        }
+    }
+}
