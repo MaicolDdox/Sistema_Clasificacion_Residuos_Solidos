@@ -30,12 +30,12 @@
             <div class="w-full lg:p-8">
                 <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                     <a href="{{ route('home') }}" class="z-20 flex flex-col items-center gap-2 font-medium lg:hidden" wire:navigate>
-                        <span class="sr-only">{{ config('app.name', 'SCR') }}</span>
+                        <span class="sr-only">{{ config('app.name') }}</span>
                     </a>
                     <div class="flex justify-center">
                         <!-- Logo para modo claro -->
                         <img
-                            src="{{ asset('img/logo/LOGO S.C.R.jpg') }}"
+                            src="{{ asset('img/LOGO S.C.R.jpg') }}"
                             alt="Logo Sistema de Clasificación de Residuos Sólidos"
                             class="h-16 w-auto object-contain drop-shadow dark:hidden"
                             loading="lazy"
