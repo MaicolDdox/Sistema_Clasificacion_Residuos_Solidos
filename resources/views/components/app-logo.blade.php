@@ -5,6 +5,7 @@
         class="size-8 rounded-md object-cover"
     />
 </div>
+
 <div class="ms-1 grid flex-1 text-start text-sm">
     <span class="mb-0.5 truncate leading-tight font-semibold">Clasificación de Residuos Sólidos</span>
 </div>

@@ -33,10 +33,18 @@
                         <span class="sr-only">{{ config('app.name', 'SCR') }}</span>
                     </a>
                     <div class="flex justify-center">
+                        <!-- Logo para modo claro -->
+                        <img
+                            src="{{ asset('img/logo/LOGO S.C.R.jpg') }}"
+                            alt="Logo Sistema de Clasificación de Residuos Sólidos"
+                            class="h-16 w-auto object-contain drop-shadow dark:hidden"
+                            loading="lazy"
+                        />
+                        <!-- Logo para modo oscuro -->
                         <img
                             src="{{ asset('img/logoTipo-mode-dark.png') }}"
-                            alt="Logo Sistema de Clasificacion de Residuos (modo oscuro)"
-                            class="h-16 w-auto object-contain drop-shadow logo-theme-dark"
+                            alt="Logo Sistema de Clasificación de Residuos Sólidos (modo oscuro)"
+                            class="hidden h-16 w-auto object-contain drop-shadow dark:block"
                             loading="lazy"
                         />
                     </div>
