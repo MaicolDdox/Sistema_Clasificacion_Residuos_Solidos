@@ -37,7 +37,7 @@
                         <img
                             src="{{ asset('img/LOGO S.C.R.jpg') }}"
                             alt="Logo Sistema de Clasificación de Residuos Sólidos"
-                            class="h-16 w-auto rounded-md object-contain drop-shadow dark:hidden"
+                            class="h-16 w-16 rounded-full object-cover drop-shadow dark:hidden"
                             loading="lazy"
                         />
                         <!-- Logo para modo oscuro -->

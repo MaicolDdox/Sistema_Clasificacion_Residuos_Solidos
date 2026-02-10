@@ -1,8 +1,8 @@
-<div class="flex items-center justify-center rounded-md overflow-hidden">
+<div class="flex items-center justify-center rounded-full overflow-hidden">
     <img
         src="{{ asset('img/LOGO S.C.R.jpg') }}"
         alt="Clasificación de Residuos Sólidos"
-        class="size-8 rounded-md object-cover"
+        class="size-8 rounded-full object-cover"
     />
 </div>
 
