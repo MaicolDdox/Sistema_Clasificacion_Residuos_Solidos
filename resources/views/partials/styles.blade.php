@@ -26,8 +26,8 @@
 <meta name="twitter:image" content="{{ asset('img/LOGO S.C.R.jpg') }}">
 
 <!-- Favicon -->
-<link rel="icon" href="{{ asset('img/LOGO S.C.R.jpg') }}" type="image/jpeg">
-<link rel="apple-touch-icon" href="{{ asset('img/LOGO S.C.R.jpg') }}">
+<link rel="icon" href="{{ asset('img/LOGO S.C.R.jpg') }}" type="image/jpeg" class="rounded-md object-cover">
+<link rel="apple-touch-icon" href="{{ asset('img/LOGO S.C.R.jpg') }}" class="rounded-md object-cover">
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.bunny.net">
