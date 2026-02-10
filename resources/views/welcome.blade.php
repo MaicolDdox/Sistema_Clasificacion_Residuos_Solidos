@@ -4,6 +4,25 @@
     @include('partials.styles')
 
     @include('partials.librerias-cdn')
+
+    <!-- Structured Data JSON-LD -->
+    @php
+        $jsonLd = [
+            '@context' => 'https://schema.org',
+            '@type' => 'WebApplication',
+            'name' => 'SCR - Sistema de Clasificación de Residuos Sólidos',
+            'description' => 'Aplicativo web de clasificación de residuos sólidos del Centro de Formación Agroindustrial La Angostura - SENA.',
+            'url' => url('/'),
+            'applicationCategory' => 'EnvironmentApplication',
+            'operatingSystem' => 'Web',
+            'image' => asset('img/LOGO S.C.R.jpg'),
+            'author' => [
+                '@type' => 'Organization',
+                'name' => 'Centro de Formación Agroindustrial La Angostura - SENA',
+            ],
+        ];
+    @endphp
+    <script type="application/ld+json">{!! json_encode($jsonLd, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) !!}</script>
 </head>
 
 <body
@@ -82,7 +101,7 @@
             <!-- Título Principal -->
             <div class="text-center mb-8" data-aos="fade-up" data-aos-delay="300">
                 <h1 class="text-3xl md:text-4xl lg:text-5xl font-bold text-white uppercase tracking-widest drop-shadow-lg">
-                    Clasificación de Residuos
+                    Clasificación de Residuos Sólidos
                 </h1>
             </div>
 
@@ -102,7 +121,7 @@
                     <div class="relative w-44 h-44 md:w-56 md:h-56 bg-white rounded-full p-2 shadow-2xl shadow-emerald-900/30 transform group-hover:scale-105 transition-transform duration-500">
                         <img
                             src="{{ asset('img/LOGO S.C.R.jpg') }}"
-                            alt="SCR - Control de Residuos La Angostura"
+                            alt="SCR - Sistema de Clasificación de Residuos Sólidos - Centro de Formación La Angostura"
                             class="w-full h-full object-cover rounded-full"
                         />
                     </div>

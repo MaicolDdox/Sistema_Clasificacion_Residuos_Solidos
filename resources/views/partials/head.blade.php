@@ -1,11 +1,14 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="csrf-token" content="{{ csrf_token() }}" />
 
-<title>{{ $title ?? config('app.name') }}</title>
+<title>{{ $title ?? 'Panel' }} - Clasificación de Residuos Sólidos</title>
+<meta name="description" content="Sistema de clasificación y control de residuos sólidos - Centro de Formación Agroindustrial La Angostura, SENA.">
+<meta name="robots" content="noindex, nofollow">
 
-<link rel="icon" href="/favicon.ico" sizes="any">
-<link rel="icon" href="/favicon.svg" type="image/svg+xml">
-<link rel="apple-touch-icon" href="/apple-touch-icon.png">
+<!-- Favicon -->
+<link rel="icon" href="{{ asset('img/LOGO S.C.R.jpg') }}" type="image/jpeg">
+<link rel="apple-touch-icon" href="{{ asset('img/LOGO S.C.R.jpg') }}">
 
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />

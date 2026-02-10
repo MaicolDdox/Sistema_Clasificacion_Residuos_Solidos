@@ -1,6 +1,10 @@
-<div class="flex aspect-square size-8 items-center justify-center rounded-md bg-accent-content text-accent-foreground">
-    <x-app-logo-icon class="size-5 fill-current text-white dark:text-black" />
+<div class="flex items-center justify-center rounded-md overflow-hidden">
+    <img
+        src="{{ asset('img/LOGO S.C.R.jpg') }}"
+        alt="Clasificación de Residuos Sólidos"
+        class="size-8 rounded-md object-cover"
+    />
 </div>
 <div class="ms-1 grid flex-1 text-start text-sm">
-    <span class="mb-0.5 truncate leading-tight font-semibold">Laravel Starter Kit</span>
+    <span class="mb-0.5 truncate leading-tight font-semibold">Clasificación de Residuos Sólidos</span>
 </div>
