@@ -15,7 +15,6 @@ class CheckRoles
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(Auth::User === )
-        return $next($request);
+    return $next($request);
     }
 }
