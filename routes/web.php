@@ -1,12 +1,12 @@
 <?php
 
+use App\Http\Controllers\AsigRoleController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
-use app\Http\Controllers\AsigRoleController;
 
 Route::get('/', function () {
     return view('welcome');

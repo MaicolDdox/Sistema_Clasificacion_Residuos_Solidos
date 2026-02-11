@@ -111,7 +111,7 @@ class PermissionSeeder extends Seeder
             );
         }
 
-        $this->command->info('✅ ' . count($allPermissions) . ' permisos creados exitosamente.');
+        $this->command->info('✅' . count($allPermissions) . ' Permisos creados exitosamente.');
 
         // ========================================
         // ASIGNAR PERMISOS A ROLES
@@ -152,7 +152,7 @@ class PermissionSeeder extends Seeder
 
         $liderAmbiental->syncPermissions($liderPermissions);
 
-        $this->command->info('✅ Líder Ambiental: ' . $liderAmbiental->permissions->count() . ' permisos asignados (Ver/Crear/Editar)');
+        $this->command->info('Líder Ambiental: ' . $liderAmbiental->permissions->count() . ' permisos asignados (Ver/Crear/Editar)');
 
         // ========================================
         // ROL 3: APRENDIZ (Solo lectura)
