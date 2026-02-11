@@ -15,7 +15,7 @@
             'url' => url('/'),
             'applicationCategory' => 'EnvironmentApplication',
             'operatingSystem' => 'Web',
-            'image' => asset('img/LOGO S.C.R.jpg'),
+            'image' => asset('img/logo_header.jpeg'),
             'author' => [
                 '@type' => 'Organization',
                 'name' => 'Centro de Formación Agroindustrial La Angostura - SENA',

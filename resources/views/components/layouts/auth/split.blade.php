@@ -35,7 +35,7 @@
                     <div class="flex justify-center">
                         <!-- Logo para modo claro -->
                         <img
-                            src="{{ asset('img/LOGO S.C.R.jpg') }}"
+                            src="{{ asset('img/logo_header.jpeg') }}"
                             alt="Logo Sistema de Clasificación de Residuos Sólidos"
                             class="h-16 w-16 rounded-full object-cover drop-shadow dark:hidden"
                             loading="lazy"

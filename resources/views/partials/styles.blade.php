@@ -15,7 +15,7 @@
 <meta property="og:url" content="{{ url('/') }}">
 <meta property="og:title" content="Clasificación de Residuos Sólidos - SCR">
 <meta property="og:description" content="Sistema web para la clasificación y control de residuos sólidos del Centro de Formación Agroindustrial La Angostura - SENA.">
-<meta property="og:image" content="{{ asset('img/LOGO S.C.R.jpg') }}">
+<meta property="og:image" content="{{ asset('img/logo_header') }}">
 <meta property="og:locale" content="es_CO">
 <meta property="og:site_name" content="SCR - Sistema de Clasificación de Residuos Sólidos">
 
@@ -23,11 +23,11 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Clasificación de Residuos Sólidos - SCR">
 <meta name="twitter:description" content="Sistema web para la clasificación y control de residuos sólidos del Centro de Formación Agroindustrial La Angostura.">
-<meta name="twitter:image" content="{{ asset('img/LOGO S.C.R.jpg') }}">
+<meta name="twitter:image" content="{{ asset('img/logo_header') }}">
 
 <!-- Favicon -->
-<link rel="icon" href="{{ asset('img/LOGO S.C.R.jpg') }}" type="image/jpeg">
-<link rel="apple-touch-icon" href="{{ asset('img/LOGO S.C.R.jpg') }}">
+<link rel="icon" href="{{ asset('img/logo_header.jpeg') }}" type="image/jpeg">
+<link rel="apple-touch-icon" href="{{ asset('img/logo_header.jpeg') }}">
 
 <!-- Fonts -->
 <link rel="preconnect" href="https://fonts.bunny.net">

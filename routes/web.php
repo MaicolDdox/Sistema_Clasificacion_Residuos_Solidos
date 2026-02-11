@@ -6,6 +6,7 @@ use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
+use app\Http\Controllers\AsigRoleController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,8 +34,14 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 
-    /* Asignacion de Roles llamando al controlador general
-            Es importante recordar que actualmente las rutas no estan protegidas y tampoco las vistas con auth()
+    /*
+    |--------------------------------------------------------------------------
+    | GESTIÓN DE ROLES (Solo Gestora Ambiental)
+    |--------------------------------------------------------------------------
+    | Protegido con middleware de roles - Solo la Gestora Ambiental puede
+    | asignar, editar o remover roles de otros usuarios
     */
-    Route::resource('roles', \App\Http\Controllers\AsigRoleController::class);
+    Route::middleware(['role:Gestora Ambiental'])->group(function () {
+        Route::resource('roles', AsigRoleController::class);
+    });
 });

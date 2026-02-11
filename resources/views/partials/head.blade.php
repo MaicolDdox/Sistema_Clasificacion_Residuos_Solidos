@@ -7,8 +7,8 @@
 <meta name="robots" content="noindex, nofollow">
 
 <!-- Favicon -->
-<link rel="icon" href="{{ asset('img/LOGO S.C.R.jpg') }}" type="image/jpeg">
-<link rel="apple-touch-icon" href="{{ asset('img/LOGO S.C.R.jpg') }}">
+<link rel="icon" href="{{ asset('img/logo_header.jpeg') }}" type="image/jpeg">
+<link rel="apple-touch-icon" href="{{ asset('img/logo_header.jpeg') }}">
 
 <link rel="preconnect" href="https://fonts.bunny.net">
 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
