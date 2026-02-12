@@ -6,6 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Spatie\Permission\Models\Role;
+use App\Http\Requests\AsignRoleStoreRequest;
+use App\Http\Requests\AsignRoleUpdateRequest;
 
 class AsigRoleController extends Controller
 {
@@ -54,17 +56,15 @@ class AsigRoleController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(AsignRoleStoreRequest $request)
     {
-        $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'role' => 'required|exists:roles,name',
-        ]);
 
-        $user = User::findOrFail($request->user_id);
+        $validated = $request->validated();
+
+        $user = User::findOrFail($validated['user_id']);
 
         // Remover roles anteriores y asignar el nuevo
-        $user->syncRoles([$request->role]);
+        $user->syncRoles([$validated['role']]);
 
         return redirect()
             ->route('roles.index')
@@ -94,16 +94,15 @@ class AsigRoleController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(AsignRoleUpdateRequest $request, $id)
     {
-        $request->validate([
-            'role' => 'required|exists:roles,name',
-        ]);
+
+        $validated = $request->validated();
 
         $user = User::findOrFail($id);
 
         // Sincronizar rol (reemplaza el actual)
-        $user->syncRoles([$request->role]);
+        $user->syncRoles([$validated['role']]);
 
         return redirect()
             ->route('roles.index')

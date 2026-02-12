@@ -18,8 +18,8 @@ class RoleSeeder extends Seeder
         // -------------------------
         // Creación de Roles
         // -------------------------
-        $gestoraAmbiental   = Role::create(['name'  => 'Gestora Ambiental']);
-        $liderAmbiental     = Role::create(['name'  => 'Lider Ambiental']);
-        $aprendiz           = Role::create(['name'  => 'Aprendiz']);
+        $gestoraAmbiental   = Role::firstOrCreate(['name'  => 'Gestora Ambiental']);
+        $liderAmbiental     = Role::firstOrCreate(['name'  => 'Lider Ambiental']);
+        $aprendiz           = Role::firstOrCreate(['name'  => 'Aprendiz']);
     }
 }

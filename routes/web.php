@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AsigRoleController;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -33,8 +34,14 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 
-    /* Asignacion de Roles llamando al controlador general
-            Es importante recordar que actualmente las rutas no estan protegidas y tampoco las vistas con auth()
+    /*
+    |--------------------------------------------------------------------------
+    | GESTIÓN DE ROLES (Solo Gestora Ambiental)
+    |--------------------------------------------------------------------------
+    | Protegido con middleware de roles - Solo la Gestora Ambiental puede
+    | asignar, editar o remover roles de otros usuarios
     */
-    Route::resource('roles', \App\Http\Controllers\AsigRoleController::class);
+    Route::middleware(['role:Gestora Ambiental'])->group(function () {
+        Route::resource('roles', AsigRoleController::class);
+    });
 });
