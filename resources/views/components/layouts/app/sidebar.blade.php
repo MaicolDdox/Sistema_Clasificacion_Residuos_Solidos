@@ -61,7 +61,7 @@
                     </div>
                     <div>
                         <h1 class="text-lg font-semibold text-slate-800 tracking-tight">SCR</h1>
-                        <p class="text-xs text-slate-400 font-medium">Gestión de residuos</p>
+                        <p class="text-xs text-slate-400 font-medium">Clasificación de Residuos</p>
                     </div>
                 </div>
             </div>

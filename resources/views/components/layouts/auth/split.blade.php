@@ -30,13 +30,21 @@
             <div class="w-full lg:p-8">
                 <div class="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                     <a href="{{ route('home') }}" class="z-20 flex flex-col items-center gap-2 font-medium lg:hidden" wire:navigate>
-                        <span class="sr-only">{{ config('app.name', 'SCR') }}</span>
+                        <span class="sr-only">{{ config('app.name') }}</span>
                     </a>
                     <div class="flex justify-center">
+                        <!-- Logo para modo claro -->
+                        <img
+                            src="{{ asset('img/logo_header.jpeg') }}"
+                            alt="Logo Sistema de Clasificación de Residuos Sólidos"
+                            class="h-16 w-16 rounded-full object-cover drop-shadow dark:hidden"
+                            loading="lazy"
+                        />
+                        <!-- Logo para modo oscuro -->
                         <img
                             src="{{ asset('img/logoTipo-mode-dark.png') }}"
-                            alt="Logo Sistema de Clasificacion de Residuos (modo oscuro)"
-                            class="h-16 w-auto object-contain drop-shadow logo-theme-dark"
+                            alt="Logo Sistema de Clasificación de Residuos Sólidos (modo oscuro)"
+                            class="hidden h-16 w-auto rounded-md object-contain drop-shadow dark:block"
                             loading="lazy"
                         />
                     </div>
