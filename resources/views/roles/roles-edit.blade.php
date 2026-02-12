@@ -17,6 +17,7 @@
                 </div>
             </div>
         </div>
+
         @if ($errors->any())
             <div class="bg-red-50 border border-red-200 rounded-xl p-4">
                 <div class="flex items-start gap-3">
@@ -34,6 +35,7 @@
                 </div>
             </div>
         @endif
+        
         <form action="{{ route('roles.update', $user->id) }}" method="POST" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
             @csrf
             @method('PUT')

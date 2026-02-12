@@ -17,6 +17,7 @@
                 </div>
             </div>
         </div>
+        
         @if ($errors->any())
             <div class="bg-red-50 border border-red-200 rounded-xl p-4">
                 <div class="flex items-start gap-3">
@@ -45,7 +46,7 @@
                         Usuario
                     </span>
                 </label>
-                <select id="user_id" name="user_id" required class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 text-slate-700">
+                <select id="user_id" name="user_id" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 text-slate-700">
                     <option value="">Selecciona un usuario</option>
                     @foreach($users as $user)
                         <option value="{{ $user->id }}" {{ old('user_id') == $user->id ? 'selected' : '' }}>
@@ -64,7 +65,7 @@
                         Rol
                     </span>
                 </label>
-                <select id="role" name="role" required class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 text-slate-700">
+                <select id="role" name="role" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 text-slate-700">
                     <option value="">Selecciona un rol</option>
                     @foreach($roles as $role)
                         <option value="{{ $role->name }}" {{ old('role') == $role->name ? 'selected' : '' }}>
