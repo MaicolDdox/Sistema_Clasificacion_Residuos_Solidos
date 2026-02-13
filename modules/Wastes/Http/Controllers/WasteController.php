@@ -48,6 +48,7 @@ class WasteController extends Controller
     public function edit(Waste $waste)
     {
         // Aprendiz solo puede editar sus propios registros
+        // Cambio realizado por John
         if (Auth::user()->hasRole('Aprendiz') && $waste->user_id !== Auth::id()) {
             abort(403, 'No puedes editar registros de otros usuarios, solo lider ambiental.');
         }
