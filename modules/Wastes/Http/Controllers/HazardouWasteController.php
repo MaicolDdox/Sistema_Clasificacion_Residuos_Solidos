@@ -47,6 +47,11 @@ class HazardouWasteController extends Controller
      */
     public function edit(HazardouWaste $hazardouWaste)
     {
+        // Aprendiz solo puede editar sus propios registros
+        if (Auth::user()->hasRole('Aprendiz') && $hazardouWaste->user_id !== Auth::id()) {
+            abort(403, 'No puedes editar registros de otros usuarios.');
+        }
+
         $unit = $hazardouWaste->productiveUnit;
 
         return view('wastes::respel-edit', compact('hazardouWaste', 'unit'));
@@ -57,6 +62,11 @@ class HazardouWasteController extends Controller
      */
     public function update(Request $request, HazardouWaste $hazardouWaste)
     {
+        // Aprendiz solo puede actualizar sus propios registros
+        if (Auth::user()->hasRole('Aprendiz') && $hazardouWaste->user_id !== Auth::id()) {
+            abort(403, 'No puedes editar registros de otros usuarios, solo lider ambiental.');
+        }
+
         $validated = $request->validate([
             'entry_date' => ['required', 'date'],
             'waste_type' => ['required', 'in:Residuo Quimico,Residuo Biologico,Residuo Organico Peligroso'],
