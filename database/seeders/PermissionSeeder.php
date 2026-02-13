@@ -142,7 +142,7 @@ class PermissionSeeder extends Seeder
         // El Líder puede: ver, crear, editar - NO puede eliminar
         $liderPermissions = Permission::where('name', 'not like', '%.destroy')
             ->where('name', 'not like', '%.destroy.confirm')
-            ->where('name', '!=', 'roles.index')      // No puede gestionar roles
+            ->where('name', '=', 'roles.index')      // No puede gestionar roles
             ->where('name', '!=', 'roles.create')
             ->where('name', '!=', 'roles.store')
             ->where('name', '!=', 'roles.edit')
@@ -155,21 +155,34 @@ class PermissionSeeder extends Seeder
         $this->command->info('Líder Ambiental: ' . $liderAmbiental->permissions->count() . ' permisos asignados (Ver/Crear/Editar)');
 
         // ========================================
-        // ROL 3: APRENDIZ (Solo lectura)
+        // ROL 3: APRENDIZ (Lectura + Crear/Editar residuos propios)
         // ========================================
         $aprendiz = Role::firstOrCreate(['name' => 'Aprendiz']);
 
-        // El Aprendiz solo puede VER (index, show, reportes)
+        // El Aprendiz puede:
+        // - VER todo (index, show, reportes, navegación)
+        // - CREAR residuos RESOL y RESPEL
+        // - EDITAR solo SUS propios registros (validado en controlador)
         $aprendizPermissions = Permission::where(function ($query) {
             $query->where('name', 'like', '%.index')
                   ->orWhere('name', 'like', '%.show')
                   ->orWhere('name', 'like', '%.report.%')
-                  ->orWhere('name', '=', 'wastes.navigator');
+                  ->orWhere('name', '=', 'wastes.navigator')
+                  // RESOL: crear y editar
+                  ->orWhere('name', '=', 'wastes.create')
+                  ->orWhere('name', '=', 'wastes.store')
+                  ->orWhere('name', '=', 'wastes.edit')
+                  ->orWhere('name', '=', 'wastes.update')
+                  // RESPEL: crear y editar
+                  ->orWhere('name', '=', 'hazardou-wastes.create')
+                  ->orWhere('name', '=', 'hazardou-wastes.store')
+                  ->orWhere('name', '=', 'hazardou-wastes.edit')
+                  ->orWhere('name', '=', 'hazardou-wastes.update');
         })->get();
 
         $aprendiz->syncPermissions($aprendizPermissions);
 
-        $this->command->info('Aprendiz: ' . $aprendiz->permissions->count() . ' permisos asignados (Solo lectura)');
+        $this->command->info('Aprendiz: ' . $aprendiz->permissions->count() . ' permisos asignados (Lectura + CRUD residuos propios)');
 
         $this->command->newLine();
         $this->command->warn('RESUMEN DE PERMISOS:');
@@ -178,7 +191,7 @@ class PermissionSeeder extends Seeder
             [
                 ['Gestora Ambiental', $gestoraAmbiental->permissions->count(), 'TOTAL (CRUD completo)'],
                 ['Líder Ambiental', $liderAmbiental->permissions->count(), 'ALTO (Ver/Crear/Editar)'],
-                ['Aprendiz', $aprendiz->permissions->count(), 'BÁSICO (Solo lectura)'],
+                ['Aprendiz', $aprendiz->permissions->count(), 'BÁSICO (Lectura + residuos propios)'],
             ]
         );
     }
