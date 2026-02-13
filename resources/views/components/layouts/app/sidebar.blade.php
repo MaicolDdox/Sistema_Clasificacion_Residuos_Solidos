@@ -13,6 +13,7 @@
 <body
     class="font-sans antialiased bg-slate-50 min-h-screen"
     x-data="{
+        sidebarOpen: false,
         openResiduesAreaModal: false,
         selectedAreaId: '',
         tomSelectInstance: null,
@@ -42,8 +43,19 @@
 
     <div class="flex min-h-screen">
 
+        {{-- Overlay mobile --}}
+        <div
+            x-show="sidebarOpen"
+            x-transition.opacity
+            class="fixed inset-0 bg-slate-900/50 z-40 md:hidden"
+            @click="sidebarOpen = false"
+        ></div>
+
         <!-- Sidebar -->
-        <aside class="w-72 bg-white border-r border-slate-200/80 flex flex-col fixed h-full z-40">
+        <aside
+            class="w-72 bg-white border-r border-slate-200/80 flex flex-col fixed h-full z-50 transition-transform duration-300 md:translate-x-0"
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+        >
 
             <!-- Logo Section -->
             <div
@@ -51,7 +63,8 @@
                 data-aos="fade-right"
                 data-aos-duration="600"
             >
-                <div class="flex items-center gap-4">
+                <div class="flex items-center justify-between">
+                    <div class="flex items-center gap-4">
                     <div class="w-12 h-12 rounded-xl bg-emerald-50/80 border border-emerald-100 flex items-center justify-center overflow-hidden">
                         <img
                             src="{{ asset('img/imagen1.png') }}"
@@ -63,6 +76,16 @@
                         <h1 class="text-lg font-semibold text-slate-800 tracking-tight">SCR</h1>
                         <p class="text-xs text-slate-400 font-medium">Clasificación de Residuos</p>
                     </div>
+                    </div>
+                    {{-- Boton cerrar sidebar en mobile --}}
+                    <button
+                        @click="sidebarOpen = false"
+                        class="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
+                    >
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
                 </div>
             </div>
 
@@ -178,8 +201,25 @@
         </aside>
 
         <!-- Main Content -->
-        <main class="flex-1 ml-72">
-            <div class="p-8">
+        <main class="flex-1 md:ml-72">
+            {{-- Top bar mobile --}}
+            <div class="md:hidden sticky top-0 z-30 bg-white border-b border-slate-200 px-4 py-3 flex items-center justify-between">
+                <button
+                    @click="sidebarOpen = true"
+                    class="p-2 rounded-lg text-slate-600 hover:bg-slate-100 transition-colors"
+                >
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+                    </svg>
+                </button>
+                <div class="flex items-center gap-2">
+                    <img src="{{ asset('img/imagen1.png') }}" alt="SCR" class="w-7 h-7 object-contain">
+                    <span class="text-sm font-semibold text-slate-800">SCR</span>
+                </div>
+                <div class="w-10"></div>
+            </div>
+
+            <div class="p-4 sm:p-6 md:p-8">
                 {{ $slot }}
             </div>
         </main>
