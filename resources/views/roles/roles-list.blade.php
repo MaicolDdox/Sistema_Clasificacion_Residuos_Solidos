@@ -1,7 +1,7 @@
 <x-layouts.app :title="__('Gestion de Roles')">
 
     {{-- Contenedor principal --}}
-    <div class="max-w-7xl mx-auto space-y-6">
+    <div class="max-w-7xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6 lg:px-0">
 
         {{-- Encabezado --}}
         <div class="bg-gradient-to-r from-emerald-50 via-white to-cyan-50 border border-emerald-100 rounded-2xl p-4 sm:p-6 shadow-sm">
@@ -42,9 +42,9 @@
 
 
         {{-- Barra de herramientas --}}
-        <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between bg-white border border-slate-200 rounded-xl px-4 py-3 shadow-sm">
+        <div class="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-3 shadow-sm">
             <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center">
+                <div class="w-10 h-10 bg-emerald-50 text-emerald-600 rounded-xl flex items-center justify-center shrink-0">
                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                               d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
@@ -102,6 +102,64 @@
     {{-- Script busqueda + paginacion AJAX --}}
     <script>
         $(document).ready(function() {
+            let allUsers = [];
+
+            // Renderizar cards mobile
+            function renderCards(data) {
+                const container = $('#userCards');
+                const empty = $('#userCardsEmpty');
+                container.empty();
+
+                if (!data || data.length === 0) {
+                    empty.removeClass('hidden');
+                    return;
+                }
+                empty.addClass('hidden');
+
+                data.forEach(function(user) {
+                    const card = `
+                        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-sm shrink-0">
+                                        ${(user.name ?? '??').substring(0, 2).toUpperCase()}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-semibold text-slate-900 truncate">${user.name ?? ''}</p>
+                                        <p class="text-xs text-slate-500 truncate">${user.email ?? ''}</p>
+                                    </div>
+                                </div>
+                                <div class="flex items-center gap-1 shrink-0">
+                                    ${user.acciones}
+                                </div>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
+                                <span class="inline-flex items-center gap-1.5 text-xs font-medium text-purple-700 bg-purple-50 rounded-full px-2.5 py-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                                    ${user.roles ?? '<span class="text-slate-400 italic">Sin rol</span>'}
+                                </span>
+                                <span class="inline-flex items-center gap-1.5 text-xs text-slate-500">
+                                    <svg class="w-3 h-3 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    ${user.created_at ?? ''}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                    container.append(card);
+                });
+            }
+
+            // Filtrar cards mobile
+            function filterCards(query) {
+                const q = query.toLowerCase();
+                const filtered = allUsers.filter(function(user) {
+                    return (user.name && user.name.toLowerCase().includes(q)) ||
+                           (user.email && user.email.toLowerCase().includes(q)) ||
+                           (user.roles && user.roles.toLowerCase().includes(q));
+                });
+                renderCards(filtered);
+            }
+
             const table = $('#usersTable').DataTable({
                 processing: true,
                 serverSide: false,
