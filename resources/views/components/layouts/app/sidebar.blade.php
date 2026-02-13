@@ -65,17 +65,17 @@
             >
                 <div class="flex items-center justify-between">
                     <div class="flex items-center gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-emerald-50/80 border border-emerald-100 flex items-center justify-center overflow-hidden">
-                            <img
-                                src="{{ asset('img/imagen1.png') }}"
-                                alt="SCR Logo"
-                                class="w-8 h-8 object-contain"
-                            >
-                        </div>
-                        <div>
-                            <h1 class="text-lg font-semibold text-slate-800 tracking-tight">SCR</h1>
-                            <p class="text-xs text-slate-400 font-medium">Clasificación de Residuos</p>
-                        </div>
+                    <div class="w-12 h-12 rounded-xl bg-emerald-50/80 border border-emerald-100 flex items-center justify-center overflow-hidden">
+                        <img
+                            src="{{ asset('img/imagen1.png') }}"
+                            alt="SCR Logo"
+                            class="w-8 h-8 object-contain"
+                        >
+                    </div>
+                    <div>
+                        <h1 class="text-lg font-semibold text-slate-800 tracking-tight">SCR</h1>
+                        <p class="text-xs text-slate-400 font-medium">Clasificación de Residuos</p>
+                    </div>
                     </div>
                     {{-- Boton cerrar sidebar en mobile --}}
                     <button

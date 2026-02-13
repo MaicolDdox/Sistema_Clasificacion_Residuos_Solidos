@@ -4,7 +4,7 @@
     <div class="max-w-7xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6 lg:px-0">
 
         {{-- Encabezado --}}
-        <div class="bg-gradient-to-r from-emerald-50 via-white to-cyan-50 border border-emerald-100 rounded-xl sm:rounded-2xl p-4 sm:p-6 shadow-sm">
+        <div class="bg-gradient-to-r from-emerald-50 via-white to-cyan-50 border border-emerald-100 rounded-2xl p-4 sm:p-6 shadow-sm">
             <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                 <div class="space-y-2">
                     <p class="inline-flex items-center text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600 bg-emerald-50 rounded-full px-3 py-1">
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     <a href="{{ route('roles.create') }}"
-                       class="inline-flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-200 shadow-sm hover:shadow-md w-full sm:w-auto justify-center">
+                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-200 shadow-sm hover:shadow-md">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                   d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
@@ -38,6 +38,8 @@
 
         {{-- Mensajes de confirmacion --}}
         @include('partials.session-message')
+
+
 
         {{-- Barra de herramientas --}}
         <div class="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-3 shadow-sm">
@@ -53,8 +55,8 @@
                     <p class="text-base font-semibold text-slate-800">Usuarios y Roles</p>
                 </div>
             </div>
-            <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
-                <div class="relative">
+            <div class="flex items-center gap-3">
+                <div class="relative w-full sm:w-auto">
                     <input
                         id="searchUsers"
                         type="search"
@@ -73,8 +75,8 @@
         </div>
     </div>
 
-    {{-- Tabla desktop --}}
-    <div class="hidden md:block mt-6 bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
+    {{-- Tabla AJAX (solo desktop) --}}
+    <div class="mt-6 bg-white rounded-2xl shadow-sm border border-slate-200 p-4 hidden md:block">
         <div class="overflow-hidden border border-slate-100 rounded-xl">
             <table id="usersTable" class="w-full text-sm text-left">
                 <thead class="bg-slate-50 text-slate-600 uppercase text-xs tracking-wide">
@@ -92,14 +94,7 @@
     </div>
 
     {{-- Cards mobile --}}
-    <div id="userCards" class="md:hidden mt-4 space-y-3 px-4">
-        {{-- Se llenan por JS --}}
-    </div>
-    <div id="userCardsEmpty" class="md:hidden hidden mt-4 px-4">
-        <div class="bg-white rounded-xl border border-slate-200 p-6 text-center">
-            <p class="text-sm text-slate-500">No se encontraron usuarios.</p>
-        </div>
-    </div>
+    <div id="mobileCards" class="mt-6 space-y-3 md:hidden"></div>
 
     {{-- CDNs & SCRIPT --}}
     @include('partials.footer-script-cdn')
@@ -171,9 +166,8 @@
                 ajax: {
                     url: '{{ route("roles.index") }}',
                     dataSrc: function(json) {
-                        allUsers = json.data || [];
-                        renderCards(allUsers);
-                        return allUsers;
+                        renderMobileCards(json.data || []);
+                        return json.data || [];
                     }
                 },
                 dom: 'lrtip',
@@ -214,10 +208,15 @@
                 responsive: true
             });
 
+            // Busqueda filtra tabla y cards
             $('#searchUsers').on('keyup', function() {
-                const val = this.value;
-                table.search(val).draw();
-                filterCards(val);
+                const term = this.value.toLowerCase();
+                table.search(this.value).draw();
+                // Filtrar cards mobile
+                $('#mobileCards .mobile-card').each(function() {
+                    const text = $(this).text().toLowerCase();
+                    $(this).toggle(text.includes(term));
+                });
             });
 
             table.on('xhr', function() {
@@ -225,6 +224,48 @@
                 const total = json && json.data ? json.data.length : 0;
                 $('#usersTotalCount').text(total);
             });
+
+            // Renderizar cards mobile
+            function renderMobileCards(data) {
+                const container = $('#mobileCards');
+                container.empty();
+                if (!data.length) {
+                    container.html('<div class="text-center text-slate-400 py-8 text-sm">No hay usuarios registrados.</div>');
+                    return;
+                }
+                data.forEach(function(row) {
+                    const card = `
+                        <div class="mobile-card bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-3 min-w-0">
+                                    <div class="w-10 h-10 shrink-0 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-sm">
+                                        ${(row.name ?? 'U').charAt(0).toUpperCase()}
+                                    </div>
+                                    <div class="min-w-0">
+                                        <p class="text-sm font-semibold text-slate-800 truncate">${row.name ?? ''}</p>
+                                        <p class="text-xs text-slate-400 truncate">${row.email ?? ''}</p>
+                                    </div>
+                                </div>
+                                <span class="text-xs text-slate-400">#${row.id}</span>
+                            </div>
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="inline-flex items-center gap-1 text-xs font-medium text-purple-700 bg-purple-50 rounded-full px-2.5 py-1">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                                    ${row.roles ?? 'Sin rol'}
+                                </span>
+                                <span class="inline-flex items-center gap-1 text-xs text-slate-500">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    ${row.created_at ?? ''}
+                                </span>
+                            </div>
+                            <div class="pt-2 border-t border-slate-100">
+                                ${row.acciones ?? ''}
+                            </div>
+                        </div>
+                    `;
+                    container.append(card);
+                });
+            }
         });
     </script>
 
