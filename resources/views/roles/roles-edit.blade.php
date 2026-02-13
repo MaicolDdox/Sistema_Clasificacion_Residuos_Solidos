@@ -62,7 +62,7 @@
                         Nuevo Rol
                     </span>
                 </label>
-                <select id="role" name="role" required class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 text-slate-700">
+                <select id="role" name="role" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 text-slate-700">
                     <option value="">Selecciona un rol</option>
                     @foreach($roles as $role)
                         <option value="{{ $role->name }}" {{ ($currentRole && $currentRole->name == $role->name) || old('role') == $role->name ? 'selected' : '' }}>
