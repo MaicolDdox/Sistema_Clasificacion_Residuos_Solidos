@@ -4,7 +4,7 @@
             <h1 class="text-2xl font-bold text-slate-900 mb-1">Registrar residuo sólido (RESOL)</h1>
             <p class="text-sm text-slate-500 mb-4">Unidad productiva: <span class="font-semibold text-slate-800">{{ $unit->name }}</span></p>
 
-            <form action="{{ route('wastes.store') }}" method="POST" class="space-y-4">
+            <form action="{{ route('wastes.store') }}" method="POST" enctype="multipart/form-data" class="space-y-4">
                 @csrf
                 <input type="hidden" name="productive_unit_id" value="{{ $unit->id }}">
 
@@ -55,6 +55,25 @@
                         rows="3"
                         class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
                     >{{ old('observations') }}</textarea>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="text-sm font-medium text-slate-700">Imagen de evidencia (opcional)</label>
+                    <input
+                        type="file"
+                        name="evidence_image"
+                        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
+                        class="w-full rounded-lg border @error('evidence_image') border-red-300 focus:ring-red-200 focus:border-red-400 @else border-slate-200 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 @enderror px-3 py-2 text-sm bg-white"
+                    >
+                    <p class="text-xs text-slate-400">Formatos permitidos: JPG, JPEG, PNG, WEBP. Tamaño máximo: 5 MB.</p>
+                    @error('evidence_image')
+                        <p class="text-sm text-red-600 flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                            </svg>
+                            {{ $message }}
+                        </p>
+                    @enderror
                 </div>
 
                 <div class="flex items-center justify-end gap-3 pt-4">
