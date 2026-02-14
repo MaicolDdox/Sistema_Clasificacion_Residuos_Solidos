@@ -152,9 +152,9 @@
                         name: 'waste_type',
                         render: function(data) {
                             let badgeClass = 'bg-slate-100 text-slate-700';
-                            if (data === 'Convencional') badgeClass = 'bg-blue-100 text-blue-700';
-                            if (data === 'Respel') badgeClass = 'bg-amber-100 text-amber-700';
-                            if (data === 'Ambos') badgeClass = 'bg-purple-100 text-purple-700';
+                            if (data === 'Residuos Solidos') badgeClass = 'bg-blue-100 text-blue-700';
+                            if (data === 'Residuos Peligrosos') badgeClass = 'bg-red-100 text-amber-700';
+                            if (data === 'RESOL/RESPEL') badgeClass = 'bg-purple-100 text-purple-700';
                             
                             return `
                                 <div class="flex items-center space-x-2">
