@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Modules\ProductiveUnits\Models\ProductiveUnit;
+use Modules\Areas\Models\Area;
 
 class ProductiveUnitController extends Controller
 {
@@ -16,21 +17,29 @@ class ProductiveUnitController extends Controller
     {
         if ($request->ajax()) {
             $units = ProductiveUnit::with('area')->get()->map(function ($unit) {
+                $wasteTypeLabel = match($unit->waste_type) {
+                    'convencional' => 'Convencional',
+                    'respel' => 'Respel',
+                    'ambos' => 'Ambos',
+                    default => 'No definido'
+                };
+
                 return [
                     'id'          => $unit->id,
                     'area'        => $unit->area?->name ?? 'Sin area',
                     'name'        => Str::limit($unit->name, 40),
                     'description' => Str::limit($unit->description, 60),
+                    'waste_type'  => $wasteTypeLabel,
                     'created_at'  => $unit->created_at?->format('Y-m-d'),
                     'updated_at'  => $unit->updated_at?->format('Y-m-d'),
-                    'acciones'    => view('ProductiveUnits::partials.productiveUnits-actions', compact('unit'))->render(),
+                    'acciones'    => view('productiveunits::partials.productiveUnits-actions', compact('unit'))->render(),
                 ];
             });
 
             return response()->json(['data' => $units]);
         }
 
-        return view('ProductiveUnits::productiveUnits-list');
+        return view('productiveunits::productiveUnits-list');
     }
 
     /**
@@ -38,7 +47,8 @@ class ProductiveUnitController extends Controller
      */
     public function create()
     {
-        //
+        $areas = Area::orderBy('name')->get();
+        return view('productiveunits::productiveUnits-create', compact('areas'));
     }
 
     /**
@@ -46,7 +56,17 @@ class ProductiveUnitController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'area_id' => 'required|exists:areas,id',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'waste_type' => 'required|in:convencional,respel,ambos',
+        ]);
+
+        ProductiveUnit::create($validated);
+
+        return redirect()->route('productive-units.index')
+            ->with('success', 'Unidad productiva creada exitosamente.');
     }
 
     /**
@@ -54,7 +74,8 @@ class ProductiveUnitController extends Controller
      */
     public function show(ProductiveUnit $productiveUnit)
     {
-        //
+        $productiveUnit->load('area');
+        return view('productiveunits::productiveUnits-detalles', compact('productiveUnit'));
     }
 
     /**
@@ -62,7 +83,8 @@ class ProductiveUnitController extends Controller
      */
     public function edit(ProductiveUnit $productiveUnit)
     {
-        //
+        $areas = Area::orderBy('name')->get();
+        return view('productiveunits::productiveUnits-edit', compact('productiveUnit', 'areas'));
     }
 
     /**
@@ -70,7 +92,17 @@ class ProductiveUnitController extends Controller
      */
     public function update(Request $request, ProductiveUnit $productiveUnit)
     {
-        //
+        $validated = $request->validate([
+            'area_id' => 'required|exists:areas,id',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'waste_type' => 'required|in:convencional,respel,ambos',
+        ]);
+
+        $productiveUnit->update($validated);
+
+        return redirect()->route('productive-units.index')
+            ->with('success', 'Unidad productiva actualizada exitosamente.');
     }
 
     /**
@@ -78,6 +110,9 @@ class ProductiveUnitController extends Controller
      */
     public function destroy(ProductiveUnit $productiveUnit)
     {
-        //
+        $productiveUnit->delete();
+
+        return redirect()->route('productive-units.index')
+            ->with('success', 'Unidad productiva eliminada exitosamente.');
     }
 }
