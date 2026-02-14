@@ -1,26 +1,27 @@
 <x-layouts.app :title="__('Editar Rol')">
     <div class="max-w-4xl mx-auto space-y-6">
-        <div class="bg-gradient-to-r from-amber-50 via-white to-orange-50 border border-amber-100 rounded-2xl p-6 shadow-sm">
+        <div class="bg-gradient-to-r from-amber-50 via-white to-orange-50 border border-amber-100 rounded-2xl p-4 sm:p-6 shadow-sm">
             <div class="flex items-center gap-4">
                 <a href="{{ route('roles.index') }}" class="p-2 hover:bg-white rounded-lg transition-colors">
                     <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                     </svg>
                 </a>
-                <div class="space-y-1">
+                <div class="space-y-1 min-w-0">
                     <p class="inline-flex items-center text-xs font-semibold uppercase tracking-[0.2em] text-amber-600 bg-amber-50 rounded-full px-3 py-1">
                         <span class="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
                         Edicion
                     </p>
-                    <h1 class="text-3xl font-bold text-slate-900 leading-tight">Editar Rol de Usuario</h1>
-                    <p class="text-slate-500">Modifica el rol asignado a {{ $user->name }}.</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight">Editar Rol de Usuario</h1>
+                    <p class="text-sm sm:text-base text-slate-500 truncate">Modifica el rol asignado a {{ $user->name }}.</p>
                 </div>
             </div>
         </div>
+
         @if ($errors->any())
             <div class="bg-red-50 border border-red-200 rounded-xl p-4">
                 <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-red-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-red-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <div class="flex-1">
@@ -34,20 +35,21 @@
                 </div>
             </div>
         @endif
-        <form action="{{ route('roles.update', $user->id) }}" method="POST" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
+
+        <form action="{{ route('roles.update', $user->id) }}" method="POST" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 space-y-6">
             @csrf
             @method('PUT')
             <div class="bg-slate-50 border border-slate-100 rounded-lg p-4">
                 <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 rounded-full bg-emerald-100 flex items-center justify-center">
+                    <div class="w-12 h-12 shrink-0 rounded-full bg-emerald-100 flex items-center justify-center">
                         <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                     </div>
-                    <div>
+                    <div class="min-w-0">
                         <p class="text-sm font-semibold text-slate-700">Usuario</p>
-                        <p class="text-base text-slate-900 font-medium">{{ $user->name }}</p>
-                        <p class="text-xs text-slate-500">{{ $user->email }}</p>
+                        <p class="text-base text-slate-900 font-medium truncate">{{ $user->name }}</p>
+                        <p class="text-xs text-slate-500 truncate">{{ $user->email }}</p>
                     </div>
                 </div>
             </div>
@@ -60,7 +62,7 @@
                         Nuevo Rol
                     </span>
                 </label>
-                <select id="role" name="role" required class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 text-slate-700">
+                <select id="role" name="role" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 text-slate-700">
                     <option value="">Selecciona un rol</option>
                     @foreach($roles as $role)
                         <option value="{{ $role->name }}" {{ ($currentRole && $currentRole->name == $role->name) || old('role') == $role->name ? 'selected' : '' }}>
@@ -74,14 +76,14 @@
                     <p class="text-xs text-amber-600 italic">Este usuario no tiene ningun rol asignado.</p>
                 @endif
             </div>
-            <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
-                <button type="submit" class="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-6 py-2.5 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md">
+            <div class="flex flex-col sm:flex-row items-center gap-3 pt-4 border-t border-slate-100">
+                <button type="submit" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-6 py-2.5 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                     <span>Actualizar Rol</span>
                 </button>
-                <a href="{{ route('roles.index') }}" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2.5 rounded-lg font-medium transition-all duration-200">
+                <a href="{{ route('roles.index') }}" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2.5 rounded-lg font-medium transition-all duration-200">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>

@@ -47,6 +47,12 @@ class WasteController extends Controller
      */
     public function edit(Waste $waste)
     {
+        // Aprendiz solo puede editar sus propios registros
+        // Cambio realizado por John
+        if (Auth::user()->hasRole('Aprendiz') && $waste->user_id !== Auth::id()) {
+            abort(403, 'No puedes editar registros de otros usuarios, solo lider ambiental.');
+        }
+
         $unit = $waste->productiveUnit;
 
         return view('wastes::resol-edit', compact('waste', 'unit'));
@@ -57,6 +63,11 @@ class WasteController extends Controller
      */
     public function update(Request $request, Waste $waste)
     {
+        // Aprendiz solo puede actualizar sus propios registros
+        if (Auth::user()->hasRole('Aprendiz') && $waste->user_id !== Auth::id()) {
+            abort(403, 'No puedes editar registros de otros usuarios.');
+        }
+
         $validated = $request->validate([
             'entry_date' => ['required', 'date'],
             'waste_type' => ['required', 'in:Residuo Organico,Residuo Ordinarios,Residuo Reciclables'],
