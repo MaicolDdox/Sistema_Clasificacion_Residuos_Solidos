@@ -1,12 +1,12 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Modules\Wastes\Http\Controllers\HazardouWasteExportController;
 use Modules\Wastes\Http\Controllers\HazardouWasteController;
-use Modules\Wastes\Http\Controllers\HazardouWasteOutletController;
 use Modules\Wastes\Http\Controllers\WasteReportController;
 use Modules\Wastes\Http\Controllers\WasteNavigatorController;
 use Modules\Wastes\Http\Controllers\WasteController;
-use Modules\Wastes\Http\Controllers\WasteOutletController;
+use Modules\Wastes\Http\Controllers\WasteExportController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +35,22 @@ Route::middleware(['web', 'auth'])->group(function () {
         ->middleware('permission:wastes.report.respel')
         ->name('wastes.report.respel');
 
+    Route::get('wastes/unit/{unit}/export/pdf', [WasteExportController::class, 'rangePdf'])
+        ->middleware('permission:wastes.report.resol')
+        ->name('wastes.export.range.pdf');
+
+    Route::get('wastes/unit/{unit}/export/excel', [WasteExportController::class, 'rangeExcel'])
+        ->middleware('permission:wastes.report.resol')
+        ->name('wastes.export.range.excel');
+
+    Route::get('hazardou-wastes/unit/{unit}/export/pdf', [HazardouWasteExportController::class, 'rangePdf'])
+        ->middleware('permission:wastes.report.respel')
+        ->name('hazardou-wastes.export.range.pdf');
+
+    Route::get('hazardou-wastes/unit/{unit}/export/excel', [HazardouWasteExportController::class, 'rangeExcel'])
+        ->middleware('permission:wastes.report.respel')
+        ->name('hazardou-wastes.export.range.excel');
+
     // ========================================
     // RESIDUOS ORDINARIOS (RESOL)
     // ========================================
@@ -43,6 +59,18 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::get('wastes/unit/{unit}', [WasteController::class, 'byUnit'])
         ->middleware('permission:wastes.index')
         ->name('wastes.byUnit');
+
+    Route::get('wastes/{waste}', [WasteController::class, 'show'])
+        ->middleware('permission:wastes.index')
+        ->name('wastes.show');
+
+    Route::get('wastes/{waste}/export/pdf', [WasteExportController::class, 'singlePdf'])
+        ->middleware('permission:wastes.report.resol')
+        ->name('wastes.export.single.pdf');
+
+    Route::get('wastes/{waste}/export/excel', [WasteExportController::class, 'singleExcel'])
+        ->middleware('permission:wastes.report.resol')
+        ->name('wastes.export.single.excel');
 
     // Creación (Gestora + Líder)
     Route::get('wastes/create/{unit}', [WasteController::class, 'create'])
@@ -79,6 +107,18 @@ Route::middleware(['web', 'auth'])->group(function () {
         ->middleware('permission:hazardou-wastes.index')
         ->name('hazardou-wastes.byUnit');
 
+    Route::get('hazardou-wastes/{hazardou_waste}', [HazardouWasteController::class, 'show'])
+        ->middleware('permission:hazardou-wastes.index')
+        ->name('hazardou-wastes.show');
+
+    Route::get('hazardou-wastes/{hazardou_waste}/export/pdf', [HazardouWasteExportController::class, 'singlePdf'])
+        ->middleware('permission:wastes.report.respel')
+        ->name('hazardou-wastes.export.single.pdf');
+
+    Route::get('hazardou-wastes/{hazardou_waste}/export/excel', [HazardouWasteExportController::class, 'singleExcel'])
+        ->middleware('permission:wastes.report.respel')
+        ->name('hazardou-wastes.export.single.excel');
+
     // Creación (Gestora + Líder)
     Route::get('hazardou-wastes/create/{unit}', [HazardouWasteController::class, 'create'])
         ->middleware('permission:hazardou-wastes.create')
@@ -104,82 +144,4 @@ Route::middleware(['web', 'auth'])->group(function () {
     Route::delete('hazardou-wastes/{hazardou_waste}', [HazardouWasteController::class, 'destroy'])
         ->middleware('permission:hazardou-wastes.destroy')
         ->name('hazardou-wastes.destroy');
-
-    // ========================================
-    // PUNTOS DE SALIDA - RESIDUOS ORDINARIOS
-    // ========================================
-
-    // Lectura (Todos los roles)
-    Route::get('waste-outlets', [WasteOutletController::class, 'index'])
-        ->middleware('permission:waste-outlets.index')
-        ->name('waste-outlets.index');
-
-    Route::get('waste-outlets/{waste_outlet}', [WasteOutletController::class, 'show'])
-        ->middleware('permission:waste-outlets.index')
-        ->name('waste-outlets.show');
-
-    // Creación (Gestora + Líder)
-    Route::get('waste-outlets/create', [WasteOutletController::class, 'create'])
-        ->middleware('permission:waste-outlets.store')
-        ->name('waste-outlets.create');
-
-    Route::post('waste-outlets', [WasteOutletController::class, 'store'])
-        ->middleware('permission:waste-outlets.store')
-        ->name('waste-outlets.store');
-
-    // Edición (Gestora + Líder)
-    Route::get('waste-outlets/{waste_outlet}/edit', [WasteOutletController::class, 'edit'])
-        ->middleware('permission:waste-outlets.update')
-        ->name('waste-outlets.edit');
-
-    Route::put('waste-outlets/{waste_outlet}', [WasteOutletController::class, 'update'])
-        ->middleware('permission:waste-outlets.update')
-        ->name('waste-outlets.update');
-
-    Route::patch('waste-outlets/{waste_outlet}', [WasteOutletController::class, 'update'])
-        ->middleware('permission:waste-outlets.update');
-
-    // Eliminación (Solo Gestora)
-    Route::delete('waste-outlets/{waste_outlet}', [WasteOutletController::class, 'destroy'])
-        ->middleware('permission:waste-outlets.destroy')
-        ->name('waste-outlets.destroy');
-
-    // ========================================
-    // PUNTOS DE SALIDA - RESIDUOS PELIGROSOS
-    // ========================================
-
-    // Lectura (Todos los roles)
-    Route::get('hazardou-waste-outlets', [HazardouWasteOutletController::class, 'index'])
-        ->middleware('permission:hazardou-waste-outlets.index')
-        ->name('hazardou-waste-outlets.index');
-
-    Route::get('hazardou-waste-outlets/{hazardou_waste_outlet}', [HazardouWasteOutletController::class, 'show'])
-        ->middleware('permission:hazardou-waste-outlets.index')
-        ->name('hazardou-waste-outlets.show');
-
-    // Creación (Gestora + Líder)
-    Route::get('hazardou-waste-outlets/create', [HazardouWasteOutletController::class, 'create'])
-        ->middleware('permission:hazardou-waste-outlets.store')
-        ->name('hazardou-waste-outlets.create');
-
-    Route::post('hazardou-waste-outlets', [HazardouWasteOutletController::class, 'store'])
-        ->middleware('permission:hazardou-waste-outlets.store')
-        ->name('hazardou-waste-outlets.store');
-
-    // Edición (Gestora + Líder)
-    Route::get('hazardou-waste-outlets/{hazardou_waste_outlet}/edit', [HazardouWasteOutletController::class, 'edit'])
-        ->middleware('permission:hazardou-waste-outlets.update')
-        ->name('hazardou-waste-outlets.edit');
-
-    Route::put('hazardou-waste-outlets/{hazardou_waste_outlet}', [HazardouWasteOutletController::class, 'update'])
-        ->middleware('permission:hazardou-waste-outlets.update')
-        ->name('hazardou-waste-outlets.update');
-
-    Route::patch('hazardou-waste-outlets/{hazardou_waste_outlet}', [HazardouWasteOutletController::class, 'update'])
-        ->middleware('permission:hazardou-waste-outlets.update');
-
-    // Eliminación (Solo Gestora)
-    Route::delete('hazardou-waste-outlets/{hazardou_waste_outlet}', [HazardouWasteOutletController::class, 'destroy'])
-        ->middleware('permission:hazardou-waste-outlets.destroy')
-        ->name('hazardou-waste-outlets.destroy');
 });
