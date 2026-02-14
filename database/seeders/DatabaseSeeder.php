@@ -16,8 +16,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             AreaSeeder::class,
             ProductiveUnitSeeder::class,
-            RoleSeeder::class,
-            PermissionSeeder::class,  // Crear permisos y asignarlos a roles
+            PermissionSeeder::class,  // Crear roles, permisos y asignarlos
             UserAndRoleSeeder::class,
             WasteSampleSeeder::class,
         ]);
