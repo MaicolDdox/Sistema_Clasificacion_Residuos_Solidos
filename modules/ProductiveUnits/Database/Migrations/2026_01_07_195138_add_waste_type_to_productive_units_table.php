@@ -24,7 +24,8 @@ return new class extends Migration
             // Agregar columna enum con valores permitidos
             // NOT NULL con valor por defecto para no afectar registros existentes
             $table->enum('waste_type', ['Residuos Solidos', 'Residuos Peligrosos', 'RESOL/RESPEL'])
-                ->default('Residuos Solidos')
+                ->default('RESOL/RESPEL')
+                ->nullable()
                 ->after('description')
                 ->comment('Tipo de residuo que puede manejar la unidad productiva');
         });
