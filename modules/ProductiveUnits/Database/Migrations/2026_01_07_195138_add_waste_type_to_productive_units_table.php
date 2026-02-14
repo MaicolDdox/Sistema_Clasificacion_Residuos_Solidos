@@ -23,8 +23,8 @@ return new class extends Migration
         Schema::table('productive_units', function (Blueprint $table) {
             // Agregar columna enum con valores permitidos
             // NOT NULL con valor por defecto para no afectar registros existentes
-            $table->enum('waste_type', ['convencional', 'respel', 'ambos'])
-                ->default('convencional')
+            $table->enum('waste_type', ['Residuos Solidos', 'Residuos Peligrosos', 'RESOL/RESPEL'])
+                ->default('Residuos Solidos')
                 ->after('description')
                 ->comment('Tipo de residuo que puede manejar la unidad productiva');
         });
