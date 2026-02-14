@@ -107,14 +107,14 @@
                     <select name="waste_type" id="waste_type" required
                             class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white text-sm text-slate-700 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 shadow-sm transition-all">
                         <option value="">-- Seleccione el tipo de residuo --</option>
-                        <option value="convencional" {{ (old('waste_type', $productiveUnit->waste_type) == 'convencional') ? 'selected' : '' }}>
-                            Residuos Convencionales
+                        <option value="Residuos Solidos" {{ (old('waste_type', $productiveUnit->waste_type) == 'Residuos Solidos') ? 'selected' : '' }}>
+                            Residuos Solidos (RESOL)
                         </option>
-                        <option value="respel" {{ (old('waste_type', $productiveUnit->waste_type) == 'respel') ? 'selected' : '' }}>
-                            Residuos Respel
+                        <option value="Residuos Peligrosos" {{ (old('waste_type', $productiveUnit->waste_type) == 'Residuos Peligrosos') ? 'selected' : '' }}>
+                            Residuos Peligrosos (RESPEL)
                         </option>
-                        <option value="ambos" {{ (old('waste_type', $productiveUnit->waste_type) == 'ambos') ? 'selected' : '' }}>
-                            Ambos (Convencional y Respel)
+                        <option value="RESOL/RESPEL" {{ (old('waste_type', $productiveUnit->waste_type) == 'RESOL/RESPEL') ? 'selected' : '' }}>
+                            Ambos (RESOL/RESPEL)
                         </option>
                     </select>
                     @error('waste_type')
