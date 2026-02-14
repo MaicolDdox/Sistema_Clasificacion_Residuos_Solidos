@@ -48,6 +48,7 @@ class HazardouWasteController extends Controller
     public function edit(HazardouWaste $hazardouWaste)
     {
         // Aprendiz solo puede editar sus propios registros
+        // Cambio realizado por John
         if (Auth::user()->hasRole('Aprendiz') && $hazardouWaste->user_id !== Auth::id()) {
             abort(403, 'No puedes editar registros de otros usuarios.');
         }

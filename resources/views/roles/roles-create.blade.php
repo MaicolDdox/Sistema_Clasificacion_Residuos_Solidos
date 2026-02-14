@@ -1,6 +1,6 @@
 <x-layouts.app :title="__('Asignar Rol')">
     <div class="max-w-4xl mx-auto space-y-6">
-        <div class="bg-gradient-to-r from-emerald-50 via-white to-cyan-50 border border-emerald-100 rounded-2xl p-6 shadow-sm">
+        <div class="bg-gradient-to-r from-emerald-50 via-white to-cyan-50 border border-emerald-100 rounded-2xl p-4 sm:p-6 shadow-sm">
             <div class="flex items-center gap-4">
                 <a href="{{ route('roles.index') }}" class="p-2 hover:bg-white rounded-lg transition-colors">
                     <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -12,16 +12,16 @@
                         <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
                         Asignacion
                     </p>
-                    <h1 class="text-3xl font-bold text-slate-900 leading-tight">Asignar Rol a Usuario</h1>
-                    <p class="text-slate-500">Selecciona un usuario y asignale un rol en el sistema.</p>
+                    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight">Asignar Rol a Usuario</h1>
+                    <p class="text-sm sm:text-base text-slate-500">Selecciona un usuario y asignale un rol en el sistema.</p>
                 </div>
             </div>
         </div>
-        
+
         @if ($errors->any())
             <div class="bg-red-50 border border-red-200 rounded-xl p-4">
                 <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-red-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 text-red-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
                     <div class="flex-1">
@@ -35,7 +35,7 @@
                 </div>
             </div>
         @endif
-        <form action="{{ route('roles.store') }}" method="POST" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-6 space-y-6">
+        <form action="{{ route('roles.store') }}" method="POST" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 space-y-6">
             @csrf
             <div class="space-y-2">
                 <label for="user_id" class="block text-sm font-semibold text-slate-700">
@@ -75,14 +75,14 @@
                 </select>
                 <p class="text-xs text-slate-500">El rol define los permisos del usuario en el sistema.</p>
             </div>
-            <div class="flex items-center gap-3 pt-4 border-t border-slate-100">
-                <button type="submit" class="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-6 py-2.5 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md">
+            <div class="flex flex-col sm:flex-row items-center gap-3 pt-4 border-t border-slate-100">
+                <button type="submit" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-6 py-2.5 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg>
                     <span>Asignar Rol</span>
                 </button>
-                <a href="{{ route('roles.index') }}" class="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2.5 rounded-lg font-medium transition-all duration-200">
+                <a href="{{ route('roles.index') }}" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2.5 rounded-lg font-medium transition-all duration-200">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
