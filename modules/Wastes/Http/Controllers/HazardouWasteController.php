@@ -53,6 +53,16 @@ class HazardouWasteController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(HazardouWaste $hazardouWaste)
+    {
+        $hazardouWaste->loadMissing(['productiveUnit', 'user']);
+
+        return view('wastes::respel-show', compact('hazardouWaste'));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit(HazardouWaste $hazardouWaste)
@@ -137,7 +147,22 @@ class HazardouWasteController extends Controller
             return response()->json(['data' => $wastes]);
         }
 
-        return view('wastes::respel-index', compact('unit'));
+        $dateBounds = HazardouWaste::query()
+            ->where('productive_unit_id', $unit->id)
+            ->selectRaw('MIN(entry_date) as min_entry_date, MAX(entry_date) as max_entry_date, COUNT(*) as total_records')
+            ->first();
+
+        $minEntryDate = $dateBounds?->min_entry_date
+            ? Carbon::parse($dateBounds->min_entry_date)->format('Y-m-d')
+            : null;
+
+        $maxEntryDate = $dateBounds?->max_entry_date
+            ? Carbon::parse($dateBounds->max_entry_date)->format('Y-m-d')
+            : null;
+
+        $hasRecords = (int) ($dateBounds?->total_records ?? 0) > 0;
+
+        return view('wastes::respel-index', compact('unit', 'minEntryDate', 'maxEntryDate', 'hasRecords'));
     }
 
     private function weekLabel($date): string

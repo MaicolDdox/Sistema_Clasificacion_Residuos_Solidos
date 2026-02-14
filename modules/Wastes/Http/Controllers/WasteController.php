@@ -53,6 +53,16 @@ class WasteController extends Controller
     }
 
     /**
+     * Display the specified resource.
+     */
+    public function show(Waste $waste)
+    {
+        $waste->loadMissing(['productiveUnit', 'user']);
+
+        return view('wastes::resol-show', compact('waste'));
+    }
+
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit(Waste $waste)
@@ -137,7 +147,22 @@ class WasteController extends Controller
             return response()->json(['data' => $wastes]);
         }
 
-        return view('wastes::resol-index', compact('unit'));
+        $dateBounds = Waste::query()
+            ->where('productive_unit_id', $unit->id)
+            ->selectRaw('MIN(entry_date) as min_entry_date, MAX(entry_date) as max_entry_date, COUNT(*) as total_records')
+            ->first();
+
+        $minEntryDate = $dateBounds?->min_entry_date
+            ? Carbon::parse($dateBounds->min_entry_date)->format('Y-m-d')
+            : null;
+
+        $maxEntryDate = $dateBounds?->max_entry_date
+            ? Carbon::parse($dateBounds->max_entry_date)->format('Y-m-d')
+            : null;
+
+        $hasRecords = (int) ($dateBounds?->total_records ?? 0) > 0;
+
+        return view('wastes::resol-index', compact('unit', 'minEntryDate', 'maxEntryDate', 'hasRecords'));
     }
 
     /**
