@@ -85,25 +85,24 @@
                     <label for="waste_type" class="block text-sm font-semibold text-slate-700 mb-2">
                         Tipo de Residuo <span class="text-red-500">*</span>
                     </label>
-                    <select name="waste_type" id="waste_type" required
+                    <select name="waste_type" id="waste_type" 
                             class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-white text-sm text-slate-700 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 shadow-sm transition-all">
                         <option value="">-- Seleccione el tipo de residuo --</option>
-                        <option value="convencional" {{ old('waste_type') == 'convencional' ? 'selected' : '' }}>
-                            Residuos Convencionales
+                        <option value="Residuos Solidos" {{ old('waste_type') == 'Residuos Solidos' ? 'selected' : '' }}>
+                            Residuos Solidos (RESOL)
                         </option>
-                        <option value="respel" {{ old('waste_type') == 'respel' ? 'selected' : '' }}>
-                            Residuos Respel
+                        <option value="Residuos Peligrosos" {{ old('waste_type') == 'Residuos Peligrosos' ? 'selected' : '' }}>
+                            Residuos Peligrosos (RESPEL)
                         </option>
-                        <option value="ambos" {{ old('waste_type') == 'ambos' ? 'selected' : '' }}>
-                            Ambos (Convencional y Respel)
+                        <option value="RESOL/RESPEL" {{ old('waste_type') == 'RESOL/RESPEL' ? 'selected' : '' }}>
+                            Ambos (RESOL/RESPEL)
                         </option>
                     </select>
                     @error('waste_type')
-                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
-                    @enderror
-                    <p class="mt-2 text-xs text-slate-500">
+                        <p class="mt-2 text-xs text-slate-500 text-red-500">
                         Seleccione el tipo de residuo que puede manejar esta unidad productiva.
-                    </p>
+                        </p>
+                    @enderror
                 </div>
 
                 {{-- Botones de accion --}}
