@@ -18,9 +18,9 @@ class ProductiveUnitController extends Controller
         if ($request->ajax()) {
             $units = ProductiveUnit::with('area')->get()->map(function ($unit) {
                 $wasteTypeLabel = match($unit->waste_type) {
-                    'convencional' => 'Convencional',
-                    'respel' => 'Respel',
-                    'ambos' => 'Ambos',
+                    'Residuos Solidos' => 'Residuos Solidos',
+                    'Residuos Peligrosos' => 'Residuos Peligrosos',
+                    'RESOL/RESPEL' => 'RESOL/RESPEL',
                     default => 'No definido'
                 };
 
@@ -60,7 +60,7 @@ class ProductiveUnitController extends Controller
             'area_id' => 'required|exists:areas,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'waste_type' => 'required|in:convencional,respel,ambos',
+            'waste_type' => 'required|in:Residuos Solidos,Residuos Peligrosos,RESOL/RESPEL',
         ]);
 
         ProductiveUnit::create($validated);
@@ -96,7 +96,7 @@ class ProductiveUnitController extends Controller
             'area_id' => 'required|exists:areas,id',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'waste_type' => 'required|in:convencional,respel,ambos',
+            'waste_type' => 'required|in:Residuos Solidos,Residuos Peligrosos,RESOL/RESPEL',
         ]);
 
         $productiveUnit->update($validated);
