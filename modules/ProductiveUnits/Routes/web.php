@@ -57,7 +57,7 @@ Route::middleware(['web', 'auth'])->group(function () {
     // ========================================
     // RUTAS DE DETALLE (Debe ir al final)
     // ========================================
-    Route::get('productive-units/{produtiveUnit}', [ProductiveUnitController::class, 'show'])
+    Route::get('productive-units/{productiveUnit}', [ProductiveUnitController::class, 'show'])
         ->middleware('permission:productive-units.show')
         ->name('productive-units.show');
 });
