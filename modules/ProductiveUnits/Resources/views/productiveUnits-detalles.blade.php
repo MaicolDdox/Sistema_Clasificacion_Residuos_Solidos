@@ -86,7 +86,21 @@
                         <p class="text-base text-slate-700 leading-relaxed">{{ $productiveUnit->description }}</p>
                     </div>
                 </div>
+                @else
+                        <div class="flex items-start gap-4 pb-6 border-b border-slate-200">
+                    <div class="w-12 h-12 bg-purple-100 text-purple-700 rounded-xl flex items-center justify-center flex-shrink-0">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                  d="M8 9h8M8 13h5m-9 5h12a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                        </svg>
+                    </div>
+                    <div class="flex-1">
+                        <p class="text-xs uppercase tracking-wide text-slate-400 font-semibold mb-1">Descripcion</p>
+                        <p class="text-s font-bold text-purple-100 text-slate-700 leading-relaxed">Actualmenten no tiene una descripción esta unidad productiva.</p>
+                    </div>
+                </div>
                 @endif
+
 
                 {{-- Tipo de Residuo --}}
                 <div class="flex items-start gap-4 pb-6 border-b border-slate-200">
@@ -101,9 +115,9 @@
                         <p class="text-lg font-semibold text-slate-800">
                             @php
                                 $wasteTypeLabel = match($productiveUnit->waste_type) {
-                                    'convencional' => 'Residuos Convencionales',
-                                    'respel' => 'Residuos Respel',
-                                    'ambos' => 'Ambos (Convencional y Respel)',
+                                    'Residuos Solidos' => 'Residuos Solidos (RESOL)',
+                                    'Residuos Peligrosos' => 'Residuos Peligrosos (RESPEL)',
+                                    'RESOL/RESPEL' => 'Ambos (RESOL/RESPEL)',
                                     default => 'No definido'
                                 };
                             @endphp
