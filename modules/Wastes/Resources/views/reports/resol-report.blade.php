@@ -14,23 +14,23 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
             <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
                 <h3 class="text-sm font-semibold text-slate-700 mb-2">Cantidad por día</h3>
-                <div id="chartCantidadPorDia"></div>
+                <div id="chartCantidadPorDia" class="w-full min-h-[280px] md:min-h-[320px] overflow-hidden"></div>
             </div>
             <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
                 <h3 class="text-sm font-semibold text-slate-700 mb-2">Cantidad por tipo</h3>
-                <div id="chartCantidadesPorTipo"></div>
+                <div id="chartCantidadesPorTipo" class="w-full min-h-[280px] md:min-h-[320px] overflow-hidden"></div>
             </div>
             <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
                 <h3 class="text-sm font-semibold text-slate-700 mb-2">Cantidad semanal</h3>
-                <div id="chartSemanal"></div>
+                <div id="chartSemanal" class="w-full min-h-[280px] md:min-h-[320px] overflow-hidden"></div>
             </div>
             <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
                 <h3 class="text-sm font-semibold text-slate-700 mb-2">Acumulado mensual</h3>
-                <div id="chartMensual"></div>
+                <div id="chartMensual" class="w-full min-h-[280px] md:min-h-[320px] overflow-hidden"></div>
             </div>
             <div class="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm lg:col-span-2">
                 <h3 class="text-sm font-semibold text-slate-700 mb-2">Distribución por usuario</h3>
-                <div id="chartUsuarios"></div>
+                <div id="chartUsuarios" class="w-full min-h-[320px] md:min-h-[360px] overflow-hidden"></div>
             </div>
         </div>
     </div>
@@ -39,59 +39,190 @@
     <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
     <script>
         const color = '{{ $color }}';
-        // Cantidad por día (línea)
-        new ApexCharts(document.querySelector('#chartCantidadPorDia'), {
-            chart: { type: 'line', height: 320, toolbar: { show: false } },
+        const chartInstances = [];
+
+        function createCartesianOptions(options) {
+            return {
+                ...options,
+                chart: {
+                    width: '100%',
+                    toolbar: { show: false },
+                    ...(options.chart || {}),
+                },
+                xaxis: {
+                    labels: {
+                        rotate: -45,
+                        style: { fontSize: '12px' },
+                    },
+                    ...(options.xaxis || {}),
+                },
+                dataLabels: {
+                    enabled: false,
+                    ...(options.dataLabels || {}),
+                },
+                grid: {
+                    borderColor: '#f1f5f9',
+                    ...(options.grid || {}),
+                },
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        options: {
+                            chart: { height: 300 },
+                            xaxis: {
+                                labels: {
+                                    rotate: -35,
+                                    style: { fontSize: '11px' },
+                                },
+                            },
+                        },
+                    },
+                    {
+                        breakpoint: 640,
+                        options: {
+                            chart: { height: 280 },
+                            xaxis: {
+                                labels: {
+                                    rotate: -20,
+                                    hideOverlappingLabels: true,
+                                    style: { fontSize: '10px' },
+                                },
+                            },
+                            legend: {
+                                position: 'bottom',
+                                fontSize: '11px',
+                            },
+                        },
+                    },
+                    ...(Array.isArray(options.responsive) ? options.responsive : []),
+                ],
+            };
+        }
+
+        function createDonutOptions(options) {
+            return {
+                ...options,
+                chart: {
+                    width: '100%',
+                    ...(options.chart || {}),
+                },
+                legend: {
+                    position: 'bottom',
+                    ...(options.legend || {}),
+                },
+                responsive: [
+                    {
+                        breakpoint: 1024,
+                        options: {
+                            chart: { height: 340 },
+                            legend: {
+                                position: 'bottom',
+                                fontSize: '12px',
+                            },
+                        },
+                    },
+                    {
+                        breakpoint: 640,
+                        options: {
+                            chart: { height: 320 },
+                            legend: {
+                                position: 'bottom',
+                                fontSize: '11px',
+                            },
+                            dataLabels: {
+                                enabled: false,
+                            },
+                        },
+                    },
+                    ...(Array.isArray(options.responsive) ? options.responsive : []),
+                ],
+            };
+        }
+
+        function renderChart(selector, options) {
+            const element = document.querySelector(selector);
+            if (!element) {
+                return;
+            }
+
+            const chart = new ApexCharts(element, options);
+            chartInstances.push(chart);
+            chart.render();
+        }
+
+        function debounce(callback, wait = 150) {
+            let timeoutId;
+
+            return (...args) => {
+                window.clearTimeout(timeoutId);
+                timeoutId = window.setTimeout(() => callback(...args), wait);
+            };
+        }
+
+        renderChart('#chartCantidadPorDia', createCartesianOptions({
+            chart: { type: 'line', height: 320 },
             stroke: { curve: 'smooth', width: 3 },
             colors: [color],
             series: [{ name: 'Cantidad', data: @json($byDay['series']) }],
-            xaxis: { categories: @json($byDay['categories']), labels: { rotate: -45 } },
-            dataLabels: { enabled: false },
+            xaxis: { categories: @json($byDay['categories']) },
             tooltip: { shared: true, intersect: false },
-            grid: { borderColor: '#f1f5f9' }
-        }).render();
+        }));
 
-        // Cantidad por tipo (barras)
-        new ApexCharts(document.querySelector('#chartCantidadesPorTipo'), {
-            chart: { type: 'bar', height: 320, toolbar: { show: false } },
+        renderChart('#chartCantidadesPorTipo', createCartesianOptions({
+            chart: { type: 'bar', height: 320 },
             plotOptions: { bar: { borderRadius: 6, columnWidth: '55%' } },
             colors: [color],
             series: [{ name: 'Cantidad', data: @json($byType['series']) }],
             xaxis: { categories: @json($byType['labels']) },
-            dataLabels: { enabled: false },
-            grid: { borderColor: '#f1f5f9' }
-        }).render();
+            responsive: [
+                {
+                    breakpoint: 640,
+                    options: {
+                        plotOptions: { bar: { columnWidth: '70%' } },
+                    },
+                },
+            ],
+        }));
 
-        // Cantidad semanal (área)
-        new ApexCharts(document.querySelector('#chartSemanal'), {
-            chart: { type: 'area', height: 320, toolbar: { show: false } },
+        renderChart('#chartSemanal', createCartesianOptions({
+            chart: { type: 'area', height: 320 },
             colors: [color],
             series: [{ name: 'Cantidad', data: @json($byWeek['series']) }],
-            xaxis: { categories: @json($byWeek['categories']), labels: { rotate: -45 } },
-            dataLabels: { enabled: false },
+            xaxis: { categories: @json($byWeek['categories']) },
             stroke: { curve: 'smooth' },
-            grid: { borderColor: '#f1f5f9' }
-        }).render();
+        }));
 
-        // Acumulado mensual (barras apiladas de un solo color)
-        new ApexCharts(document.querySelector('#chartMensual'), {
-            chart: { type: 'bar', height: 320, stacked: true, toolbar: { show: false } },
+        renderChart('#chartMensual', createCartesianOptions({
+            chart: { type: 'bar', height: 320, stacked: true },
             plotOptions: { bar: { borderRadius: 6, columnWidth: '55%' } },
             colors: [color],
             series: [{ name: 'Cantidad', data: @json($byMonth['series']) }],
             xaxis: { categories: @json($byMonth['categories']) },
-            dataLabels: { enabled: false },
-            grid: { borderColor: '#f1f5f9' }
-        }).render();
+            responsive: [
+                {
+                    breakpoint: 640,
+                    options: {
+                        plotOptions: { bar: { columnWidth: '70%' } },
+                    },
+                },
+            ],
+        }));
 
-        // Distribución por usuario (donut)
-        new ApexCharts(document.querySelector('#chartUsuarios'), {
+        renderChart('#chartUsuarios', createDonutOptions({
             chart: { type: 'donut', height: 360 },
             labels: @json($byUser['labels']),
             series: @json($byUser['series']),
             colors: ['#10b981', '#34d399', '#6ee7b7', '#a7f3d0', '#ecfeff'],
-            legend: { position: 'bottom' },
-            dataLabels: { enabled: true }
-        }).render();
+            dataLabels: { enabled: true },
+        }));
+
+        const handleResize = debounce(() => {
+            chartInstances.forEach((chart) => chart.resize());
+        }, 150);
+
+        window.addEventListener('resize', handleResize);
+        window.addEventListener('beforeunload', () => {
+            window.removeEventListener('resize', handleResize);
+        });
     </script>
 </x-layouts.app>

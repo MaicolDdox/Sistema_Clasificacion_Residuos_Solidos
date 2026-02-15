@@ -19,6 +19,7 @@ class HazardouWaste extends Model
         'waste_type',
         'amount',
         'observations',
+        'evidence_image',
     ];
 
     protected $casts = [
