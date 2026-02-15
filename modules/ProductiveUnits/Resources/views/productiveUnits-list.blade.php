@@ -83,6 +83,7 @@
                         <th class="px-4 py-3 font-semibold">Area</th>
                         <th class="px-4 py-3 font-semibold">Nombre</th>
                         <th class="px-4 py-3 font-semibold">Descripcion</th>
+                        <th class="px-4 py-3 font-semibold">Tipo Residuo</th>
                         <th class="px-4 py-3 font-semibold">Creacion</th>
                         <th class="px-4 py-3 font-semibold">Actualizacion</th>
                         <th class="px-4 py-3 font-semibold text-center">Acciones</th>
@@ -143,6 +144,23 @@
                                               d="M8 9h8M8 13h5m-9 5h12a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2z" />
                                     </svg>
                                     <span class="text-sm text-foreground">${data ?? ''}</span>
+                                </div>`;
+                        }
+                    },
+                    {
+                        data: 'waste_type',
+                        name: 'waste_type',
+                        render: function(data) {
+                            let badgeClass = 'bg-slate-100 text-slate-700';
+                            if (data === 'Residuos Solidos') badgeClass = 'bg-blue-100 text-blue-700';
+                            if (data === 'Residuos Peligrosos') badgeClass = 'bg-red-100 text-amber-700';
+                            if (data === 'RESOL/RESPEL') badgeClass = 'bg-purple-100 text-purple-700';
+                            
+                            return `
+                                <div class="flex items-center space-x-2">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${badgeClass}">
+                                        ${data ?? 'No definido'}
+                                    </span>
                                 </div>`;
                         }
                     },

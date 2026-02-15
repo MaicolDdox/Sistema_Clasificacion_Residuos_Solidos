@@ -17,6 +17,7 @@
                 </div>
             </div>
         </div>
+        
 
         @if ($errors->any())
             <div class="bg-red-50 border border-red-200 rounded-xl p-4">

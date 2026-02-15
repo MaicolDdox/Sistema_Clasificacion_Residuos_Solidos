@@ -18,6 +18,7 @@ class ProductiveUnit extends Model
         'area_id',
         'name',
         'description',
+        'waste_type',
     ];
 
     public function area(): BelongsTo

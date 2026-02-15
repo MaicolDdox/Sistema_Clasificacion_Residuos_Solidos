@@ -17,7 +17,7 @@ class ProductiveUnitsServiceProvider extends ServiceProvider
 
         $this->loadRoutesFrom(__DIR__.'/../Routes/web.php');
         $this->loadMigrationsFrom(__DIR__.'/../Database/Migrations');
-        $this->loadViewsFrom($viewsPath, 'ProductiveUnits');
-        $this->mergeConfigFrom(__DIR__.'/../Config/config.php', 'ProductiveUnits');
+        $this->loadViewsFrom($viewsPath, 'productiveunits');
+        $this->mergeConfigFrom(__DIR__.'/../Config/config.php', 'productiveunits');
     }
 }
