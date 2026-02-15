@@ -45,9 +45,9 @@
                         <div
                             x-cloak
                             x-show="headerMenuOpen"
-                            x-transition.origin.top.right
+                            x-transition
                             @click.outside="headerMenuOpen = false"
-                            class="absolute right-0 mt-2 w-64 rounded-xl border border-slate-200 bg-white shadow-xl z-50 py-1"
+                            class="absolute left-0 sm:left-auto sm:right-0 mt-2 w-64 max-w-[calc(100vw-1rem)] max-h-[70vh] overflow-y-auto origin-top-left sm:origin-top-right rounded-xl border border-slate-200 bg-white shadow-xl z-[70] py-1"
                         >
                             <a href="{{ route('wastes.report.respel', $unit) }}" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition">
                                 <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -89,16 +89,16 @@
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-            <div class="overflow-x-auto border border-slate-100 rounded-xl">
-                <table id="respelTable" class="w-full text-sm text-left">
+            <div class="w-full max-w-full overflow-x-auto border border-slate-100 rounded-xl">
+                <table id="respelTable" class="w-full min-w-[640px] table-auto text-sm text-left">
                     <thead class="bg-slate-50 text-slate-600 uppercase text-xs tracking-wide">
                         <tr>
-                            <th class="px-4 py-3 font-semibold">Fecha entrada</th>
-                            <th class="px-4 py-3 font-semibold">Tipo</th>
-                            <th class="px-4 py-3 font-semibold">Cantidad</th>
+                            <th class="px-4 py-3 font-semibold whitespace-nowrap">Fecha entrada</th>
+                            <th class="px-4 py-3 font-semibold whitespace-nowrap">Tipo</th>
+                            <th class="px-4 py-3 font-semibold whitespace-nowrap">Cantidad</th>
                             <th class="px-4 py-3 font-semibold">Observaciones</th>
-                            <th class="px-4 py-3 font-semibold">Usuario</th>
-                            <th class="px-4 py-3 font-semibold text-center">Acciones</th>
+                            <th class="px-4 py-3 font-semibold whitespace-nowrap">Usuario</th>
+                            <th class="px-4 py-3 font-semibold text-center whitespace-nowrap">Acciones</th>
                         </tr>
                     </thead>
                 </table>
@@ -277,7 +277,7 @@
             <div
                 x-ref="rowActionsPanel"
                 data-row-actions-panel
-                class="fixed z-[85] w-56 rounded-xl border border-slate-200 bg-white shadow-xl py-1 text-left"
+                class="fixed z-[85] w-[calc(100vw-1.5rem)] max-w-56 sm:w-56 rounded-xl border border-slate-200 bg-white shadow-xl py-1 text-left"
                 :style="`left:${rowMenu.left}px;top:${rowMenu.top}px;`"
                 @click.stop
             >
@@ -368,7 +368,9 @@
 
     @include('partials.footer-script-cdn')
     <link rel="stylesheet" href="https://cdn.datatables.net/rowgroup/1.5.0/css/rowGroup.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/3.0.2/css/responsive.dataTables.min.css">
     <script src="https://cdn.datatables.net/rowgroup/1.5.0/js/dataTables.rowGroup.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/3.0.2/js/dataTables.responsive.min.js"></script>
     <script>
         function hazardousListingPage(config) {
             return {
@@ -854,7 +856,7 @@
                 processing: true,
                 serverSide: false,
                 ajax: '{{ route("hazardou-wastes.byUnit", $unit) }}',
-                dom: 'lrtip',
+                dom: 'lfrtip',
                 order: [[0, 'desc']],
                 rowGroup: { dataSrc: 'grupo_semana' },
                 columns: [
@@ -865,12 +867,26 @@
                     { data: 'usuario', name: 'usuario' },
                     { data: 'acciones', name: 'acciones', orderable: false, searchable: false },
                 ],
+                columnDefs: [
+                    { targets: 0, responsivePriority: 1, className: 'wastes-nowrap-cell' },
+                    { targets: 1, responsivePriority: 2, className: 'wastes-nowrap-cell' },
+                    { targets: 2, responsivePriority: 1, className: 'wastes-nowrap-cell' },
+                    { targets: 3, responsivePriority: 5, className: 'wastes-observations-cell' },
+                    { targets: 4, responsivePriority: 4, className: 'wastes-nowrap-cell' },
+                    { targets: 5, responsivePriority: 1, className: 'wastes-actions-cell' },
+                ],
                 drawCallback: function () {
                     document.dispatchEvent(new CustomEvent('datatable:drawn'));
                 },
                 language: { url: '/i18n/es-ES.json' },
                 pageLength: 10,
-                responsive: true,
+                autoWidth: false,
+                responsive: {
+                    details: {
+                        type: 'inline',
+                        target: 'tr',
+                    },
+                },
             });
         });
     </script>
