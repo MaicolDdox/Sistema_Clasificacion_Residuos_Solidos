@@ -18,8 +18,19 @@ class RoleSeeder extends Seeder
         // -------------------------
         // Creación de Roles
         // -------------------------
+
+        /*
+
+        El RoleSeeder ya no se ejecuta 
+        porque PermissionSeeder ya crea 
+        los 3 roles con Role::firstOrCreate dentro de assignPermissionsToRoles().
+
         $gestoraAmbiental   = Role::firstOrCreate(['name'  => 'Gestora Ambiental']);
         $liderAmbiental     = Role::firstOrCreate(['name'  => 'Lider Ambiental']);
         $aprendiz           = Role::firstOrCreate(['name'  => 'Aprendiz']);
+        */
     }
 }
+
+
+    

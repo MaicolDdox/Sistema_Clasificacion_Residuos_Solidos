@@ -1,0 +1,13 @@
+{
+    "name": "Dashboard",
+    "alias": "Dashboard",
+    "description": "Modulo de dashboard",
+    "providers": [
+        "Modules\\Dashboard\\Providers\\DashboardServiceProvider"
+    ],
+    "autoload": {
+        "psr-4": {
+            "Modules\\Dashboard\\": ""
+        }
+    }
+}
