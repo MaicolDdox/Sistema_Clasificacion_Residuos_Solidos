@@ -30,6 +30,16 @@ Notas:
 5. Repetir los pasos 2-4 para Excel (`.xlsx`).
 
 ## Troubleshooting
+### node_modules desincronizado o incompleto
+- Síntoma típico:
+  - `npm ls puppeteer --depth=0` muestra `missing: puppeteer`.
+  - Browsershot falla con `Cannot find module 'puppeteer'`.
+- Recuperación recomendada:
+  1. Ejecutar `npm ci` en la raíz del proyecto.
+  2. Si `npm ci` falla por archivos bloqueados en Windows (EPERM), cerrar procesos Node/Vite y reintentar.
+  3. Como alternativa puntual, ejecutar `npm install puppeteer@^24.37.3 --save`.
+  4. Verificar con `npm ls puppeteer --depth=0`.
+
 ### Error `Cannot find module 'puppeteer'`
 - Verificar que exista `node_modules/puppeteer`.
 - Verificar que `LARAVEL_PDF_NODE_MODULES_PATH` apunte a la carpeta correcta.
@@ -42,6 +52,11 @@ Notas:
   - `LARAVEL_PDF_NODE_MODULES_PATH`
 - Limpiar caché de configuración si aplica:
   - `php artisan config:clear`
+
+### Validaciones en modal no muestran 422 y redirigen (302)
+- El `Accept` del `fetch` debe priorizar JSON:
+  - `Accept: application/json, application/octet-stream`
+- Si se invierte el orden, Laravel puede responder con redirect (302) y ocultar errores de validación en el modal.
 
 ### Validación 422 en exportación personalizada
 - El backend exige:

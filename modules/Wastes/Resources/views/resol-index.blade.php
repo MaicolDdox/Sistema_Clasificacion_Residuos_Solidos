@@ -602,7 +602,7 @@
                             credentials: 'same-origin',
                             headers: {
                                 'X-Requested-With': 'XMLHttpRequest',
-                                Accept: 'application/octet-stream, application/json',
+                                Accept: 'application/json, application/octet-stream',
                             },
                         });
 

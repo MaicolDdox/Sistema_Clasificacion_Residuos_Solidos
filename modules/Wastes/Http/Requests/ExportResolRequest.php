@@ -127,15 +127,17 @@ class ExportResolRequest extends FormRequest
             $today = now()->endOfDay();
 
             if ($rangeType === 'weekly') {
+                $weeklyEndDate = $endDate->copy()->startOfDay();
+
                 if (! $startDate->isMonday()) {
                     $validator->errors()->add('start_date', 'La fecha de inicio debe corresponder a un lunes.');
                 }
 
-                if (! $endDate->isSunday()) {
+                if (! $weeklyEndDate->isSunday()) {
                     $validator->errors()->add('end_date', 'La fecha de fin debe corresponder a un domingo.');
                 }
 
-                if ($startDate->diffInDays($endDate) !== 6) {
+                if (! $startDate->copy()->addDays(6)->isSameDay($weeklyEndDate)) {
                     $validator->errors()->add('end_date', 'El rango semanal debe tener exactamente 7 días (lunes a domingo).');
                 }
             }

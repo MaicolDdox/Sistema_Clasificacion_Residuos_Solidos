@@ -16,6 +16,8 @@ use Modules\Wastes\Services\WasteExportQueryService;
 use Modules\Wastes\Services\WasteExportRangeService;
 use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelPdf\Facades\Pdf;
+use Spatie\LaravelPdf\PdfBuilder;
+use RuntimeException;
 use Throwable;
 
 class WasteExportController extends Controller
@@ -40,7 +42,7 @@ class WasteExportController extends Controller
                 extension: 'pdf'
             );
 
-            return Pdf::view('wastes::exports.waste-export-pdf', [
+            $pdfBuilder = Pdf::view('wastes::exports.waste-export-pdf', [
                 'title' => 'Exportación RESOL',
                 'moduleLabel' => 'RESOL',
                 'unitName' => $unit->name,
@@ -50,9 +52,11 @@ class WasteExportController extends Controller
             ])->withBrowsershot(function (Browsershot $browsershot): void {
                 $this->configureBrowsershot($browsershot);
             })
-                ->format('a4')
-                ->landscape()
-                ->download($fileName);
+                ->format('a4');
+
+            $pdfBuilder->landscape();
+
+            return $this->downloadPdfResponse($pdfBuilder, $fileName);
         } catch (Throwable $exception) {
             return $this->handleExportFailure(
                 $request,
@@ -102,7 +106,7 @@ class WasteExportController extends Controller
                 extension: 'pdf'
             );
 
-            return Pdf::view('wastes::exports.waste-export-pdf', [
+            $pdfBuilder = Pdf::view('wastes::exports.waste-export-pdf', [
                 'title' => 'Exportación RESOL',
                 'moduleLabel' => 'RESOL',
                 'unitName' => $waste->productiveUnit->name ?? 'Sin unidad',
@@ -112,9 +116,11 @@ class WasteExportController extends Controller
             ])->withBrowsershot(function (Browsershot $browsershot): void {
                 $this->configureBrowsershot($browsershot);
             })
-                ->format('a4')
-                ->landscape()
-                ->download($fileName);
+                ->format('a4');
+
+            $pdfBuilder->landscape();
+
+            return $this->downloadPdfResponse($pdfBuilder, $fileName);
         } catch (Throwable $exception) {
             return $this->handleExportFailure(
                 $request,
@@ -193,6 +199,33 @@ class WasteExportController extends Controller
 
         if ($noSandbox) {
             $browsershot->noSandbox();
+        }
+    }
+
+    private function downloadPdfResponse(PdfBuilder $pdfBuilder, string $fileName)
+    {
+        $this->ensurePuppeteerInstalled();
+
+        $base64Pdf = $pdfBuilder->base64();
+        $pdfContent = base64_decode($base64Pdf, true);
+
+        if ($pdfContent === false) {
+            throw new RuntimeException('No se pudo decodificar el contenido PDF generado.');
+        }
+
+        return response($pdfContent, 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'attachment; filename="'.$fileName.'"',
+        ]);
+    }
+
+    private function ensurePuppeteerInstalled(): void
+    {
+        $nodeModulesPath = config('laravel-pdf.browsershot.node_modules_path') ?: base_path('node_modules');
+        $puppeteerPath = rtrim($nodeModulesPath, '\\/').DIRECTORY_SEPARATOR.'puppeteer';
+
+        if (! is_dir($puppeteerPath)) {
+            throw new RuntimeException('No se encontró la dependencia Puppeteer en node_modules.');
         }
     }
 
