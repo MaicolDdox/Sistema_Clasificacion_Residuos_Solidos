@@ -162,7 +162,19 @@ class WasteController extends Controller
 
         $hasRecords = (int) ($dateBounds?->total_records ?? 0) > 0;
 
-        return view('wastes::resol-index', compact('unit', 'minEntryDate', 'maxEntryDate', 'hasRecords'));
+        $availableYears = Waste::query()
+            ->where('productive_unit_id', $unit->id)
+            ->whereNotNull('entry_date')
+            ->whereYear('entry_date', '<=', now()->year)
+            ->selectRaw('YEAR(entry_date) as year')
+            ->distinct()
+            ->orderByDesc('year')
+            ->pluck('year')
+            ->map(static fn ($year): int => (int) $year)
+            ->values()
+            ->all();
+
+        return view('wastes::resol-index', compact('unit', 'minEntryDate', 'maxEntryDate', 'hasRecords', 'availableYears'));
     }
 
     /**

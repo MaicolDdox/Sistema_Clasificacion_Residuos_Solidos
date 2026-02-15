@@ -162,7 +162,19 @@ class HazardouWasteController extends Controller
 
         $hasRecords = (int) ($dateBounds?->total_records ?? 0) > 0;
 
-        return view('wastes::respel-index', compact('unit', 'minEntryDate', 'maxEntryDate', 'hasRecords'));
+        $availableYears = HazardouWaste::query()
+            ->where('productive_unit_id', $unit->id)
+            ->whereNotNull('entry_date')
+            ->whereYear('entry_date', '<=', now()->year)
+            ->selectRaw('YEAR(entry_date) as year')
+            ->distinct()
+            ->orderByDesc('year')
+            ->pluck('year')
+            ->map(static fn ($year): int => (int) $year)
+            ->values()
+            ->all();
+
+        return view('wastes::respel-index', compact('unit', 'minEntryDate', 'maxEntryDate', 'hasRecords', 'availableYears'));
     }
 
     private function weekLabel($date): string

@@ -15,9 +15,11 @@ class ExportResolRequest extends FormRequest
 
     public function rules(): array
     {
+        $currentYear = now()->year;
+
         return [
             'range_type' => ['required', 'in:annual,semiannual,quarterly,monthly,weekly,custom'],
-            'year' => ['required_if:range_type,annual,semiannual,quarterly,monthly', 'integer', 'digits:4', 'min:2000', 'max:2100'],
+            'year' => ['required_if:range_type,annual,semiannual,quarterly,monthly', 'integer', 'digits:4', 'min:1900', "max:{$currentYear}"],
             'semester' => ['required_if:range_type,semiannual', 'integer', 'in:1,2'],
             'quarter' => ['required_if:range_type,quarterly', 'integer', 'in:1,2,3,4'],
             'month' => ['required_if:range_type,monthly', 'integer', 'between:1,12'],
@@ -31,11 +33,11 @@ class ExportResolRequest extends FormRequest
         return [
             'range_type.required' => 'Debe seleccionar un tipo de rango.',
             'range_type.in' => 'El tipo de rango seleccionado no es válido.',
-            'year.required_if' => 'El año es obligatorio para el rango seleccionado.',
+            'year.required_if' => 'Selecciona un año válido.',
             'year.integer' => 'El año debe ser numérico.',
             'year.digits' => 'El año debe tener 4 dígitos.',
-            'year.min' => 'El año no puede ser menor a 2000.',
-            'year.max' => 'El año no puede ser mayor a 2100.',
+            'year.min' => 'El año no puede ser menor a 1900.',
+            'year.max' => 'El año no puede ser mayor al año actual.',
             'semester.required_if' => 'Debe seleccionar el semestre.',
             'semester.in' => 'El semestre seleccionado no es válido.',
             'quarter.required_if' => 'Debe seleccionar el trimestre.',
@@ -66,10 +68,54 @@ class ExportResolRequest extends FormRequest
     public function withValidator($validator): void
     {
         $validator->after(function ($validator): void {
-            if ($this->input('range_type') !== 'weekly') {
-                if ($this->input('range_type') !== 'custom') {
+            $rangeType = $this->input('range_type');
+            $unitId = $this->resolveUnitId();
+            $yearBasedRanges = ['annual', 'semiannual', 'quarterly', 'monthly'];
+
+            if (in_array($rangeType, $yearBasedRanges, true) && $this->filled('year') && is_numeric($this->input('year'))) {
+                $year = (int) $this->input('year');
+                $currentYear = now()->year;
+
+                if ($year > $currentYear) {
+                    $validator->errors()->add('year', 'El año no puede ser mayor al año actual.');
                     return;
                 }
+
+                if ($unitId !== null) {
+                    $hasYearData = Waste::query()
+                        ->where('productive_unit_id', $unitId)
+                        ->whereYear('entry_date', $year)
+                        ->exists();
+
+                    if (! $hasYearData) {
+                        $validator->errors()->add('year', 'No hay registros en el año seleccionado.');
+                        return;
+                    }
+
+                    if (in_array($rangeType, ['semiannual', 'quarterly', 'monthly'], true)) {
+                        $rangeDates = $this->resolvePeriodicDates($rangeType, $year);
+
+                        if ($rangeDates !== null) {
+                            [$startDate, $endDate] = $rangeDates;
+
+                            $hasRangeData = Waste::query()
+                                ->where('productive_unit_id', $unitId)
+                                ->whereBetween('entry_date', [
+                                    $startDate->toDateTimeString(),
+                                    $endDate->toDateTimeString(),
+                                ])
+                                ->exists();
+
+                            if (! $hasRangeData) {
+                                $validator->errors()->add('start_date', 'No hay registros en el rango seleccionado.');
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (! in_array($rangeType, ['weekly', 'custom'], true)) {
+                return;
             }
 
             if (! $this->filled('start_date') || ! $this->filled('end_date')) {
@@ -80,7 +126,7 @@ class ExportResolRequest extends FormRequest
             $endDate = Carbon::parse($this->input('end_date'))->endOfDay();
             $today = now()->endOfDay();
 
-            if ($this->input('range_type') === 'weekly') {
+            if ($rangeType === 'weekly') {
                 if (! $startDate->isMonday()) {
                     $validator->errors()->add('start_date', 'La fecha de inicio debe corresponder a un lunes.');
                 }
@@ -94,7 +140,7 @@ class ExportResolRequest extends FormRequest
                 }
             }
 
-            if ($this->input('range_type') === 'custom') {
+            if ($rangeType === 'custom') {
                 if ($startDate->greaterThan($today)) {
                     $validator->errors()->add('start_date', 'La fecha de inicio no puede ser futura.');
                 }
@@ -102,8 +148,6 @@ class ExportResolRequest extends FormRequest
                 if ($endDate->greaterThan($today)) {
                     $validator->errors()->add('end_date', 'La fecha de fin no puede ser futura.');
                 }
-
-                $unitId = $this->resolveUnitId();
 
                 if ($unitId !== null) {
                     $exists = Waste::query()
@@ -132,6 +176,53 @@ class ExportResolRequest extends FormRequest
 
         if (is_numeric($unit)) {
             return (int) $unit;
+        }
+
+        return null;
+    }
+
+    private function resolvePeriodicDates(string $rangeType, int $year): ?array
+    {
+        if ($rangeType === 'semiannual') {
+            $semester = (int) $this->input('semester');
+            if (! in_array($semester, [1, 2], true)) {
+                return null;
+            }
+
+            $startMonth = $semester === 1 ? 1 : 7;
+            $endMonth = $semester === 1 ? 6 : 12;
+
+            return [
+                Carbon::create($year, $startMonth, 1)->startOfDay(),
+                Carbon::create($year, $endMonth, 1)->endOfMonth()->endOfDay(),
+            ];
+        }
+
+        if ($rangeType === 'quarterly') {
+            $quarter = (int) $this->input('quarter');
+            if ($quarter < 1 || $quarter > 4) {
+                return null;
+            }
+
+            $startMonth = (($quarter - 1) * 3) + 1;
+            $endMonth = $startMonth + 2;
+
+            return [
+                Carbon::create($year, $startMonth, 1)->startOfDay(),
+                Carbon::create($year, $endMonth, 1)->endOfMonth()->endOfDay(),
+            ];
+        }
+
+        if ($rangeType === 'monthly') {
+            $month = (int) $this->input('month');
+            if ($month < 1 || $month > 12) {
+                return null;
+            }
+
+            return [
+                Carbon::create($year, $month, 1)->startOfDay(),
+                Carbon::create($year, $month, 1)->endOfMonth()->endOfDay(),
+            ];
         }
 
         return null;
