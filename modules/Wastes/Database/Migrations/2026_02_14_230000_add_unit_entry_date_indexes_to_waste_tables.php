@@ -25,12 +25,34 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // Primero eliminar los foreign keys que dependen de los índices
+        Schema::table('wastes', function (Blueprint $table) {
+            $table->dropForeign(['productive_unit_id']);
+        });
+
         Schema::table('wastes', function (Blueprint $table) {
             $table->dropIndex('wastes_productive_unit_entry_date_idx');
         });
 
+        // Recrear el foreign key (MySQL creará automáticamente un índice simple)
+        Schema::table('wastes', function (Blueprint $table) {
+            $table->foreign('productive_unit_id')
+                ->references('id')->on('productive_units')
+                ->cascadeOnDelete();
+        });
+
+        Schema::table('hazardou_wastes', function (Blueprint $table) {
+            $table->dropForeign(['productive_unit_id']);
+        });
+
         Schema::table('hazardou_wastes', function (Blueprint $table) {
             $table->dropIndex('hazardou_wastes_productive_unit_entry_date_idx');
+        });
+
+        Schema::table('hazardou_wastes', function (Blueprint $table) {
+            $table->foreign('productive_unit_id')
+                ->references('id')->on('productive_units')
+                ->cascadeOnDelete();
         });
     }
 };
