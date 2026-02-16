@@ -8,10 +8,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Modules\ProductiveUnits\Models\ProductiveUnit;
+use Modules\Wastes\Http\Requests\StoreHazardouWasteRequest;
+use Modules\Wastes\Http\Requests\UpdateHazardouWasteRequest;
 use Modules\Wastes\Models\HazardouWaste;
+use Modules\Wastes\Services\EvidenceImageService;
 
 class HazardouWasteController extends Controller
 {
+    public function __construct(
+        private readonly EvidenceImageService $evidenceImageService
+    ) {}
+
     /**
      * Show the form for creating a new resource.
      */
@@ -23,15 +30,18 @@ class HazardouWasteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreHazardouWasteRequest $request)
     {
-        $validated = $request->validate([
-            'productive_unit_id' => ['required', 'exists:productive_units,id'],
-            'entry_date' => ['required', 'date'],
-            'waste_type' => ['required', 'in:Residuo Quimico,Residuo Biologico,Residuo Organico Peligroso'],
-            'amount' => ['required', 'integer', 'min:1'],
-            'observations' => ['nullable', 'string'],
-        ]);
+        $validated = $request->validated();
+
+        if ($request->hasFile('evidence_image')) {
+            $validated['evidence_image'] = $this->evidenceImageService->store(
+                $request->file('evidence_image'),
+                'evidences/hazardou_wastes'
+            );
+        } else {
+            unset($validated['evidence_image']);
+        }
 
         $validated['user_id'] = Auth::id();
 
@@ -40,6 +50,16 @@ class HazardouWasteController extends Controller
         return redirect()
             ->route('hazardou-wastes.byUnit', ['unit' => $waste->productive_unit_id])
             ->with('success', 'Residuo peligroso registrado correctamente.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(HazardouWaste $hazardouWaste)
+    {
+        $hazardouWaste->loadMissing(['productiveUnit', 'user']);
+
+        return view('wastes::respel-show', compact('hazardouWaste'));
     }
 
     /**
@@ -61,19 +81,24 @@ class HazardouWasteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, HazardouWaste $hazardouWaste)
+    public function update(UpdateHazardouWasteRequest $request, HazardouWaste $hazardouWaste)
     {
         // Aprendiz solo puede actualizar sus propios registros
         if (Auth::user()->hasRole('Aprendiz') && $hazardouWaste->user_id !== Auth::id()) {
             abort(403, 'No puedes editar registros de otros usuarios, solo lider ambiental.');
         }
 
-        $validated = $request->validate([
-            'entry_date' => ['required', 'date'],
-            'waste_type' => ['required', 'in:Residuo Quimico,Residuo Biologico,Residuo Organico Peligroso'],
-            'amount' => ['required', 'integer', 'min:1'],
-            'observations' => ['nullable', 'string'],
-        ]);
+        $validated = $request->validated();
+
+        if ($request->hasFile('evidence_image')) {
+            $validated['evidence_image'] = $this->evidenceImageService->replace(
+                $request->file('evidence_image'),
+                'evidences/hazardou_wastes',
+                $hazardouWaste->evidence_image
+            );
+        } else {
+            unset($validated['evidence_image']);
+        }
 
         $hazardouWaste->update($validated);
 
@@ -87,6 +112,8 @@ class HazardouWasteController extends Controller
      */
     public function destroy(HazardouWaste $hazardouWaste)
     {
+        $this->evidenceImageService->delete($hazardouWaste->evidence_image);
+
         $unitId = $hazardouWaste->productive_unit_id;
         $hazardouWaste->delete();
 
@@ -120,7 +147,34 @@ class HazardouWasteController extends Controller
             return response()->json(['data' => $wastes]);
         }
 
-        return view('wastes::respel-index', compact('unit'));
+        $dateBounds = HazardouWaste::query()
+            ->where('productive_unit_id', $unit->id)
+            ->selectRaw('MIN(entry_date) as min_entry_date, MAX(entry_date) as max_entry_date, COUNT(*) as total_records')
+            ->first();
+
+        $minEntryDate = $dateBounds?->min_entry_date
+            ? Carbon::parse($dateBounds->min_entry_date)->format('Y-m-d')
+            : null;
+
+        $maxEntryDate = $dateBounds?->max_entry_date
+            ? Carbon::parse($dateBounds->max_entry_date)->format('Y-m-d')
+            : null;
+
+        $hasRecords = (int) ($dateBounds?->total_records ?? 0) > 0;
+
+        $availableYears = HazardouWaste::query()
+            ->where('productive_unit_id', $unit->id)
+            ->whereNotNull('entry_date')
+            ->whereYear('entry_date', '<=', now()->year)
+            ->selectRaw('YEAR(entry_date) as year')
+            ->distinct()
+            ->orderByDesc('year')
+            ->pluck('year')
+            ->map(static fn ($year): int => (int) $year)
+            ->values()
+            ->all();
+
+        return view('wastes::respel-index', compact('unit', 'minEntryDate', 'maxEntryDate', 'hasRecords', 'availableYears'));
     }
 
     private function weekLabel($date): string

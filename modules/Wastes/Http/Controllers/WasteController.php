@@ -8,10 +8,17 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Modules\ProductiveUnits\Models\ProductiveUnit;
+use Modules\Wastes\Http\Requests\StoreWasteRequest;
+use Modules\Wastes\Http\Requests\UpdateWasteRequest;
 use Modules\Wastes\Models\Waste;
+use Modules\Wastes\Services\EvidenceImageService;
 
 class WasteController extends Controller
 {
+    public function __construct(
+        private readonly EvidenceImageService $evidenceImageService
+    ) {}
+
     /**
      * Show the form for creating a new resource.
      */
@@ -23,15 +30,18 @@ class WasteController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreWasteRequest $request)
     {
-        $validated = $request->validate([
-            'productive_unit_id' => ['required', 'exists:productive_units,id'],
-            'entry_date' => ['required', 'date'],
-            'waste_type' => ['required', 'in:Residuo Organico,Residuo Ordinarios,Residuo Reciclables'],
-            'amount' => ['required', 'integer', 'min:1'],
-            'observations' => ['nullable', 'string'],
-        ]);
+        $validated = $request->validated();
+
+        if ($request->hasFile('evidence_image')) {
+            $validated['evidence_image'] = $this->evidenceImageService->store(
+                $request->file('evidence_image'),
+                'evidences/wastes'
+            );
+        } else {
+            unset($validated['evidence_image']);
+        }
 
         $validated['user_id'] = Auth::id();
 
@@ -40,6 +50,16 @@ class WasteController extends Controller
         return redirect()
             ->route('wastes.byUnit', ['unit' => $waste->productive_unit_id])
             ->with('success', 'Residuo registrado correctamente.');
+    }
+
+    /**
+     * Display the specified resource.
+     */
+    public function show(Waste $waste)
+    {
+        $waste->loadMissing(['productiveUnit', 'user']);
+
+        return view('wastes::resol-show', compact('waste'));
     }
 
     /**
@@ -61,19 +81,24 @@ class WasteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Waste $waste)
+    public function update(UpdateWasteRequest $request, Waste $waste)
     {
         // Aprendiz solo puede actualizar sus propios registros
         if (Auth::user()->hasRole('Aprendiz') && $waste->user_id !== Auth::id()) {
             abort(403, 'No puedes editar registros de otros usuarios.');
         }
 
-        $validated = $request->validate([
-            'entry_date' => ['required', 'date'],
-            'waste_type' => ['required', 'in:Residuo Organico,Residuo Ordinarios,Residuo Reciclables'],
-            'amount' => ['required', 'integer', 'min:1'],
-            'observations' => ['nullable', 'string'],
-        ]);
+        $validated = $request->validated();
+
+        if ($request->hasFile('evidence_image')) {
+            $validated['evidence_image'] = $this->evidenceImageService->replace(
+                $request->file('evidence_image'),
+                'evidences/wastes',
+                $waste->evidence_image
+            );
+        } else {
+            unset($validated['evidence_image']);
+        }
 
         $waste->update($validated);
 
@@ -87,6 +112,8 @@ class WasteController extends Controller
      */
     public function destroy(Waste $waste)
     {
+        $this->evidenceImageService->delete($waste->evidence_image);
+
         $unitId = $waste->productive_unit_id;
         $waste->delete();
 
@@ -120,7 +147,34 @@ class WasteController extends Controller
             return response()->json(['data' => $wastes]);
         }
 
-        return view('wastes::resol-index', compact('unit'));
+        $dateBounds = Waste::query()
+            ->where('productive_unit_id', $unit->id)
+            ->selectRaw('MIN(entry_date) as min_entry_date, MAX(entry_date) as max_entry_date, COUNT(*) as total_records')
+            ->first();
+
+        $minEntryDate = $dateBounds?->min_entry_date
+            ? Carbon::parse($dateBounds->min_entry_date)->format('Y-m-d')
+            : null;
+
+        $maxEntryDate = $dateBounds?->max_entry_date
+            ? Carbon::parse($dateBounds->max_entry_date)->format('Y-m-d')
+            : null;
+
+        $hasRecords = (int) ($dateBounds?->total_records ?? 0) > 0;
+
+        $availableYears = Waste::query()
+            ->where('productive_unit_id', $unit->id)
+            ->whereNotNull('entry_date')
+            ->whereYear('entry_date', '<=', now()->year)
+            ->selectRaw('YEAR(entry_date) as year')
+            ->distinct()
+            ->orderByDesc('year')
+            ->pluck('year')
+            ->map(static fn ($year): int => (int) $year)
+            ->values()
+            ->all();
+
+        return view('wastes::resol-index', compact('unit', 'minEntryDate', 'maxEntryDate', 'hasRecords', 'availableYears'));
     }
 
     /**
