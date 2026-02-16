@@ -22,10 +22,6 @@ Route::middleware(['web', 'auth'])->group(function () {
         ->middleware('permission:productive-units.index')
         ->name('productive-units.index');
 
-    Route::get('productive-units/{unit}', [ProductiveUnitController::class, 'show'])
-        ->middleware('permission:productive-units.show')
-        ->name('productive-units.show');
-
     // ========================================
     // RUTAS DE CREACIÓN (Gestora + Líder)
     // ========================================
@@ -40,21 +36,28 @@ Route::middleware(['web', 'auth'])->group(function () {
     // ========================================
     // RUTAS DE EDICIÓN (Gestora + Líder)
     // ========================================
-    Route::get('productive-units/{unit}/edit', [ProductiveUnitController::class, 'edit'])
+    Route::get('productive-units/{productiveUnit}/edit', [ProductiveUnitController::class, 'edit'])
         ->middleware('permission:productive-units.edit')
         ->name('productive-units.edit');
 
-    Route::put('productive-units/{unit}', [ProductiveUnitController::class, 'update'])
+    Route::put('productive-units/{productiveUnit}', [ProductiveUnitController::class, 'update'])
         ->middleware('permission:productive-units.update')
         ->name('productive-units.update');
 
-    Route::patch('productive-units/{unit}', [ProductiveUnitController::class, 'update'])
+    Route::patch('productive-units/{productiveUnit}', [ProductiveUnitController::class, 'update'])
         ->middleware('permission:productive-units.update');
 
     // ========================================
     // RUTAS DE ELIMINACIÓN (Solo Gestora)
     // ========================================
-    Route::delete('productive-units/{unit}', [ProductiveUnitController::class, 'destroy'])
+    Route::delete('productive-units/{productiveUnit}', [ProductiveUnitController::class, 'destroy'])
         ->middleware('permission:productive-units.destroy')
         ->name('productive-units.destroy');
+
+    // ========================================
+    // RUTAS DE DETALLE (Debe ir al final)
+    // ========================================
+    Route::get('productive-units/{productiveUnit}', [ProductiveUnitController::class, 'show'])
+        ->middleware('permission:productive-units.show')
+        ->name('productive-units.show');
 });

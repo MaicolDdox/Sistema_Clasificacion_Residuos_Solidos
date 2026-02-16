@@ -21,12 +21,12 @@
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-            <div class="overflow-hidden border border-slate-100 rounded-xl">
-                <table id="unitsByAreaTable" class="w-full text-sm text-left">
+            <div class="w-full max-w-full overflow-x-auto border border-slate-100 rounded-xl">
+                <table id="unitsByAreaTable" class="w-full min-w-[740px] table-auto text-sm text-left">
                     <thead class="bg-slate-50 text-slate-600 uppercase text-xs tracking-wide">
                         <tr>
                             <th class="px-4 py-3 font-semibold">Unidad productiva</th>
-                            <th class="px-4 py-3 font-semibold text-center">Acciones</th>
+                            <th class="px-4 py-3 font-semibold text-center whitespace-nowrap">Acciones</th>
                         </tr>
                     </thead>
                 </table>
@@ -46,8 +46,13 @@
                     { data: 'name', name: 'name' },
                     { data: 'acciones', name: 'acciones', orderable: false, searchable: false }
                 ],
+                columnDefs: [
+                    { targets: 0, className: 'units-name-cell' },
+                    { targets: 1, className: 'units-actions-cell' },
+                ],
                 language: { url: '/i18n/es-ES.json' },
                 pageLength: 10,
+                autoWidth: false,
                 responsive: true,
             });
         });

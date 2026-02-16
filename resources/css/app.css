@@ -88,6 +88,236 @@ div.dataTables_wrapper div.dataTables_paginate {
 
 }
 
+/* Ajustes responsive para DataTables de RESOL/RESPEL (DataTables 2) */
+#resolTable_wrapper,
+#respelTable_wrapper {
+    width: 100%;
+}
+
+#resolTable_wrapper .dt-layout-row,
+#respelTable_wrapper .dt-layout-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#resolTable_wrapper .dt-layout-cell,
+#respelTable_wrapper .dt-layout-cell {
+    min-width: 0;
+    width: 100%;
+}
+
+#resolTable_wrapper .dt-length,
+#respelTable_wrapper .dt-length,
+#resolTable_wrapper .dt-search,
+#respelTable_wrapper .dt-search {
+    width: 100%;
+}
+
+#resolTable_wrapper .dt-search label,
+#respelTable_wrapper .dt-search label {
+    display: block;
+    width: 100%;
+    color: #475569;
+    font-size: 0.875rem;
+}
+
+#resolTable_wrapper .dt-search input,
+#respelTable_wrapper .dt-search input {
+    width: 100%;
+    margin-top: 0.35rem;
+    margin-left: 0 !important;
+    border-radius: 0.5rem;
+    border-color: #cbd5e1;
+}
+
+#resolTable_wrapper .dt-length label,
+#respelTable_wrapper .dt-length label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #475569;
+    font-size: 0.875rem;
+}
+
+#resolTable_wrapper .dt-length select,
+#respelTable_wrapper .dt-length select {
+    border-radius: 0.5rem;
+    border-color: #cbd5e1;
+}
+
+#resolTable_wrapper .dt-info,
+#respelTable_wrapper .dt-info {
+    width: 100%;
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+#resolTable_wrapper .dt-paging,
+#respelTable_wrapper .dt-paging {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+}
+
+#resolTable_wrapper .dt-paging nav,
+#respelTable_wrapper .dt-paging nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+#resolTable_wrapper .dt-paging .dt-paging-button,
+#respelTable_wrapper .dt-paging .dt-paging-button {
+    border-radius: 0.5rem;
+}
+
+#resolTable_wrapper td.wastes-nowrap-cell,
+#respelTable_wrapper td.wastes-nowrap-cell {
+    white-space: nowrap;
+}
+
+#resolTable_wrapper td.wastes-observations-cell,
+#respelTable_wrapper td.wastes-observations-cell {
+    max-width: 14rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+#resolTable_wrapper td.wastes-actions-cell,
+#respelTable_wrapper td.wastes-actions-cell {
+    white-space: nowrap;
+    text-align: center;
+}
+
+/* Ajustes responsive para DataTable de unidades por área (Wastes) */
+#unitsByAreaTable_wrapper {
+    width: 100%;
+}
+
+#unitsByAreaTable_wrapper .dt-layout-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#unitsByAreaTable_wrapper .dt-layout-cell {
+    min-width: 0;
+    width: 100%;
+}
+
+#unitsByAreaTable_wrapper .dt-length,
+#unitsByAreaTable_wrapper .dt-info,
+#unitsByAreaTable_wrapper .dt-paging {
+    width: 100%;
+}
+
+#unitsByAreaTable_wrapper .dt-length label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #475569;
+    font-size: 0.875rem;
+}
+
+#unitsByAreaTable_wrapper .dt-length select {
+    border-radius: 0.5rem;
+    border-color: #cbd5e1;
+}
+
+#unitsByAreaTable_wrapper .dt-info {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+#unitsByAreaTable_wrapper .dt-paging {
+    display: flex;
+    justify-content: flex-start;
+}
+
+#unitsByAreaTable_wrapper .dt-paging nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+#unitsByAreaTable_wrapper .dt-paging .dt-paging-button {
+    border-radius: 0.5rem;
+}
+
+#unitsByAreaTable_wrapper td.units-name-cell {
+    min-width: 14rem;
+    white-space: normal;
+    word-break: break-word;
+}
+
+#unitsByAreaTable_wrapper td.units-actions-cell {
+    min-width: 17rem;
+    white-space: nowrap;
+    vertical-align: middle;
+}
+
+@media (min-width: 640px) {
+    #unitsByAreaTable_wrapper td.units-actions-cell {
+        min-width: 18rem;
+    }
+}
+
+@media (min-width: 768px) {
+    #resolTable_wrapper .dt-layout-cell,
+    #respelTable_wrapper .dt-layout-cell,
+    #unitsByAreaTable_wrapper .dt-layout-cell {
+        width: auto;
+    }
+
+    #resolTable_wrapper .dt-length,
+    #respelTable_wrapper .dt-length,
+    #resolTable_wrapper .dt-search,
+    #respelTable_wrapper .dt-search,
+    #resolTable_wrapper .dt-info,
+    #respelTable_wrapper .dt-info,
+    #resolTable_wrapper .dt-paging,
+    #respelTable_wrapper .dt-paging,
+    #unitsByAreaTable_wrapper .dt-length,
+    #unitsByAreaTable_wrapper .dt-info,
+    #unitsByAreaTable_wrapper .dt-paging {
+        width: auto;
+    }
+
+    #resolTable_wrapper .dt-search label,
+    #respelTable_wrapper .dt-search label {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    #resolTable_wrapper .dt-search input,
+    #respelTable_wrapper .dt-search input {
+        width: 14rem;
+        margin-top: 0;
+    }
+
+    #resolTable_wrapper .dt-paging,
+    #respelTable_wrapper .dt-paging,
+    #unitsByAreaTable_wrapper .dt-paging {
+        justify-content: flex-end;
+    }
+
+    #resolTable_wrapper td.wastes-observations-cell,
+    #respelTable_wrapper td.wastes-observations-cell {
+        max-width: 24rem;
+        white-space: normal;
+        overflow: visible;
+        text-overflow: clip;
+        word-break: break-word;
+    }
+}
+
 /* Alpine.js x-cloak - Oculta elementos hasta que Alpine se inicialice */
 [x-cloak] {
     display: none !important;
