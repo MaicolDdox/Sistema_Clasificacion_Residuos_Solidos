@@ -19,6 +19,11 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::create('hazardou_waste_outlets', function (Blueprint $table) {
+            $table->id();
+            $table->date('outlet_date');
+            $table->bigInteger('amount');
+            $table->timestamps();
+        });
     }
 };
