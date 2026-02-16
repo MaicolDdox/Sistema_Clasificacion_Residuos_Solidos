@@ -95,6 +95,7 @@
 
     {{-- Cards mobile --}}
     <div id="mobileCards" class="mt-6 space-y-3 md:hidden"></div>
+    <div id="mobileCardsPagination" class="mt-4 md:hidden"></div>
 
     {{-- CDNs & SCRIPT --}}
     @include('partials.footer-script-cdn')
@@ -102,63 +103,167 @@
     {{-- Script busqueda + paginacion AJAX --}}
     <script>
         $(document).ready(function() {
-            let allUsers = [];
+            const mobileState = {
+                allRows: [],
+                filteredRows: [],
+                currentPage: 1,
+                pageSize: 10,
+            };
 
-            // Renderizar cards mobile
-            function renderCards(data) {
-                const container = $('#userCards');
-                const empty = $('#userCardsEmpty');
-                container.empty();
+            function stripHtml(value) {
+                return $('<div>').html(value ?? '').text();
+            }
 
-                if (!data || data.length === 0) {
-                    empty.removeClass('hidden');
+            function normalize(value) {
+                return stripHtml(value).toLowerCase();
+            }
+
+            function initials(value) {
+                return (stripHtml(value).trim().substring(0, 1) || 'U').toUpperCase();
+            }
+
+            function escapeAttr(value) {
+                return String(value ?? '')
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;');
+            }
+
+            function renderMobilePagination() {
+                const totalRows = mobileState.filteredRows.length;
+                const totalPages = Math.ceil(totalRows / mobileState.pageSize);
+                const container = $('#mobileCardsPagination');
+
+                if (totalPages <= 1) {
+                    container.empty();
                     return;
                 }
-                empty.addClass('hidden');
 
-                data.forEach(function(user) {
+                const previousDisabled = mobileState.currentPage === 1;
+                const nextDisabled = mobileState.currentPage === totalPages;
+
+                container.html(`
+                    <div class="flex items-center justify-between gap-2 bg-white border border-slate-200 rounded-xl p-2 shadow-sm">
+                        <button
+                            type="button"
+                            data-page="${mobileState.currentPage - 1}"
+                            class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 ${previousDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-slate-50'}"
+                        >
+                            Anterior
+                        </button>
+                        <p class="text-xs sm:text-sm text-slate-500 text-center">
+                            Página ${mobileState.currentPage} de ${totalPages}
+                        </p>
+                        <button
+                            type="button"
+                            data-page="${mobileState.currentPage + 1}"
+                            class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 ${nextDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-slate-50'}"
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                `);
+            }
+
+            function renderMobileCards() {
+                const container = $('#mobileCards');
+                const totalRows = mobileState.filteredRows.length;
+
+                if (!totalRows) {
+                    container.html('<div class="text-center text-slate-400 py-8 text-sm">No hay usuarios registrados.</div>');
+                    $('#mobileCardsPagination').empty();
+                    return;
+                }
+
+                const totalPages = Math.ceil(totalRows / mobileState.pageSize);
+                if (mobileState.currentPage > totalPages) {
+                    mobileState.currentPage = totalPages;
+                }
+                if (mobileState.currentPage < 1) {
+                    mobileState.currentPage = 1;
+                }
+
+                const start = (mobileState.currentPage - 1) * mobileState.pageSize;
+                const pageRows = mobileState.filteredRows.slice(start, start + mobileState.pageSize);
+
+                container.empty();
+                pageRows.forEach(function(row) {
+                    const safeName = stripHtml(row.name);
+                    const safeEmail = stripHtml(row.email);
+                    const safeCreated = stripHtml(row.created_at);
+                    const safeRoles = row.roles ?? 'Sin rol';
+                    const safeId = escapeAttr(row.id);
                     const card = `
-                        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-3">
+                        <div class="mobile-card bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
                             <div class="flex items-center justify-between">
                                 <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-sm shrink-0">
-                                        ${(user.name ?? '??').substring(0, 2).toUpperCase()}
+                                    <div class="w-10 h-10 shrink-0 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-sm">
+                                        ${initials(row.name)}
                                     </div>
                                     <div class="min-w-0">
-                                        <p class="text-sm font-semibold text-slate-900 truncate">${user.name ?? ''}</p>
-                                        <p class="text-xs text-slate-500 truncate">${user.email ?? ''}</p>
+                                        <p class="text-sm font-semibold text-slate-800 truncate">${safeName}</p>
+                                        <p class="text-xs text-slate-400 truncate">${safeEmail}</p>
                                     </div>
                                 </div>
-                                <div class="flex items-center gap-1 shrink-0">
-                                    ${user.acciones}
-                                </div>
+                                <span class="text-xs text-slate-400">#${safeId}</span>
                             </div>
-                            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
-                                <span class="inline-flex items-center gap-1.5 text-xs font-medium text-purple-700 bg-purple-50 rounded-full px-2.5 py-1">
+                            <div class="flex flex-wrap items-center gap-2">
+                                <span class="inline-flex items-center gap-1 text-xs font-medium text-purple-700 bg-purple-50 rounded-full px-2.5 py-1">
                                     <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                                    ${user.roles ?? '<span class="text-slate-400 italic">Sin rol</span>'}
+                                    ${safeRoles}
                                 </span>
-                                <span class="inline-flex items-center gap-1.5 text-xs text-slate-500">
-                                    <svg class="w-3 h-3 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                    ${user.created_at ?? ''}
+                                <span class="inline-flex items-center gap-1 text-xs text-slate-500">
+                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                                    ${safeCreated}
                                 </span>
+                            </div>
+                            <div class="pt-2 border-t border-slate-100">
+                                ${row.acciones ?? ''}
                             </div>
                         </div>
                     `;
                     container.append(card);
                 });
+
+                renderMobilePagination();
             }
 
-            // Filtrar cards mobile
-            function filterCards(query) {
-                const q = query.toLowerCase();
-                const filtered = allUsers.filter(function(user) {
-                    return (user.name && user.name.toLowerCase().includes(q)) ||
-                           (user.email && user.email.toLowerCase().includes(q)) ||
-                           (user.roles && user.roles.toLowerCase().includes(q));
-                });
-                renderCards(filtered);
+            function setMobileRows(rows) {
+                mobileState.allRows = rows;
+                mobileState.filteredRows = rows.slice();
+                mobileState.currentPage = 1;
+                $('#usersTotalCount').text(rows.length);
+                renderMobileCards();
             }
+
+            function filterMobileRows(query) {
+                const term = String(query ?? '').trim().toLowerCase();
+                if (!term) {
+                    mobileState.filteredRows = mobileState.allRows.slice();
+                } else {
+                    mobileState.filteredRows = mobileState.allRows.filter(function(row) {
+                        return normalize(row.id).includes(term)
+                            || normalize(row.name).includes(term)
+                            || normalize(row.email).includes(term)
+                            || normalize(row.roles).includes(term)
+                            || normalize(row.created_at).includes(term);
+                    });
+                }
+                mobileState.currentPage = 1;
+                renderMobileCards();
+            }
+
+            $('#mobileCardsPagination').on('click', 'button[data-page]', function() {
+                const requestedPage = Number($(this).attr('data-page'));
+                if (!Number.isInteger(requestedPage)) {
+                    return;
+                }
+
+                const maxPage = Math.max(1, Math.ceil(mobileState.filteredRows.length / mobileState.pageSize));
+                mobileState.currentPage = Math.min(Math.max(requestedPage, 1), maxPage);
+                renderMobileCards();
+            });
 
             const table = $('#usersTable').DataTable({
                 processing: true,
@@ -166,8 +271,9 @@
                 ajax: {
                     url: '{{ route("roles.index") }}',
                     dataSrc: function(json) {
-                        renderMobileCards(json.data || []);
-                        return json.data || [];
+                        const rows = Array.isArray(json.data) ? json.data : [];
+                        setMobileRows(rows);
+                        return rows;
                     }
                 },
                 dom: 'lrtip',
@@ -210,62 +316,9 @@
 
             // Busqueda filtra tabla y cards
             $('#searchUsers').on('keyup', function() {
-                const term = this.value.toLowerCase();
                 table.search(this.value).draw();
-                // Filtrar cards mobile
-                $('#mobileCards .mobile-card').each(function() {
-                    const text = $(this).text().toLowerCase();
-                    $(this).toggle(text.includes(term));
-                });
+                filterMobileRows(this.value);
             });
-
-            table.on('xhr', function() {
-                const json = table.ajax.json();
-                const total = json && json.data ? json.data.length : 0;
-                $('#usersTotalCount').text(total);
-            });
-
-            // Renderizar cards mobile
-            function renderMobileCards(data) {
-                const container = $('#mobileCards');
-                container.empty();
-                if (!data.length) {
-                    container.html('<div class="text-center text-slate-400 py-8 text-sm">No hay usuarios registrados.</div>');
-                    return;
-                }
-                data.forEach(function(row) {
-                    const card = `
-                        <div class="mobile-card bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-10 h-10 shrink-0 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-sm">
-                                        ${(row.name ?? 'U').charAt(0).toUpperCase()}
-                                    </div>
-                                    <div class="min-w-0">
-                                        <p class="text-sm font-semibold text-slate-800 truncate">${row.name ?? ''}</p>
-                                        <p class="text-xs text-slate-400 truncate">${row.email ?? ''}</p>
-                                    </div>
-                                </div>
-                                <span class="text-xs text-slate-400">#${row.id}</span>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <span class="inline-flex items-center gap-1 text-xs font-medium text-purple-700 bg-purple-50 rounded-full px-2.5 py-1">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                                    ${row.roles ?? 'Sin rol'}
-                                </span>
-                                <span class="inline-flex items-center gap-1 text-xs text-slate-500">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                    ${row.created_at ?? ''}
-                                </span>
-                            </div>
-                            <div class="pt-2 border-t border-slate-100">
-                                ${row.acciones ?? ''}
-                            </div>
-                        </div>
-                    `;
-                    container.append(card);
-                });
-            }
         });
     </script>
 

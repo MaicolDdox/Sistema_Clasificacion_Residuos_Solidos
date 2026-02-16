@@ -73,8 +73,8 @@
         </div>
     </div>
 
-    {{-- Tabla AJAX --}}
-    <div class="mt-4 md:mt-6 bg-white rounded-xl md:rounded-2xl shadow-sm border border-slate-200 p-2 md:p-4 mx-4 sm:mx-6 lg:mx-8">
+    {{-- Tabla AJAX (solo desktop) --}}
+    <div class="mt-4 md:mt-6 bg-white rounded-xl md:rounded-2xl shadow-sm border border-slate-200 p-2 md:p-4 mx-4 sm:mx-6 lg:mx-8 hidden md:block">
         <div class="overflow-x-auto border border-slate-100 rounded-lg md:rounded-xl">
             <table id="areasTable" class="w-full text-sm text-left">
                 <thead class="bg-slate-50 text-slate-600 uppercase text-xs tracking-wide">
@@ -91,16 +91,156 @@
         </div>
     </div>
 
+    {{-- Cards mobile --}}
+    <div id="areasMobileCards" class="mt-4 mx-4 sm:mx-6 lg:mx-8 space-y-3 md:hidden"></div>
+    <div id="areasMobilePagination" class="mt-4 mx-4 sm:mx-6 lg:mx-8 md:hidden"></div>
+
     {{-- ================== CDNs & SCRIPT ================== --}}
     @include('partials.footer-script-cdn')
 
     {{-- Script busqueda + paginacion AJAX --}}
     <script>
         $(document).ready(function() {
+            const mobileState = {
+                allRows: [],
+                filteredRows: [],
+                currentPage: 1,
+                pageSize: 10,
+            };
+
+            function stripHtml(value) {
+                return $('<div>').html(value ?? '').text();
+            }
+
+            function normalize(value) {
+                return stripHtml(value).toLowerCase();
+            }
+
+            function renderMobilePagination() {
+                const totalRows = mobileState.filteredRows.length;
+                const totalPages = Math.ceil(totalRows / mobileState.pageSize);
+                const container = $('#areasMobilePagination');
+
+                if (totalPages <= 1) {
+                    container.empty();
+                    return;
+                }
+
+                const previousDisabled = mobileState.currentPage === 1;
+                const nextDisabled = mobileState.currentPage === totalPages;
+
+                container.html(`
+                    <div class="flex items-center justify-between gap-2 bg-white border border-slate-200 rounded-xl p-2 shadow-sm">
+                        <button
+                            type="button"
+                            data-page="${mobileState.currentPage - 1}"
+                            class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 ${previousDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-slate-50'}"
+                        >
+                            Anterior
+                        </button>
+                        <p class="text-xs sm:text-sm text-slate-500 text-center">
+                            Página ${mobileState.currentPage} de ${totalPages}
+                        </p>
+                        <button
+                            type="button"
+                            data-page="${mobileState.currentPage + 1}"
+                            class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 ${nextDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-slate-50'}"
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                `);
+            }
+
+            function renderMobileCards() {
+                const container = $('#areasMobileCards');
+                const totalRows = mobileState.filteredRows.length;
+
+                if (!totalRows) {
+                    container.html('<div class="text-center text-slate-400 py-8 text-sm">No hay áreas registradas.</div>');
+                    $('#areasMobilePagination').empty();
+                    return;
+                }
+
+                const totalPages = Math.ceil(totalRows / mobileState.pageSize);
+                mobileState.currentPage = Math.min(Math.max(mobileState.currentPage, 1), totalPages);
+
+                const start = (mobileState.currentPage - 1) * mobileState.pageSize;
+                const pageRows = mobileState.filteredRows.slice(start, start + mobileState.pageSize);
+
+                container.empty();
+                pageRows.forEach(function(row) {
+                    const card = `
+                        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
+                            <div class="flex items-center justify-between gap-3">
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold text-slate-800 truncate">${stripHtml(row.name)}</p>
+                                    <p class="text-xs text-slate-400">#${stripHtml(row.id)}</p>
+                                </div>
+                                <div class="shrink-0">
+                                    ${row.acciones ?? ''}
+                                </div>
+                            </div>
+                            <div class="space-y-2 text-xs text-slate-500">
+                                <p><span class="font-medium text-slate-700">Descripción:</span> ${stripHtml(row.description) || 'Sin descripción'}</p>
+                                <p><span class="font-medium text-slate-700">Creación:</span> ${stripHtml(row.created_at)}</p>
+                                <p><span class="font-medium text-slate-700">Actualización:</span> ${stripHtml(row.updated_at)}</p>
+                            </div>
+                        </div>
+                    `;
+                    container.append(card);
+                });
+
+                renderMobilePagination();
+            }
+
+            function setMobileRows(rows) {
+                mobileState.allRows = rows;
+                mobileState.filteredRows = rows.slice();
+                mobileState.currentPage = 1;
+                $('#areasTotalCount').text(rows.length);
+                renderMobileCards();
+            }
+
+            function filterMobileRows(query) {
+                const term = String(query ?? '').trim().toLowerCase();
+                if (!term) {
+                    mobileState.filteredRows = mobileState.allRows.slice();
+                } else {
+                    mobileState.filteredRows = mobileState.allRows.filter(function(row) {
+                        return normalize(row.id).includes(term)
+                            || normalize(row.name).includes(term)
+                            || normalize(row.description).includes(term)
+                            || normalize(row.created_at).includes(term)
+                            || normalize(row.updated_at).includes(term);
+                    });
+                }
+                mobileState.currentPage = 1;
+                renderMobileCards();
+            }
+
+            $('#areasMobilePagination').on('click', 'button[data-page]', function() {
+                const requestedPage = Number($(this).attr('data-page'));
+                if (!Number.isInteger(requestedPage)) {
+                    return;
+                }
+
+                const maxPage = Math.max(1, Math.ceil(mobileState.filteredRows.length / mobileState.pageSize));
+                mobileState.currentPage = Math.min(Math.max(requestedPage, 1), maxPage);
+                renderMobileCards();
+            });
+
             const table = $('#areasTable').DataTable({
                 processing: true,
                 serverSide: false,
-                ajax: '{{ route("areas.index") }}',
+                ajax: {
+                    url: '{{ route("areas.index") }}',
+                    dataSrc: function(json) {
+                        const rows = Array.isArray(json.data) ? json.data : [];
+                        setMobileRows(rows);
+                        return rows;
+                    }
+                },
                 dom: 'lrtip', // ocultar search box nativo (usamos el superior)
                 columns: [
                     { data: 'id', name: 'id' },
@@ -169,13 +309,7 @@
             // Filtro en tiempo real si existe el input
             $('#searchAreas').on('keyup', function() {
                 table.search(this.value).draw();
-            });
-
-            // Total de registros (solo si llega data)
-            table.on('xhr', function() {
-                const json = table.ajax.json();
-                const total = json && json.data ? json.data.length : 0;
-                $('#areasTotalCount').text(total);
+                filterMobileRows(this.value);
             });
         });
     </script>
