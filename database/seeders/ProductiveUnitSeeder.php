@@ -79,7 +79,7 @@ class ProductiveUnitSeeder extends Seeder
             // Nos aseguramos de que el área exista
             $area = Area::firstOrCreate(
                 ['name' => $areaName],
-                ['description' => null]
+                ['description' => "Area de prueba"]
             );
 
             foreach ($units as $unitName) {
@@ -89,7 +89,7 @@ class ProductiveUnitSeeder extends Seeder
                         'name'    => $unitName,
                     ],
                     [
-                        'description' => null,
+                        'description' => "Unidad productiva de prueba",
                     ]
                 );
             }
