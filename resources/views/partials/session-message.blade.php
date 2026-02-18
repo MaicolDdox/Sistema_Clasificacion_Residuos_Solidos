@@ -1,2 +1,1 @@
-{{-- Parcial legado: se mantiene como puente al nuevo stack de toasts global --}}
-@include('partials.ui.toast-stack')
+{{-- Parcial legado sin renderizado. El stack oficial vive en el layout global --}}
