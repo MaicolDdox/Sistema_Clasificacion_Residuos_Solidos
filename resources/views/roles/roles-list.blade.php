@@ -4,42 +4,29 @@
     <div class="max-w-7xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6 lg:px-0">
 
         {{-- Encabezado --}}
-        <div class="bg-gradient-to-r from-emerald-50 via-white to-cyan-50 border border-emerald-100 rounded-2xl p-4 sm:p-6 shadow-sm">
-            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div class="space-y-2">
-                    <p class="inline-flex items-center text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600 bg-emerald-50 rounded-full px-3 py-1">
-                        <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
-                        Sistema de Roles
-                    </p>
+        <x-ui.page-header
+            eyebrow="Sistema de Roles"
+            title="Asignacion de Roles"
+            subtitle="Administra los roles de usuarios del sistema SCR."
+            eyebrowTone="emerald"
+        >
+            <x-slot:actions>
+                <div class="hidden md:flex items-center gap-2 px-3 py-2 bg-white border border-emerald-100 rounded-xl shadow-sm">
+                    <span class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold">US</span>
                     <div>
-                        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight">Asignacion de Roles</h1>
-                        <p class="text-sm sm:text-base text-slate-500">Administra los roles de usuarios del sistema SCR.</p>
+                        <p class="text-xs text-slate-400">Total usuarios</p>
+                        <p class="text-lg font-semibold text-slate-800" id="usersTotalCount"></p>
                     </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="hidden md:flex items-center gap-2 px-3 py-2 bg-white border border-emerald-100 rounded-xl shadow-sm">
-                        <span class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold">US</span>
-                        <div>
-                            <p class="text-xs text-slate-400">Total usuarios</p>
-                            <p class="text-lg font-semibold text-slate-800" id="usersTotalCount"></p>
-                        </div>
-                    </div>
-                    <a href="{{ route('roles.create') }}"
-                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-200 shadow-sm hover:shadow-md">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        <span>Asignar Rol</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{-- Mensajes de confirmacion --}}
-        @include('partials.session-message')
-
-
+                <a href="{{ route('roles.create') }}"
+                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-200 shadow-sm hover:shadow-md">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <span>Asignar Rol</span>
+                </a>
+            </x-slot:actions>
+        </x-ui.page-header>
 
         {{-- Barra de herramientas --}}
         <div class="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-3 shadow-sm">
@@ -95,6 +82,7 @@
 
     {{-- Cards mobile --}}
     <div id="mobileCards" class="mt-6 space-y-3 md:hidden"></div>
+    <div id="mobileCardsPagination" class="mt-4 md:hidden"></div>
 
     {{-- CDNs & SCRIPT --}}
     @include('partials.footer-script-cdn')
@@ -102,63 +90,144 @@
     {{-- Script busqueda + paginacion AJAX --}}
     <script>
         $(document).ready(function() {
-            let allUsers = [];
+            const mobileState = {
+                allRows: [],
+                filteredRows: [],
+                currentPage: 1,
+                pageSize: 10,
+            };
 
-            // Renderizar cards mobile
-            function renderCards(data) {
-                const container = $('#userCards');
-                const empty = $('#userCardsEmpty');
-                container.empty();
+            function stripHtml(value) {
+                return $('<div>').html(value ?? '').text();
+            }
 
-                if (!data || data.length === 0) {
-                    empty.removeClass('hidden');
+            function normalize(value) {
+                return stripHtml(value).toLowerCase();
+            }
+
+            function renderMobilePagination() {
+                const totalRows = mobileState.filteredRows.length;
+                const totalPages = Math.ceil(totalRows / mobileState.pageSize);
+                const container = $('#mobileCardsPagination');
+
+                if (totalPages <= 1) {
+                    container.empty();
                     return;
                 }
-                empty.addClass('hidden');
 
-                data.forEach(function(user) {
+                const previousDisabled = mobileState.currentPage === 1;
+                const nextDisabled = mobileState.currentPage === totalPages;
+
+                container.html(`
+                    <div class="flex items-center justify-between gap-2 bg-white border border-slate-200 rounded-xl p-2 shadow-sm">
+                        <button
+                            type="button"
+                            data-page="${mobileState.currentPage - 1}"
+                            class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 ${previousDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-slate-50'}"
+                        >
+                            Anterior
+                        </button>
+                        <p class="text-xs sm:text-sm text-slate-500 text-center">
+                            Página ${mobileState.currentPage} de ${totalPages}
+                        </p>
+                        <button
+                            type="button"
+                            data-page="${mobileState.currentPage + 1}"
+                            class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 ${nextDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-slate-50'}"
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                `);
+            }
+
+            function renderMobileCards() {
+                const container = $('#mobileCards');
+                const totalRows = mobileState.filteredRows.length;
+
+                if (!totalRows) {
+                    container.html('<div class="text-center text-slate-400 py-8 text-sm">No hay usuarios registrados.</div>');
+                    $('#mobileCardsPagination').empty();
+                    return;
+                }
+
+                const totalPages = Math.ceil(totalRows / mobileState.pageSize);
+                if (mobileState.currentPage > totalPages) {
+                    mobileState.currentPage = totalPages;
+                }
+                if (mobileState.currentPage < 1) {
+                    mobileState.currentPage = 1;
+                }
+
+                const start = (mobileState.currentPage - 1) * mobileState.pageSize;
+                const pageRows = mobileState.filteredRows.slice(start, start + mobileState.pageSize);
+
+                container.empty();
+                pageRows.forEach(function(row) {
+                    const safeName = stripHtml(row.name);
+                    const safeEmail = stripHtml(row.email);
+                    const safeCreated = stripHtml(row.created_at);
+                    const safeRoles = stripHtml(row.roles) || 'Sin rol';
+                    const safeId = stripHtml(row.id);
                     const card = `
-                        <div class="bg-white rounded-xl border border-slate-200 p-4 shadow-sm space-y-3">
+                        <div class="mobile-card bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
                             <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-sm shrink-0">
-                                        ${(user.name ?? '??').substring(0, 2).toUpperCase()}
-                                    </div>
-                                    <div class="min-w-0">
-                                        <p class="text-sm font-semibold text-slate-900 truncate">${user.name ?? ''}</p>
-                                        <p class="text-xs text-slate-500 truncate">${user.email ?? ''}</p>
-                                    </div>
+                                <div class="min-w-0">
+                                    <p class="text-sm font-semibold text-slate-800 truncate">${safeName}</p>
+                                    <p class="text-xs text-slate-400 truncate">#${safeId}</p>
                                 </div>
-                                <div class="flex items-center gap-1 shrink-0">
-                                    ${user.acciones}
+                                <div class="shrink-0">
+                                    ${row.acciones ?? ''}
                                 </div>
                             </div>
-                            <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-100">
-                                <span class="inline-flex items-center gap-1.5 text-xs font-medium text-purple-700 bg-purple-50 rounded-full px-2.5 py-1">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                                    ${user.roles ?? '<span class="text-slate-400 italic">Sin rol</span>'}
-                                </span>
-                                <span class="inline-flex items-center gap-1.5 text-xs text-slate-500">
-                                    <svg class="w-3 h-3 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                    ${user.created_at ?? ''}
-                                </span>
+                            <div class="space-y-2 text-xs text-slate-500">
+                                <p><span class="font-medium text-slate-700">Email:</span> ${safeEmail}</p>
+                                <p><span class="font-medium text-slate-700">Roles:</span> ${safeRoles}</p>
+                                <p><span class="font-medium text-slate-700">Registro:</span> ${safeCreated}</p>
                             </div>
                         </div>
                     `;
                     container.append(card);
                 });
+
+                renderMobilePagination();
             }
 
-            // Filtrar cards mobile
-            function filterCards(query) {
-                const q = query.toLowerCase();
-                const filtered = allUsers.filter(function(user) {
-                    return (user.name && user.name.toLowerCase().includes(q)) ||
-                           (user.email && user.email.toLowerCase().includes(q)) ||
-                           (user.roles && user.roles.toLowerCase().includes(q));
-                });
-                renderCards(filtered);
+            function setMobileRows(rows) {
+                mobileState.allRows = rows;
+                mobileState.filteredRows = rows.slice();
+                mobileState.currentPage = 1;
+                $('#usersTotalCount').text(rows.length);
+                renderMobileCards();
             }
+
+            function filterMobileRows(query) {
+                const term = String(query ?? '').trim().toLowerCase();
+                if (!term) {
+                    mobileState.filteredRows = mobileState.allRows.slice();
+                } else {
+                    mobileState.filteredRows = mobileState.allRows.filter(function(row) {
+                        return normalize(row.id).includes(term)
+                            || normalize(row.name).includes(term)
+                            || normalize(row.email).includes(term)
+                            || normalize(row.roles).includes(term)
+                            || normalize(row.created_at).includes(term);
+                    });
+                }
+                mobileState.currentPage = 1;
+                renderMobileCards();
+            }
+
+            $('#mobileCardsPagination').on('click', 'button[data-page]', function() {
+                const requestedPage = Number($(this).attr('data-page'));
+                if (!Number.isInteger(requestedPage)) {
+                    return;
+                }
+
+                const maxPage = Math.max(1, Math.ceil(mobileState.filteredRows.length / mobileState.pageSize));
+                mobileState.currentPage = Math.min(Math.max(requestedPage, 1), maxPage);
+                renderMobileCards();
+            });
 
             const table = $('#usersTable').DataTable({
                 processing: true,
@@ -166,106 +235,35 @@
                 ajax: {
                     url: '{{ route("roles.index") }}',
                     dataSrc: function(json) {
-                        renderMobileCards(json.data || []);
-                        return json.data || [];
+                        const rows = Array.isArray(json.data) ? json.data : [];
+                        setMobileRows(rows);
+                        return rows;
                     }
                 },
                 dom: 'lrtip',
                 columns: [
                     { data: 'id', name: 'id' },
-                    {
-                        data: 'name',
-                        name: 'name',
-                        render: function(data) {
-                            return '<div class="flex items-center space-x-2"><svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg><span class="text-sm text-foreground">' + (data ?? '') + '</span></div>';
-                        }
-                    },
-                    {
-                        data: 'email',
-                        name: 'email',
-                        render: function(data) {
-                            return '<div class="flex items-center space-x-2"><svg class="w-4 h-4 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg><span class="text-sm text-foreground">' + (data ?? '') + '</span></div>';
-                        }
-                    },
-                    {
-                        data: 'roles',
-                        name: 'roles',
-                        render: function(data) {
-                            return '<div class="flex items-center space-x-2"><svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg><span class="text-sm text-foreground">' + (data ?? '') + '</span></div>';
-                        }
-                    },
-                    {
-                        data: 'created_at',
-                        name: 'created_at',
-                        render: function(data) {
-                            return '<div class="flex items-center space-x-2"><svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg><span class="text-sm text-foreground">' + (data ?? '') + '</span></div>';
-                        }
-                    },
+                    { data: 'name', name: 'name' },
+                    { data: 'email', name: 'email' },
+                    { data: 'roles', name: 'roles' },
+                    { data: 'created_at', name: 'created_at' },
                     { data: 'acciones', name: 'acciones', orderable: false, searchable: false }
+                ],
+                columnDefs: [
+                    { targets: [0, 4], className: 'users-nowrap-cell' },
+                    { targets: [5], className: 'users-actions-cell' },
                 ],
                 language: { url: '/i18n/es-ES.json' },
                 pageLength: 10,
+                autoWidth: false,
                 responsive: true
             });
 
             // Busqueda filtra tabla y cards
             $('#searchUsers').on('keyup', function() {
-                const term = this.value.toLowerCase();
                 table.search(this.value).draw();
-                // Filtrar cards mobile
-                $('#mobileCards .mobile-card').each(function() {
-                    const text = $(this).text().toLowerCase();
-                    $(this).toggle(text.includes(term));
-                });
+                filterMobileRows(this.value);
             });
-
-            table.on('xhr', function() {
-                const json = table.ajax.json();
-                const total = json && json.data ? json.data.length : 0;
-                $('#usersTotalCount').text(total);
-            });
-
-            // Renderizar cards mobile
-            function renderMobileCards(data) {
-                const container = $('#mobileCards');
-                container.empty();
-                if (!data.length) {
-                    container.html('<div class="text-center text-slate-400 py-8 text-sm">No hay usuarios registrados.</div>');
-                    return;
-                }
-                data.forEach(function(row) {
-                    const card = `
-                        <div class="mobile-card bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
-                            <div class="flex items-center justify-between">
-                                <div class="flex items-center gap-3 min-w-0">
-                                    <div class="w-10 h-10 shrink-0 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-sm">
-                                        ${(row.name ?? 'U').charAt(0).toUpperCase()}
-                                    </div>
-                                    <div class="min-w-0">
-                                        <p class="text-sm font-semibold text-slate-800 truncate">${row.name ?? ''}</p>
-                                        <p class="text-xs text-slate-400 truncate">${row.email ?? ''}</p>
-                                    </div>
-                                </div>
-                                <span class="text-xs text-slate-400">#${row.id}</span>
-                            </div>
-                            <div class="flex flex-wrap items-center gap-2">
-                                <span class="inline-flex items-center gap-1 text-xs font-medium text-purple-700 bg-purple-50 rounded-full px-2.5 py-1">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
-                                    ${row.roles ?? 'Sin rol'}
-                                </span>
-                                <span class="inline-flex items-center gap-1 text-xs text-slate-500">
-                                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                                    ${row.created_at ?? ''}
-                                </span>
-                            </div>
-                            <div class="pt-2 border-t border-slate-100">
-                                ${row.acciones ?? ''}
-                            </div>
-                        </div>
-                    `;
-                    container.append(card);
-                });
-            }
         });
     </script>
 

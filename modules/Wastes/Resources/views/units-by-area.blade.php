@@ -1,5 +1,5 @@
 <x-layouts.app :title="__('Unidades del área '.$area->name)">
-    <div class="max-w-7xl mx-auto space-y-6">
+    <div class="max-w-7xl mx-auto space-y-6" x-data="window.uiUnitWasteActionModals()" x-init="init()">
         <div class="bg-gradient-to-r from-emerald-50 via-white to-cyan-50 border border-emerald-100 rounded-2xl p-6 shadow-sm">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div class="space-y-2">
@@ -21,7 +21,21 @@
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-            <div class="w-full max-w-full overflow-x-auto border border-slate-100 rounded-xl">
+            <div class="md:hidden mb-4">
+                <div class="relative">
+                    <input
+                        id="unitsByAreaMobileSearch"
+                        type="search"
+                        placeholder="Buscar unidad productiva..."
+                        class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-700 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 shadow-sm"
+                    >
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 18a7 7 0 100-14 7 7 0 000 14z" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="w-full max-w-full overflow-x-auto border border-slate-100 rounded-xl hidden md:block">
                 <table id="unitsByAreaTable" class="w-full min-w-[740px] table-auto text-sm text-left">
                     <thead class="bg-slate-50 text-slate-600 uppercase text-xs tracking-wide">
                         <tr>
@@ -31,16 +45,242 @@
                     </thead>
                 </table>
             </div>
+
+            <div id="unitsByAreaMobileCards" class="space-y-3 md:hidden"></div>
+            <div id="unitsByAreaMobilePagination" class="mt-4 md:hidden"></div>
+        </div>
+
+        <div
+            x-cloak
+            x-show="showRegister"
+            x-transition.opacity
+            class="fixed inset-0 z-[90] flex items-center justify-center bg-slate-900/60 px-4"
+        >
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-slate-200"
+                x-show="showRegister"
+                x-transition.scale.origin-center
+                @click.outside="showRegister = false"
+                @keydown.escape.window="showRegister = false"
+            >
+                <div class="p-6 space-y-4">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.2em] text-emerald-600 font-semibold">Registrar</p>
+                            <h3 class="text-xl font-bold text-slate-900">¿Qué tipo de residuo deseas registrar?</h3>
+                            <p class="text-sm text-slate-500 mt-1">Unidad: <span x-text="unitName"></span></p>
+                        </div>
+                        <button type="button" class="text-slate-400 hover:text-slate-600 transition" @click="showRegister = false">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <span class="sr-only">Cerrar</span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3">
+                        <button
+                            type="button"
+                            class="w-full px-4 py-3 rounded-xl border border-emerald-200 text-emerald-700 font-semibold hover:bg-emerald-50 transition"
+                            @click="goTo(registerUrls.resol)"
+                        >
+                            Residuo sólido (RESOL)
+                        </button>
+                        <button
+                            type="button"
+                            class="w-full px-4 py-3 rounded-xl border border-teal-200 text-teal-700 font-semibold hover:bg-teal-50 transition"
+                            @click="goTo(registerUrls.respel)"
+                        >
+                            Residuo peligroso (RESPEL)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            x-cloak
+            x-show="showView"
+            x-transition.opacity
+            class="fixed inset-0 z-[90] flex items-center justify-center bg-slate-900/60 px-4"
+        >
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-slate-200"
+                x-show="showView"
+                x-transition.scale.origin-center
+                @click.outside="showView = false"
+                @keydown.escape.window="showView = false"
+            >
+                <div class="p-6 space-y-4">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.2em] text-emerald-600 font-semibold">Ver registros</p>
+                            <h3 class="text-xl font-bold text-slate-900">Selecciona el tipo de registros</h3>
+                            <p class="text-sm text-slate-500 mt-1">Unidad: <span x-text="unitName"></span></p>
+                        </div>
+                        <button type="button" class="text-slate-400 hover:text-slate-600 transition" @click="showView = false">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <span class="sr-only">Cerrar</span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3">
+                        <button
+                            type="button"
+                            class="w-full px-4 py-3 rounded-xl border border-emerald-200 text-emerald-700 font-semibold hover:bg-emerald-50 transition"
+                            @click="goTo(viewUrls.resol)"
+                        >
+                            RESOL
+                        </button>
+                        <button
+                            type="button"
+                            class="w-full px-4 py-3 rounded-xl border border-teal-200 text-teal-700 font-semibold hover:bg-teal-50 transition"
+                            @click="goTo(viewUrls.respel)"
+                        >
+                            RESPEL
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
     @include('partials.footer-script-cdn')
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const mobileState = {
+                allRows: [],
+                filteredRows: [],
+                currentPage: 1,
+                pageSize: 10,
+            };
+
+            function stripHtml(value) {
+                return $('<div>').html(value ?? '').text();
+            }
+
+            function normalize(value) {
+                return stripHtml(value).toLowerCase();
+            }
+
+            function renderMobilePagination() {
+                const totalRows = mobileState.filteredRows.length;
+                const totalPages = Math.ceil(totalRows / mobileState.pageSize);
+                const container = $('#unitsByAreaMobilePagination');
+
+                if (totalPages <= 1) {
+                    container.empty();
+                    return;
+                }
+
+                const previousDisabled = mobileState.currentPage === 1;
+                const nextDisabled = mobileState.currentPage === totalPages;
+
+                container.html(`
+                    <div class="flex items-center justify-between gap-2 bg-white border border-slate-200 rounded-xl p-2 shadow-sm">
+                        <button
+                            type="button"
+                            data-page="${mobileState.currentPage - 1}"
+                            class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 ${previousDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-slate-50'}"
+                        >
+                            Anterior
+                        </button>
+                        <p class="text-xs sm:text-sm text-slate-500 text-center">
+                            Página ${mobileState.currentPage} de ${totalPages}
+                        </p>
+                        <button
+                            type="button"
+                            data-page="${mobileState.currentPage + 1}"
+                            class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 ${nextDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-slate-50'}"
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                `);
+            }
+
+            function renderMobileCards() {
+                const container = $('#unitsByAreaMobileCards');
+                const totalRows = mobileState.filteredRows.length;
+
+                if (!totalRows) {
+                    container.html('<div class="text-center text-slate-400 py-8 text-sm">No hay unidades disponibles en esta área.</div>');
+                    $('#unitsByAreaMobilePagination').empty();
+                    return;
+                }
+
+                const totalPages = Math.ceil(totalRows / mobileState.pageSize);
+                mobileState.currentPage = Math.min(Math.max(mobileState.currentPage, 1), totalPages);
+
+                const start = (mobileState.currentPage - 1) * mobileState.pageSize;
+                const pageRows = mobileState.filteredRows.slice(start, start + mobileState.pageSize);
+
+                container.empty();
+                pageRows.forEach(function(row) {
+                    const card = `
+                        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
+                            <div>
+                                <p class="text-sm font-semibold text-slate-800">${stripHtml(row.name)}</p>
+                            </div>
+                            <div class="pt-2 border-t border-slate-100">
+                                ${row.acciones ?? ''}
+                            </div>
+                        </div>
+                    `;
+                    container.append(card);
+                });
+
+                renderMobilePagination();
+            }
+
+            function setMobileRows(rows) {
+                mobileState.allRows = rows;
+                mobileState.filteredRows = rows.slice();
+                mobileState.currentPage = 1;
+                renderMobileCards();
+            }
+
+            function filterMobileRows(query) {
+                const term = String(query ?? '').trim().toLowerCase();
+                if (!term) {
+                    mobileState.filteredRows = mobileState.allRows.slice();
+                } else {
+                    mobileState.filteredRows = mobileState.allRows.filter(function(row) {
+                        return normalize(row.name).includes(term);
+                    });
+                }
+                mobileState.currentPage = 1;
+                renderMobileCards();
+            }
+
+            $('#unitsByAreaMobilePagination').on('click', 'button[data-page]', function() {
+                const requestedPage = Number($(this).attr('data-page'));
+                if (!Number.isInteger(requestedPage)) {
+                    return;
+                }
+
+                const maxPage = Math.max(1, Math.ceil(mobileState.filteredRows.length / mobileState.pageSize));
+                mobileState.currentPage = Math.min(Math.max(requestedPage, 1), maxPage);
+                renderMobileCards();
+            });
+
+            $('#unitsByAreaMobileSearch').on('keyup', function() {
+                filterMobileRows(this.value);
+            });
+
             const table = $('#unitsByAreaTable').DataTable({
                 processing: true,
                 serverSide: false,
-                ajax: '{{ route("wastes.units.byArea", $area) }}',
+                ajax: {
+                    url: '{{ route("wastes.units.byArea", $area) }}',
+                    dataSrc: function(json) {
+                        const rows = Array.isArray(json.data) ? json.data : [];
+                        setMobileRows(rows);
+                        return rows;
+                    }
+                },
                 dom: 'lrtip',
                 columns: [
                     { data: 'name', name: 'name' },

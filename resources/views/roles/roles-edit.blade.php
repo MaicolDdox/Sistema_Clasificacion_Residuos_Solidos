@@ -1,96 +1,46 @@
 <x-layouts.app :title="__('Editar Rol')">
-    <div class="max-w-4xl mx-auto space-y-6">
-        <div class="bg-gradient-to-r from-amber-50 via-white to-orange-50 border border-amber-100 rounded-2xl p-4 sm:p-6 shadow-sm">
-            <div class="flex items-center gap-4">
-                <a href="{{ route('roles.index') }}" class="p-2 hover:bg-white rounded-lg transition-colors">
-                    <svg class="w-6 h-6 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                    </svg>
+    <div class="max-w-3xl mx-auto space-y-6">
+        <x-ui.page-header
+            eyebrow="Sistema de Roles"
+            title="Editar rol de usuario"
+            subtitle="Modifica el rol asignado al usuario seleccionado."
+            eyebrowTone="emerald"
+        >
+            <x-slot:actions>
+                <a href="{{ route('roles.index') }}" class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 transition text-sm">
+                    Volver al listado
                 </a>
-                <div class="space-y-1 min-w-0">
-                    <p class="inline-flex items-center text-xs font-semibold uppercase tracking-[0.2em] text-amber-600 bg-amber-50 rounded-full px-3 py-1">
-                        <span class="w-2 h-2 bg-amber-500 rounded-full mr-2"></span>
-                        Edicion
-                    </p>
-                    <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight">Editar Rol de Usuario</h1>
-                    <p class="text-sm sm:text-base text-slate-500 truncate">Modifica el rol asignado a {{ $user->name }}.</p>
-                </div>
+            </x-slot:actions>
+        </x-ui.page-header>
+
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
+            <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-1">
+                <p class="text-xs uppercase tracking-wide text-slate-500 font-semibold">Usuario</p>
+                <p class="text-sm font-semibold text-slate-900">{{ $user->name }}</p>
+                <p class="text-xs text-slate-500">{{ $user->email }}</p>
             </div>
+
+            <form action="{{ route('roles.update', $user->id) }}" method="POST" class="space-y-4">
+                @csrf
+                @method('PUT')
+
+                @include('partials.ui.form.select', [
+                    'name' => 'role',
+                    'label' => 'Nuevo rol',
+                    'required' => true,
+                    'placeholder' => 'Selecciona un rol',
+                    'options' => $roles->pluck('name', 'name')->toArray(),
+                    'value' => $currentRole?->name,
+                    'help' => $currentRole
+                        ? 'Rol actual: '.$currentRole->name
+                        : 'Este usuario no tiene ningún rol asignado.',
+                ])
+
+                <div class="flex items-center justify-end gap-3 pt-4">
+                    <a href="{{ route('roles.index') }}" class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 transition">Cancelar</a>
+                    <button type="submit" class="px-4 py-2 rounded-lg bg-emerald-500 text-white hover:bg-emerald-400 transition">Actualizar rol</button>
+                </div>
+            </form>
         </div>
-        
-
-        @if ($errors->any())
-            <div class="bg-red-50 border border-red-200 rounded-xl p-4">
-                <div class="flex items-start gap-3">
-                    <svg class="w-5 h-5 text-red-600 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                    <div class="flex-1">
-                        <h3 class="text-sm font-semibold text-red-800">Errores de validacion</h3>
-                        <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
-                            @foreach ($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        @endif
-
-        <form action="{{ route('roles.update', $user->id) }}" method="POST" class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4 sm:p-6 space-y-6">
-            @csrf
-            @method('PUT')
-            <div class="bg-slate-50 border border-slate-100 rounded-lg p-4">
-                <div class="flex items-center gap-3">
-                    <div class="w-12 h-12 shrink-0 rounded-full bg-emerald-100 flex items-center justify-center">
-                        <svg class="w-6 h-6 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                        </svg>
-                    </div>
-                    <div class="min-w-0">
-                        <p class="text-sm font-semibold text-slate-700">Usuario</p>
-                        <p class="text-base text-slate-900 font-medium truncate">{{ $user->name }}</p>
-                        <p class="text-xs text-slate-500 truncate">{{ $user->email }}</p>
-                    </div>
-                </div>
-            </div>
-            <div class="space-y-2">
-                <label for="role" class="block text-sm font-semibold text-slate-700">
-                    <span class="flex items-center gap-2">
-                        <svg class="w-4 h-4 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                        </svg>
-                        Nuevo Rol
-                    </span>
-                </label>
-                <select id="role" name="role" class="w-full px-4 py-2.5 border border-slate-200 rounded-lg focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 text-slate-700">
-                    <option value="">Selecciona un rol</option>
-                    @foreach($roles as $role)
-                        <option value="{{ $role->name }}" {{ ($currentRole && $currentRole->name == $role->name) || old('role') == $role->name ? 'selected' : '' }}>
-                            {{ $role->name }}
-                        </option>
-                    @endforeach
-                </select>
-                @if($currentRole)
-                    <p class="text-xs text-slate-500">Rol actual: <span class="font-semibold text-purple-600">{{ $currentRole->name }}</span></p>
-                @else
-                    <p class="text-xs text-amber-600 italic">Este usuario no tiene ningun rol asignado.</p>
-                @endif
-            </div>
-            <div class="flex flex-col sm:flex-row items-center gap-3 pt-4 border-t border-slate-100">
-                <button type="submit" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-6 py-2.5 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-                    </svg>
-                    <span>Actualizar Rol</span>
-                </button>
-                <a href="{{ route('roles.index') }}" class="w-full sm:w-auto flex items-center justify-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-700 px-6 py-2.5 rounded-lg font-medium transition-all duration-200">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                    <span>Cancelar</span>
-                </a>
-            </div>
-        </form>
     </div>
 </x-layouts.app>

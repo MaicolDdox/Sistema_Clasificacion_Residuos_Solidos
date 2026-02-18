@@ -85,11 +85,24 @@
                     </a>
                 </div>
             </div>
-            @include('partials.session-message')
         </div>
 
         <div class="bg-white rounded-2xl shadow-sm border border-slate-200 p-4">
-            <div class="w-full max-w-full overflow-x-auto border border-slate-100 rounded-xl">
+            <div class="md:hidden mb-4">
+                <div class="relative">
+                    <input
+                        id="resolMobileSearch"
+                        type="search"
+                        placeholder="Buscar en registros RESOL..."
+                        class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-slate-200 bg-white text-sm text-slate-700 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 shadow-sm"
+                    >
+                    <svg class="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-4.35-4.35M11 18a7 7 0 100-14 7 7 0 000 14z" />
+                    </svg>
+                </div>
+            </div>
+
+            <div class="w-full max-w-full overflow-x-auto border border-slate-100 rounded-xl hidden md:block">
                 <table id="resolTable" class="w-full min-w-[640px] table-auto text-sm text-left">
                     <thead class="bg-slate-50 text-slate-600 uppercase text-xs tracking-wide">
                         <tr>
@@ -103,6 +116,9 @@
                     </thead>
                 </table>
             </div>
+
+            <div id="resolMobileCards" class="space-y-3 md:hidden"></div>
+            <div id="resolMobilePagination" class="mt-4 md:hidden"></div>
         </div>
 
         @can('wastes.report.resol')
@@ -266,105 +282,6 @@
             </div>
         @endcan
 
-        <div
-            x-cloak
-            x-show="rowMenu.open"
-            x-transition.opacity
-            class="fixed inset-0 z-[80]"
-            @click="closeRowMenu()"
-        >
-            <div class="absolute inset-0"></div>
-            <div
-                x-ref="rowActionsPanel"
-                data-row-actions-panel
-                class="fixed z-[85] w-[calc(100vw-1.5rem)] max-w-56 sm:w-56 rounded-xl border border-slate-200 bg-white shadow-xl py-1 text-left"
-                :style="`left:${rowMenu.left}px;top:${rowMenu.top}px;`"
-                @click.stop
-            >
-                <a :href="rowMenu.links.show" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition" @click="closeRowMenu()">
-                    <svg class="w-4 h-4 text-sky-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                    </svg>
-                    Ver detalles
-                </a>
-
-                <template x-if="rowMenu.links.edit">
-                    <a :href="rowMenu.links.edit" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition" @click="closeRowMenu()">
-                        <svg class="w-4 h-4 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                        Editar
-                    </a>
-                </template>
-
-                <template x-if="rowMenu.links.delete">
-                    <button
-                        type="button"
-                        class="w-full flex items-center gap-2 px-3 py-2 text-sm text-red-700 hover:bg-red-50 transition"
-                        @click="openDeleteFromRowMenu()"
-                    >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                        Eliminar
-                    </button>
-                </template>
-
-                <template x-if="rowMenu.links.pdf || rowMenu.links.excel">
-                    <div class="my-1 border-t border-slate-100"></div>
-                </template>
-
-                <template x-if="rowMenu.links.pdf">
-                    <a :href="rowMenu.links.pdf" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition" @click="closeRowMenu()">
-                        <svg class="w-4 h-4 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h10v10H7z" />
-                        </svg>
-                        Exportar PDF
-                    </a>
-                </template>
-                <template x-if="rowMenu.links.excel">
-                    <a :href="rowMenu.links.excel" class="flex items-center gap-2 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50 transition" @click="closeRowMenu()">
-                        <svg class="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4zM8 8l8 8M16 8l-8 8" />
-                        </svg>
-                        Exportar Excel
-                    </a>
-                </template>
-            </div>
-        </div>
-
-        <div
-            x-cloak
-            x-show="showDeleteModal"
-            x-transition.opacity
-            class="fixed inset-0 z-[75] bg-slate-900/60 flex items-center justify-center px-4"
-        >
-            <div
-                class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-slate-200"
-                x-show="showDeleteModal"
-                x-transition.scale.origin-center
-            >
-                <div class="p-6 space-y-4">
-                    <div>
-                        <h3 class="text-lg font-bold text-slate-900">Confirmar eliminación</h3>
-                        <p class="text-sm text-slate-500 mt-1">Esta acción eliminará el registro seleccionado de RESOL.</p>
-                    </div>
-                    <div class="flex items-center justify-end gap-3">
-                        <button type="button" class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 transition" @click="closeDeleteModal()">
-                            Cancelar
-                        </button>
-                        <form method="POST" :action="deleteAction">
-                            @csrf
-                            @method('DELETE')
-                            <button type="submit" class="px-4 py-2 rounded-lg bg-red-600 text-white hover:bg-red-500 transition">
-                                Eliminar
-                            </button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
     @include('partials.footer-script-cdn')
@@ -395,29 +312,6 @@
                 rangeType: config.initialRangeType || 'annual',
                 modalError: '',
                 isSubmitting: false,
-                rowMenu: {
-                    open: false,
-                    left: 0,
-                    top: 0,
-                    triggerId: null,
-                    links: {
-                        show: '',
-                        edit: '',
-                        delete: '',
-                        pdf: '',
-                        excel: '',
-                    },
-                },
-                showDeleteModal: false,
-                deleteAction: '',
-                listenersBound: false,
-                listeners: {
-                    onDocumentClick: null,
-                    onDocumentKeydown: null,
-                    onDatatableDrawn: null,
-                    onWindowResize: null,
-                    onWindowScroll: null,
-                },
                 form: {
                     year: config.initialForm.year || new Date().getFullYear().toString(),
                     semester: config.initialForm.semester || '1',
@@ -436,72 +330,19 @@
                     if (this.hasValidationErrors) {
                         this.showExportModal = true;
                     }
-
-                    this.bindEventListeners();
-                },
-                destroy() {
-                    this.unbindEventListeners();
-                },
-                bindEventListeners() {
-                    if (this.listenersBound) {
-                        return;
-                    }
-
-                    this.listeners.onDocumentClick = (event) => this.handleDocumentClick(event);
-                    this.listeners.onDocumentKeydown = (event) => {
-                        if (event.key === 'Escape') {
-                            this.closeRowMenu();
-                        }
-                    };
-                    this.listeners.onDatatableDrawn = () => this.closeRowMenu();
-                    this.listeners.onWindowResize = () => this.closeRowMenu();
-                    this.listeners.onWindowScroll = () => this.closeRowMenu();
-
-                    document.addEventListener('click', this.listeners.onDocumentClick);
-                    document.addEventListener('keydown', this.listeners.onDocumentKeydown);
-                    document.addEventListener('datatable:drawn', this.listeners.onDatatableDrawn);
-                    window.addEventListener('resize', this.listeners.onWindowResize);
-                    window.addEventListener('scroll', this.listeners.onWindowScroll, true);
-
-                    this.listenersBound = true;
-                },
-                unbindEventListeners() {
-                    if (!this.listenersBound) {
-                        return;
-                    }
-
-                    document.removeEventListener('click', this.listeners.onDocumentClick);
-                    document.removeEventListener('keydown', this.listeners.onDocumentKeydown);
-                    document.removeEventListener('datatable:drawn', this.listeners.onDatatableDrawn);
-                    window.removeEventListener('resize', this.listeners.onWindowResize);
-                    window.removeEventListener('scroll', this.listeners.onWindowScroll, true);
-
-                    this.listenersBound = false;
                 },
                 toggleHeaderMenu() {
                     this.headerMenuOpen = !this.headerMenuOpen;
-                    if (this.headerMenuOpen) {
-                        this.closeRowMenu();
-                    }
                 },
                 openExportModal(format) {
                     this.exportFormat = format;
                     this.headerMenuOpen = false;
-                    this.closeRowMenu();
                     this.modalError = '';
                     this.showExportModal = true;
                 },
                 closeExportModal() {
                     this.showExportModal = false;
                     this.modalError = '';
-                },
-                openDeleteModal(action) {
-                    this.deleteAction = action;
-                    this.showDeleteModal = true;
-                },
-                closeDeleteModal() {
-                    this.showDeleteModal = false;
-                    this.deleteAction = '';
                 },
                 requiresYear() {
                     return ['annual', 'semiannual', 'quarterly', 'monthly'].includes(this.rangeType);
@@ -684,92 +525,6 @@
 
                     return fallback;
                 },
-                handleDocumentClick(event) {
-                    if (!this.$root || !document.body.contains(this.$root)) {
-                        this.unbindEventListeners();
-                        return;
-                    }
-
-                    const toggleButton = event.target.closest('[data-row-actions-trigger]');
-                    if (toggleButton) {
-                        if (!this.$root.contains(toggleButton)) {
-                            return;
-                        }
-
-                        event.preventDefault();
-                        event.stopPropagation();
-                        this.toggleRowMenu(toggleButton);
-                        return;
-                    }
-
-                    if (this.rowMenu.open && !event.target.closest('[data-row-actions-panel]')) {
-                        this.closeRowMenu();
-                        return;
-                    }
-                },
-                toggleRowMenu(triggerButton) {
-                    const triggerId = triggerButton.getAttribute('data-menu-id');
-
-                    if (this.rowMenu.open && this.rowMenu.triggerId === triggerId) {
-                        this.closeRowMenu();
-                        return;
-                    }
-
-                    this.rowMenu.triggerId = triggerId;
-                    this.rowMenu.links = {
-                        show: triggerButton.getAttribute('data-show-url') || '',
-                        edit: triggerButton.getAttribute('data-edit-url') || '',
-                        delete: triggerButton.getAttribute('data-delete-url') || '',
-                        pdf: triggerButton.getAttribute('data-export-pdf-url') || '',
-                        excel: triggerButton.getAttribute('data-export-excel-url') || '',
-                    };
-                    this.rowMenu.open = true;
-
-                    this.$nextTick(() => {
-                        this.positionRowMenu(triggerButton);
-                    });
-                },
-                positionRowMenu(triggerButton) {
-                    const panel = this.$refs.rowActionsPanel;
-                    if (!panel) {
-                        return;
-                    }
-
-                    const triggerRect = triggerButton.getBoundingClientRect();
-                    const panelRect = panel.getBoundingClientRect();
-                    const margin = 8;
-                    const viewportPadding = 12;
-
-                    let left = triggerRect.right - panelRect.width;
-                    let top = triggerRect.bottom + margin;
-
-                    if (left < viewportPadding) {
-                        left = viewportPadding;
-                    }
-
-                    if ((left + panelRect.width) > (window.innerWidth - viewportPadding)) {
-                        left = Math.max(viewportPadding, window.innerWidth - panelRect.width - viewportPadding);
-                    }
-
-                    if ((top + panelRect.height) > (window.innerHeight - viewportPadding)) {
-                        top = Math.max(viewportPadding, triggerRect.top - panelRect.height - margin);
-                    }
-
-                    this.rowMenu.left = Math.round(left);
-                    this.rowMenu.top = Math.round(top);
-                },
-                closeRowMenu() {
-                    this.rowMenu.open = false;
-                    this.rowMenu.triggerId = null;
-                },
-                openDeleteFromRowMenu() {
-                    const deleteUrl = this.rowMenu.links.delete;
-                    this.closeRowMenu();
-
-                    if (deleteUrl) {
-                        this.openDeleteModal(deleteUrl);
-                    }
-                },
                 initializeWeekDefaults() {
                     if (this.form.start_date && this.form.end_date) {
                         return;
@@ -853,10 +608,165 @@
         }
 
         document.addEventListener('DOMContentLoaded', function () {
+            const mobileState = {
+                allRows: [],
+                filteredRows: [],
+                currentPage: 1,
+                pageSize: 10,
+            };
+
+            function stripHtml(value) {
+                return $('<div>').html(value ?? '').text();
+            }
+
+            function normalize(value) {
+                return stripHtml(value).toLowerCase();
+            }
+
+            function renderMobilePagination() {
+                const totalRows = mobileState.filteredRows.length;
+                const totalPages = Math.ceil(totalRows / mobileState.pageSize);
+                const container = $('#resolMobilePagination');
+
+                if (totalPages <= 1) {
+                    container.empty();
+                    return;
+                }
+
+                const previousDisabled = mobileState.currentPage === 1;
+                const nextDisabled = mobileState.currentPage === totalPages;
+
+                container.html(`
+                    <div class="flex items-center justify-between gap-2 bg-white border border-slate-200 rounded-xl p-2 shadow-sm">
+                        <button
+                            type="button"
+                            data-page="${mobileState.currentPage - 1}"
+                            class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 ${previousDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-slate-50'}"
+                        >
+                            Anterior
+                        </button>
+                        <p class="text-xs sm:text-sm text-slate-500 text-center">
+                            Página ${mobileState.currentPage} de ${totalPages}
+                        </p>
+                        <button
+                            type="button"
+                            data-page="${mobileState.currentPage + 1}"
+                            class="px-3 py-2 text-sm rounded-lg border border-slate-200 text-slate-700 ${nextDisabled ? 'opacity-50 pointer-events-none' : 'hover:bg-slate-50'}"
+                        >
+                            Siguiente
+                        </button>
+                    </div>
+                `);
+            }
+
+            function renderMobileCards() {
+                const container = $('#resolMobileCards');
+                const totalRows = mobileState.filteredRows.length;
+
+                if (!totalRows) {
+                    container.html('<div class="text-center text-slate-400 py-8 text-sm">No hay registros RESOL para mostrar.</div>');
+                    $('#resolMobilePagination').empty();
+                    document.dispatchEvent(new CustomEvent('datatable:drawn'));
+                    return;
+                }
+
+                const totalPages = Math.ceil(totalRows / mobileState.pageSize);
+                mobileState.currentPage = Math.min(Math.max(mobileState.currentPage, 1), totalPages);
+
+                const start = (mobileState.currentPage - 1) * mobileState.pageSize;
+                const pageRows = mobileState.filteredRows.slice(start, start + mobileState.pageSize);
+
+                container.empty();
+
+                let activeGroup = null;
+                pageRows.forEach(function(row) {
+                    const groupLabel = stripHtml(row.grupo_semana) || 'Semana sin fecha';
+                    if (groupLabel !== activeGroup) {
+                        activeGroup = groupLabel;
+                        container.append(`
+                            <div class="px-3 py-2 rounded-lg bg-emerald-50 border border-emerald-100 text-emerald-700 text-xs font-semibold uppercase tracking-wide">
+                                ${groupLabel}
+                            </div>
+                        `);
+                    }
+
+                    const observations = stripHtml(row.observations) || 'Sin observaciones';
+                    const card = `
+                        <div class="bg-white rounded-xl border border-slate-200 shadow-sm p-4 space-y-3">
+                            <div class="flex items-center justify-between gap-2">
+                                <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-100 text-emerald-700">
+                                    ${stripHtml(row.waste_type) || 'N/D'}
+                                </span>
+                                <span class="text-xs text-slate-500">${stripHtml(row.entry_date)}</span>
+                            </div>
+                            <div class="space-y-2 text-xs text-slate-500">
+                                <p><span class="font-medium text-slate-700">Cantidad:</span> ${stripHtml(row.amount)}</p>
+                                <p><span class="font-medium text-slate-700">Usuario:</span> ${stripHtml(row.usuario)}</p>
+                                <p><span class="font-medium text-slate-700">Observaciones:</span> ${observations}</p>
+                            </div>
+                            <div class="pt-2 border-t border-slate-100">
+                                ${row.acciones ?? ''}
+                            </div>
+                        </div>
+                    `;
+                    container.append(card);
+                });
+
+                renderMobilePagination();
+                document.dispatchEvent(new CustomEvent('datatable:drawn'));
+            }
+
+            function setMobileRows(rows) {
+                mobileState.allRows = rows;
+                mobileState.filteredRows = rows.slice();
+                mobileState.currentPage = 1;
+                renderMobileCards();
+            }
+
+            function filterMobileRows(query) {
+                const term = String(query ?? '').trim().toLowerCase();
+                if (!term) {
+                    mobileState.filteredRows = mobileState.allRows.slice();
+                } else {
+                    mobileState.filteredRows = mobileState.allRows.filter(function(row) {
+                        return normalize(row.entry_date).includes(term)
+                            || normalize(row.waste_type).includes(term)
+                            || normalize(row.amount).includes(term)
+                            || normalize(row.observations).includes(term)
+                            || normalize(row.usuario).includes(term)
+                            || normalize(row.grupo_semana).includes(term);
+                    });
+                }
+                mobileState.currentPage = 1;
+                renderMobileCards();
+            }
+
+            $('#resolMobilePagination').on('click', 'button[data-page]', function() {
+                const requestedPage = Number($(this).attr('data-page'));
+                if (!Number.isInteger(requestedPage)) {
+                    return;
+                }
+
+                const maxPage = Math.max(1, Math.ceil(mobileState.filteredRows.length / mobileState.pageSize));
+                mobileState.currentPage = Math.min(Math.max(requestedPage, 1), maxPage);
+                renderMobileCards();
+            });
+
+            $('#resolMobileSearch').on('keyup', function() {
+                filterMobileRows(this.value);
+            });
+
             $('#resolTable').DataTable({
                 processing: true,
                 serverSide: false,
-                ajax: '{{ route("wastes.byUnit", $unit) }}',
+                ajax: {
+                    url: '{{ route("wastes.byUnit", $unit) }}',
+                    dataSrc: function(json) {
+                        const rows = Array.isArray(json.data) ? json.data : [];
+                        setMobileRows(rows);
+                        return rows;
+                    }
+                },
                 dom: 'lfrtip',
                 order: [[0, 'desc']],
                 rowGroup: { dataSrc: 'grupo_semana' },
