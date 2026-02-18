@@ -10,6 +10,7 @@
             'label' => 'Ver detalles',
             'href' => route('hazardou-wastes.show', $waste),
             'variant' => 'info',
+            'icon' => 'eye',
         ],
     ];
 
@@ -18,6 +19,7 @@
             'label' => 'Editar',
             'href' => route('hazardou-wastes.edit', $waste),
             'variant' => 'warning',
+            'icon' => 'edit',
         ];
     }
 
@@ -27,6 +29,7 @@
             'href' => route('hazardou-wastes.destroy', $waste),
             'method' => 'DELETE',
             'variant' => 'danger',
+            'icon' => 'trash',
             'confirm' => true,
             'confirmTitle' => 'Confirmar eliminación',
             'confirmMessage' => 'Esta acción eliminará el registro seleccionado de RESPEL.',
@@ -39,11 +42,13 @@
             'label' => 'Exportar PDF',
             'href' => route('hazardou-wastes.export.single.pdf', $waste),
             'variant' => 'default',
+            'icon' => 'pdf',
         ];
         $actions[] = [
             'label' => 'Exportar Excel',
             'href' => route('hazardou-wastes.export.single.excel', $waste),
             'variant' => 'default',
+            'icon' => 'excel',
         ];
     }
 @endphp

@@ -7,6 +7,7 @@
             'label' => 'Ver detalles',
             'href' => route('areas.show', $area),
             'variant' => 'info',
+            'icon' => 'eye',
         ],
     ];
 
@@ -15,6 +16,7 @@
             'label' => 'Editar',
             'href' => route('areas.edit', $area),
             'variant' => 'warning',
+            'icon' => 'edit',
         ];
     }
 
@@ -23,6 +25,7 @@
             $actions[] = [
                 'label' => 'Eliminar',
                 'variant' => 'danger',
+                'icon' => 'trash',
                 'eventName' => 'ui:confirm-modal.open',
                 'eventDetail' => [
                     'title' => 'No se puede eliminar el área',
@@ -38,6 +41,7 @@
                 'href' => route('areas.destroy', $area),
                 'method' => 'DELETE',
                 'variant' => 'danger',
+                'icon' => 'trash',
                 'confirm' => true,
                 'confirmTitle' => 'Confirmar eliminación',
                 'confirmMessage' => 'Esta acción eliminará el área seleccionada.',

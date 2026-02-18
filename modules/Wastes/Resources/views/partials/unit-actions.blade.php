@@ -5,6 +5,7 @@
         [
             'label' => 'Registrar residuo',
             'variant' => 'success',
+            'icon' => 'plus',
             'eventName' => 'wastes:unit-register-modal.open',
             'eventDetail' => [
                 'unitName' => $unit->name,
@@ -15,6 +16,7 @@
         [
             'label' => 'Ver residuos',
             'variant' => 'info',
+            'icon' => 'list',
             'eventName' => 'wastes:unit-view-modal.open',
             'eventDetail' => [
                 'unitName' => $unit->name,

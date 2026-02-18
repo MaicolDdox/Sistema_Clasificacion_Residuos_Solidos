@@ -17,6 +17,7 @@
         class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition disabled:opacity-60 disabled:cursor-not-allowed"
         :disabled="!hasActions()"
         :title="triggerTitle()"
+        :aria-label="triggerTitle()"
         aria-haspopup="true"
         :aria-expanded="isOpen.toString()"
         :aria-controls="menuId"
@@ -49,11 +50,13 @@
                 class="outline-none"
                 :disabled="action.disabled"
                 :aria-disabled="action.disabled.toString()"
+                :aria-label="action.label"
                 :title="action.disabledReason || action.label"
                 :class="actionClass(action)"
                 @click.prevent="runAction(action)"
                 @focus="activeIndex = index"
             >
+                <span class="shrink-0" x-html="actionIcon(action)"></span>
                 <span class="truncate" x-text="action.label"></span>
             </button>
         </template>

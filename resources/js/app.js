@@ -107,7 +107,108 @@ window.uiActionsDropdown = function uiActionsDropdown(config = {}) {
                         : {},
                 disabled: Boolean(item.disabled),
                 disabledReason: item.disabledReason || '',
+                icon: this.resolveIcon(item.icon, item.label),
             };
+        },
+        resolveIcon(icon, label) {
+            const allowedIcons = [
+                'eye',
+                'edit',
+                'trash',
+                'pdf',
+                'excel',
+                'plus',
+                'list',
+                'chart',
+                'default',
+            ];
+
+            const explicitIcon = String(icon || '')
+                .trim()
+                .toLowerCase();
+
+            if (allowedIcons.includes(explicitIcon)) {
+                return explicitIcon;
+            }
+
+            const normalizedLabel = String(label || '')
+                .trim()
+                .toLowerCase();
+
+            if (
+                normalizedLabel.includes('ver') ||
+                normalizedLabel.includes('detalle')
+            ) {
+                return 'eye';
+            }
+
+            if (normalizedLabel.includes('editar')) {
+                return 'edit';
+            }
+
+            if (
+                normalizedLabel.includes('eliminar') ||
+                normalizedLabel.includes('remover')
+            ) {
+                return 'trash';
+            }
+
+            if (normalizedLabel.includes('pdf')) {
+                return 'pdf';
+            }
+
+            if (normalizedLabel.includes('excel')) {
+                return 'excel';
+            }
+
+            if (
+                normalizedLabel.includes('nuevo') ||
+                normalizedLabel.includes('registrar') ||
+                normalizedLabel.includes('asignar')
+            ) {
+                return 'plus';
+            }
+
+            if (
+                normalizedLabel.includes('reporte') ||
+                normalizedLabel.includes('grafico')
+            ) {
+                return 'chart';
+            }
+
+            if (
+                normalizedLabel.includes('listado') ||
+                normalizedLabel.includes('listar') ||
+                normalizedLabel.includes('ver residuos')
+            ) {
+                return 'list';
+            }
+
+            return 'default';
+        },
+        actionIcon(action) {
+            const icon = String(action?.icon || 'default').toLowerCase();
+
+            switch (icon) {
+                case 'eye':
+                    return `<svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5s8.268 2.943 9.542 7c-1.274 4.057-5.065 7-9.542 7S3.732 16.057 2.458 12z"/></svg>`;
+                case 'edit':
+                    return `<svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16.5 3.5a2.121 2.121 0 113 3L11 15l-4 1 1-4 8.5-8.5z"/></svg>`;
+                case 'trash':
+                    return `<svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-1 12a2 2 0 01-2 2H8a2 2 0 01-2-2L5 7"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 11v6M14 11v6M9 7V4a1 1 0 011-1h4a1 1 0 011 1v3M4 7h16"/></svg>`;
+                case 'pdf':
+                    return `<svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 3h7l5 5v13a1 1 0 01-1 1H7a1 1 0 01-1-1V4a1 1 0 011-1z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 3v5h5M9 16h6M9 12h3"/></svg>`;
+                case 'excel':
+                    return `<svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h16v16H4z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 8l4 8M14 8l-4 8"/></svg>`;
+                case 'plus':
+                    return `<svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14M5 12h14"/></svg>`;
+                case 'list':
+                    return `<svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6h13M8 12h13M8 18h13"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 6h.01M3 12h.01M3 18h.01"/></svg>`;
+                case 'chart':
+                    return `<svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 20V10M12 20V4M17 20v-7M4 20h16"/></svg>`;
+                default:
+                    return `<svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5h.01M12 12h.01M12 19h.01"/></svg>`;
+            }
         },
         hasActions() {
             return this.normalizedActions.length > 0;
