@@ -35,9 +35,6 @@
             </div>
         </div>
 
-        {{-- Mensajes de confirmación --}}
-        @include('partials.session-message')
-
         {{-- Tarjeta de información principal --}}
         <div class="bg-white border border-slate-200 rounded-xl md:rounded-2xl shadow-sm p-4 md:p-6">
             <div class="space-y-4 md:space-y-6">
@@ -109,4 +106,3 @@
     </div>
 
 </x-layouts.app>
-
