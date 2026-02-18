@@ -320,5 +320,13 @@
         </div>
     </div>
 
+    @include('partials.ui.confirm-modal', [
+        'modalId' => 'global-confirm-modal',
+        'title' => 'Confirmar acción',
+        'message' => '¿Deseas continuar con esta operación?',
+        'confirmButtonText' => 'Confirmar',
+    ])
+    @include('partials.ui.toast-stack')
+
 </body>
 </html>
