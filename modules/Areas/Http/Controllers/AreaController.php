@@ -5,6 +5,8 @@ namespace Modules\Areas\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Modules\Areas\Http\Requests\StoreAreaRequest;
+use Modules\Areas\Http\Requests\UpdateAreaRequest;
 use Modules\Areas\Models\Area;
 
 class AreaController extends Controller
@@ -45,17 +47,9 @@ class AreaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAreaRequest $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:areas,name'],
-            'description' => ['nullable', 'string', 'max:1000'],
-        ], [
-            'name.required' => 'El nombre del área es obligatorio.',
-            'name.unique' => 'Ya existe un área con este nombre.',
-            'name.max' => 'El nombre no puede exceder 255 caracteres.',
-            'description.max' => 'La descripción no puede exceder 1000 caracteres.',
-        ]);
+        $validated = $request->validated();
 
         try {
             Area::create($validated);
@@ -87,17 +81,9 @@ class AreaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Area $area)
+    public function update(UpdateAreaRequest $request, Area $area)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:areas,name,' . $area->id],
-            'description' => ['nullable', 'string', 'max:1000'],
-        ], [
-            'name.required' => 'El nombre del área es obligatorio.',
-            'name.unique' => 'Ya existe un área con este nombre.',
-            'name.max' => 'El nombre no puede exceder 255 caracteres.',
-            'description.max' => 'La descripción no puede exceder 1000 caracteres.',
-        ]);
+        $validated = $request->validated();
 
         try {
             $area->update($validated);
