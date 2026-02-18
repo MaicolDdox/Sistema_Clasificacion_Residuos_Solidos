@@ -47,10 +47,6 @@ Route::middleware(['web', 'auth'])->group(function () {
     // ========================================
     // RUTAS DE ELIMINACIÓN (Solo Gestora)
     // ========================================
-    Route::get('areas/{area}/destroy/confirm', [AreaController::class, 'confirmDestroy'])
-        ->middleware('permission:areas.destroy.confirm')
-        ->name('areas.destroy.confirm');
-
     Route::delete('areas/{area}', [AreaController::class, 'destroy'])
         ->middleware('permission:areas.destroy')
         ->name('areas.destroy');

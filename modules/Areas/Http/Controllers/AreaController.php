@@ -18,16 +18,21 @@ class AreaController extends Controller
     {
         // Si la petición es AJAX (desde DataTable)
         if ($request->ajax()) {
-            $areas = Area::all()->map(function ($area) {
-                return [
-                    'id'           => $area->id,
-                    'name'         => Str::limit($area->name, 30),
-                    'description'  => Str::limit($area->description, 60),
-                    'created_at'   => $area->created_at->format('Y-m-d'),
-                    'updated_at'   => $area->updated_at->format('Y-m-d'),
-                    'acciones'     => view('areas::partials.areas-actions', compact('area'))->render(),
-                ];
-            });
+            $areas = Area::query()
+                ->withCount('productiveUnits')
+                ->orderBy('name')
+                ->get()
+                ->map(function ($area) {
+                    return [
+                        'id' => $area->id,
+                        'name' => Str::limit($area->name, 30),
+                        'description' => Str::limit($area->description, 60),
+                        'created_at' => $area->created_at->format('Y-m-d'),
+                        'updated_at' => $area->updated_at->format('Y-m-d'),
+                        'productive_units_count' => $area->productive_units_count,
+                        'acciones' => view('areas::partials.areas-actions', compact('area'))->render(),
+                    ];
+                });
 
             return response()->json(['data' => $areas]);
         }
@@ -53,12 +58,13 @@ class AreaController extends Controller
 
         try {
             Area::create($validated);
+
             return redirect()->route('areas.index')
                 ->with('success', 'Área creada exitosamente.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Error al crear el área: ' . $e->getMessage());
+                ->with('error', 'Error al crear el área: '.$e->getMessage());
         }
     }
 
@@ -87,21 +93,14 @@ class AreaController extends Controller
 
         try {
             $area->update($validated);
+
             return redirect()->route('areas.index')
                 ->with('success', 'Área actualizada exitosamente.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Error al actualizar el área: ' . $e->getMessage());
+                ->with('error', 'Error al actualizar el área: '.$e->getMessage());
         }
-    }
-
-    /**
-     * Show the confirmation page for deleting the specified resource.
-     */
-    public function confirmDestroy(Area $area)
-    {
-        return view('areas::areas-delete', compact('area'));
     }
 
     /**
@@ -117,11 +116,12 @@ class AreaController extends Controller
             }
 
             $area->delete();
+
             return redirect()->route('areas.index')
                 ->with('success', 'Área eliminada exitosamente.');
         } catch (\Exception $e) {
             return redirect()->route('areas.index')
-                ->with('error', 'Error al eliminar el área: ' . $e->getMessage());
+                ->with('error', 'Error al eliminar el área: '.$e->getMessage());
         }
     }
 }

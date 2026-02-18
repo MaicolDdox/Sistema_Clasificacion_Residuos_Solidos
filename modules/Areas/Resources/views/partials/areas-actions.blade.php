@@ -1,61 +1,53 @@
-<div class="flex items-center space-x-2">
+@php
+    $menuId = 'area-'.$area->id;
+    $hasLinkedUnits = (int) ($area->productive_units_count ?? 0) > 0;
 
-    {{-- Botón Ver Detalles --}}
-    <a
-        href="{{ route('areas.show', $area) }}"
-        title="Ver detalles del Área"
-        class="bg-blue-100 hover:bg-blue-200 text-blue-700 p-2 rounded-lg transition-colors duration-200 group">
-        <svg
-            class="w-4 h-4 group-hover:scale-110 transition-transform duration-200"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        </svg>
-    </a>
+    $actions = [
+        [
+            'label' => 'Ver detalles',
+            'href' => route('areas.show', $area),
+            'variant' => 'info',
+        ],
+    ];
 
-    {{-- Botón Editar --}}
-    <a
-        href="{{ route('areas.edit', $area) }}"
-        title="Editar Área"
-        class="bg-amber-100 hover:bg-amber-200 text-amber-700 p-2 rounded-lg transition-colors duration-200 group">
-        <svg
-            class="w-4 h-4 group-hover:scale-110 transition-transform duration-200"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-        </svg>
-    </a>
+    if (auth()->user()?->can('areas.edit')) {
+        $actions[] = [
+            'label' => 'Editar',
+            'href' => route('areas.edit', $area),
+            'variant' => 'warning',
+        ];
+    }
 
-    {{-- Botón Eliminar --}}
-    <a
-        href="{{ route('areas.destroy.confirm', $area) }}"
-        title="Eliminar Área"
-        class="bg-red-100 hover:bg-red-200 text-red-700 p-2 rounded-lg transition-colors duration-200 group">
-        <svg
-            class="w-4 h-4 group-hover:scale-110 transition-transform duration-200"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24">
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-        </svg>
-    </a>
-</div>
+    if (auth()->user()?->can('areas.destroy')) {
+        if ($hasLinkedUnits) {
+            $actions[] = [
+                'label' => 'Eliminar',
+                'variant' => 'danger',
+                'eventName' => 'ui:confirm-modal.open',
+                'eventDetail' => [
+                    'title' => 'No se puede eliminar el área',
+                    'message' => 'Esta área tiene '.$area->productive_units_count.' unidad(es) productiva(s) asociada(s). Debes eliminarlas o reasignarlas antes de continuar.',
+                    'confirmButtonText' => 'Entendido',
+                    'confirmVariant' => 'default',
+                    'hideCancel' => true,
+                ],
+            ];
+        } else {
+            $actions[] = [
+                'label' => 'Eliminar',
+                'href' => route('areas.destroy', $area),
+                'method' => 'DELETE',
+                'variant' => 'danger',
+                'confirm' => true,
+                'confirmTitle' => 'Confirmar eliminación',
+                'confirmMessage' => 'Esta acción eliminará el área seleccionada.',
+                'confirmButtonText' => 'Eliminar',
+            ];
+        }
+    }
+@endphp
+
+@include('partials.ui.actions-dropdown', [
+    'id' => $menuId,
+    'actions' => $actions,
+])

@@ -36,9 +36,6 @@
             </div>
         </div>
 
-        {{-- Mensajes de confirmacion --}}
-        @include('partials.session-message')
-
         {{-- Barra de herramientas --}}
         <div class="flex flex-col gap-3 md:gap-4 md:flex-row md:items-center md:justify-between bg-white border border-slate-200 rounded-xl px-3 md:px-4 py-3 shadow-sm">
             <div class="flex items-center gap-2 md:gap-3">
