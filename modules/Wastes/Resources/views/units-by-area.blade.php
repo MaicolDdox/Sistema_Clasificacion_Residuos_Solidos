@@ -1,5 +1,5 @@
 <x-layouts.app :title="__('Unidades del área '.$area->name)">
-    <div class="max-w-7xl mx-auto space-y-6">
+    <div class="max-w-7xl mx-auto space-y-6" x-data="window.uiUnitWasteActionModals()" x-init="init()">
         <div class="bg-gradient-to-r from-emerald-50 via-white to-cyan-50 border border-emerald-100 rounded-2xl p-6 shadow-sm">
             <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <div class="space-y-2">
@@ -48,6 +48,102 @@
 
             <div id="unitsByAreaMobileCards" class="space-y-3 md:hidden"></div>
             <div id="unitsByAreaMobilePagination" class="mt-4 md:hidden"></div>
+        </div>
+
+        <div
+            x-cloak
+            x-show="showRegister"
+            x-transition.opacity
+            class="fixed inset-0 z-[90] flex items-center justify-center bg-slate-900/60 px-4"
+        >
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-slate-200"
+                x-show="showRegister"
+                x-transition.scale.origin-center
+                @click.outside="showRegister = false"
+                @keydown.escape.window="showRegister = false"
+            >
+                <div class="p-6 space-y-4">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.2em] text-emerald-600 font-semibold">Registrar</p>
+                            <h3 class="text-xl font-bold text-slate-900">¿Qué tipo de residuo deseas registrar?</h3>
+                            <p class="text-sm text-slate-500 mt-1">Unidad: <span x-text="unitName"></span></p>
+                        </div>
+                        <button type="button" class="text-slate-400 hover:text-slate-600 transition" @click="showRegister = false">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <span class="sr-only">Cerrar</span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3">
+                        <button
+                            type="button"
+                            class="w-full px-4 py-3 rounded-xl border border-emerald-200 text-emerald-700 font-semibold hover:bg-emerald-50 transition"
+                            @click="goTo(registerUrls.resol)"
+                        >
+                            Residuo sólido (RESOL)
+                        </button>
+                        <button
+                            type="button"
+                            class="w-full px-4 py-3 rounded-xl border border-teal-200 text-teal-700 font-semibold hover:bg-teal-50 transition"
+                            @click="goTo(registerUrls.respel)"
+                        >
+                            Residuo peligroso (RESPEL)
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div
+            x-cloak
+            x-show="showView"
+            x-transition.opacity
+            class="fixed inset-0 z-[90] flex items-center justify-center bg-slate-900/60 px-4"
+        >
+            <div
+                class="bg-white rounded-2xl shadow-2xl w-full max-w-md border border-slate-200"
+                x-show="showView"
+                x-transition.scale.origin-center
+                @click.outside="showView = false"
+                @keydown.escape.window="showView = false"
+            >
+                <div class="p-6 space-y-4">
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.2em] text-emerald-600 font-semibold">Ver registros</p>
+                            <h3 class="text-xl font-bold text-slate-900">Selecciona el tipo de registros</h3>
+                            <p class="text-sm text-slate-500 mt-1">Unidad: <span x-text="unitName"></span></p>
+                        </div>
+                        <button type="button" class="text-slate-400 hover:text-slate-600 transition" @click="showView = false">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                            </svg>
+                            <span class="sr-only">Cerrar</span>
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-1 gap-3">
+                        <button
+                            type="button"
+                            class="w-full px-4 py-3 rounded-xl border border-emerald-200 text-emerald-700 font-semibold hover:bg-emerald-50 transition"
+                            @click="goTo(viewUrls.resol)"
+                        >
+                            RESOL
+                        </button>
+                        <button
+                            type="button"
+                            class="w-full px-4 py-3 rounded-xl border border-teal-200 text-teal-700 font-semibold hover:bg-teal-50 transition"
+                            @click="goTo(viewUrls.respel)"
+                        >
+                            RESPEL
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 

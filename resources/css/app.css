@@ -257,14 +257,14 @@ div.dataTables_wrapper div.dataTables_paginate {
 }
 
 #unitsByAreaTable_wrapper td.units-actions-cell {
-    min-width: 17rem;
+    min-width: 6rem;
     white-space: nowrap;
     vertical-align: middle;
 }
 
 @media (min-width: 640px) {
     #unitsByAreaTable_wrapper td.units-actions-cell {
-        min-width: 18rem;
+        min-width: 7rem;
     }
 }
 
