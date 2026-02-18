@@ -639,7 +639,17 @@ window.uiToastStack = function uiToastStack(config = {}) {
         toasts: [],
         nextId: 1,
         listener: null,
+        isMounted: false,
+        mountFlagKey: '__uiToastStackMounted',
         init() {
+            // Evita doble registro si Alpine se inicializa dos veces.
+            if (window[this.mountFlagKey]) {
+                return;
+            }
+
+            window[this.mountFlagKey] = true;
+            this.isMounted = true;
+
             const initial = Array.isArray(config.initialToasts)
                 ? config.initialToasts
                 : [];
@@ -653,9 +663,17 @@ window.uiToastStack = function uiToastStack(config = {}) {
             window.addEventListener('ui:toast', this.listener);
         },
         destroy() {
+            if (!this.isMounted) {
+                return;
+            }
+
             if (this.listener) {
                 window.removeEventListener('ui:toast', this.listener);
+                this.listener = null;
             }
+
+            window[this.mountFlagKey] = false;
+            this.isMounted = false;
         },
         pushToast(payload = {}) {
             const message = String(payload.message || '').trim();
