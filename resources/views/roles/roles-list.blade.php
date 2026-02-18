@@ -4,37 +4,29 @@
     <div class="max-w-7xl mx-auto space-y-4 sm:space-y-6 px-4 sm:px-6 lg:px-0">
 
         {{-- Encabezado --}}
-        <div class="bg-gradient-to-r from-emerald-50 via-white to-cyan-50 border border-emerald-100 rounded-2xl p-4 sm:p-6 shadow-sm">
-            <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-                <div class="space-y-2">
-                    <p class="inline-flex items-center text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600 bg-emerald-50 rounded-full px-3 py-1">
-                        <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
-                        Sistema de Roles
-                    </p>
+        <x-ui.page-header
+            eyebrow="Sistema de Roles"
+            title="Asignacion de Roles"
+            subtitle="Administra los roles de usuarios del sistema SCR."
+            eyebrowTone="emerald"
+        >
+            <x-slot:actions>
+                <div class="hidden md:flex items-center gap-2 px-3 py-2 bg-white border border-emerald-100 rounded-xl shadow-sm">
+                    <span class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold">US</span>
                     <div>
-                        <h1 class="text-2xl sm:text-3xl font-bold text-slate-900 leading-tight">Asignacion de Roles</h1>
-                        <p class="text-sm sm:text-base text-slate-500">Administra los roles de usuarios del sistema SCR.</p>
+                        <p class="text-xs text-slate-400">Total usuarios</p>
+                        <p class="text-lg font-semibold text-slate-800" id="usersTotalCount"></p>
                     </div>
                 </div>
-                <div class="flex items-center gap-3">
-                    <div class="hidden md:flex items-center gap-2 px-3 py-2 bg-white border border-emerald-100 rounded-xl shadow-sm">
-                        <span class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold">US</span>
-                        <div>
-                            <p class="text-xs text-slate-400">Total usuarios</p>
-                            <p class="text-lg font-semibold text-slate-800" id="usersTotalCount"></p>
-                        </div>
-                    </div>
-                    <a href="{{ route('roles.create') }}"
-                       class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-200 shadow-sm hover:shadow-md">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        <span>Asignar Rol</span>
-                    </a>
-                </div>
-            </div>
-        </div>
+                <a href="{{ route('roles.create') }}"
+                    class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-200 shadow-sm hover:shadow-md">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <span>Asignar Rol</span>
+                </a>
+            </x-slot:actions>
+        </x-ui.page-header>
 
         {{-- Barra de herramientas --}}
         <div class="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between bg-white border border-slate-200 rounded-xl px-3 sm:px-4 py-3 shadow-sm">

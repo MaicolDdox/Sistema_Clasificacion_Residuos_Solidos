@@ -1,9 +1,19 @@
 <x-layouts.app :title="__('Editar Área')">
     <div class="max-w-3xl mx-auto space-y-6">
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-            <h1 class="text-2xl font-bold text-slate-900 mb-1">Editar Área</h1>
-            <p class="text-sm text-slate-500 mb-4">Modifica la información del área seleccionada.</p>
+        <x-ui.page-header
+            eyebrow="Catalogo"
+            title="Editar Area"
+            subtitle="Modifica la informacion del area seleccionada."
+            eyebrowTone="emerald"
+        >
+            <x-slot:actions>
+                <a href="{{ route('areas.index') }}" class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 transition text-sm">
+                    Volver al listado
+                </a>
+            </x-slot:actions>
+        </x-ui.page-header>
 
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
             <form action="{{ route('areas.update', $area) }}" method="POST" class="space-y-4">
                 @csrf
                 @method('PUT')

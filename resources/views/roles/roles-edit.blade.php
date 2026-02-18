@@ -1,9 +1,19 @@
 <x-layouts.app :title="__('Editar Rol')">
     <div class="max-w-3xl mx-auto space-y-6">
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-            <h1 class="text-2xl font-bold text-slate-900 mb-1">Editar rol de usuario</h1>
-            <p class="text-sm text-slate-500 mb-4">Modifica el rol asignado al usuario seleccionado.</p>
+        <x-ui.page-header
+            eyebrow="Sistema de Roles"
+            title="Editar rol de usuario"
+            subtitle="Modifica el rol asignado al usuario seleccionado."
+            eyebrowTone="emerald"
+        >
+            <x-slot:actions>
+                <a href="{{ route('roles.index') }}" class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 transition text-sm">
+                    Volver al listado
+                </a>
+            </x-slot:actions>
+        </x-ui.page-header>
 
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
             <div class="rounded-xl border border-slate-200 bg-slate-50 p-4 space-y-1">
                 <p class="text-xs uppercase tracking-wide text-slate-500 font-semibold">Usuario</p>
                 <p class="text-sm font-semibold text-slate-900">{{ $user->name }}</p>

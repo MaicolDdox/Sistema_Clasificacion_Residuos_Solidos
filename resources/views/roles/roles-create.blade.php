@@ -1,9 +1,19 @@
 <x-layouts.app :title="__('Asignar Rol')">
     <div class="max-w-3xl mx-auto space-y-6">
-        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
-            <h1 class="text-2xl font-bold text-slate-900 mb-1">Asignar rol a usuario</h1>
-            <p class="text-sm text-slate-500 mb-4">Selecciona un usuario y asigna el rol correspondiente.</p>
+        <x-ui.page-header
+            eyebrow="Sistema de Roles"
+            title="Asignar rol a usuario"
+            subtitle="Selecciona un usuario y asigna el rol correspondiente."
+            eyebrowTone="emerald"
+        >
+            <x-slot:actions>
+                <a href="{{ route('roles.index') }}" class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 transition text-sm">
+                    Volver al listado
+                </a>
+            </x-slot:actions>
+        </x-ui.page-header>
 
+        <div class="bg-white border border-slate-200 rounded-2xl p-6 shadow-sm">
             <form action="{{ route('roles.store') }}" method="POST" class="space-y-4">
                 @csrf
 
