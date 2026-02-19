@@ -257,21 +257,103 @@ div.dataTables_wrapper div.dataTables_paginate {
 }
 
 #unitsByAreaTable_wrapper td.units-actions-cell {
-    min-width: 17rem;
+    min-width: 6rem;
     white-space: nowrap;
     vertical-align: middle;
 }
 
+/* Ajustes responsive para DataTables de Areas y Roles */
+#areasTable_wrapper,
+#usersTable_wrapper {
+    width: 100%;
+}
+
+#areasTable_wrapper .dt-layout-row,
+#usersTable_wrapper .dt-layout-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    align-items: center;
+    justify-content: space-between;
+}
+
+#areasTable_wrapper .dt-layout-cell,
+#usersTable_wrapper .dt-layout-cell {
+    min-width: 0;
+    width: 100%;
+}
+
+#areasTable_wrapper .dt-length,
+#usersTable_wrapper .dt-length,
+#areasTable_wrapper .dt-info,
+#usersTable_wrapper .dt-info,
+#areasTable_wrapper .dt-paging,
+#usersTable_wrapper .dt-paging {
+    width: 100%;
+}
+
+#areasTable_wrapper .dt-length label,
+#usersTable_wrapper .dt-length label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #475569;
+    font-size: 0.875rem;
+}
+
+#areasTable_wrapper .dt-length select,
+#usersTable_wrapper .dt-length select {
+    border-radius: 0.5rem;
+    border-color: #cbd5e1;
+}
+
+#areasTable_wrapper .dt-info,
+#usersTable_wrapper .dt-info {
+    color: #64748b;
+    font-size: 0.875rem;
+}
+
+#areasTable_wrapper .dt-paging,
+#usersTable_wrapper .dt-paging {
+    display: flex;
+    justify-content: flex-start;
+}
+
+#areasTable_wrapper .dt-paging nav,
+#usersTable_wrapper .dt-paging nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+}
+
+#areasTable_wrapper .dt-paging .dt-paging-button,
+#usersTable_wrapper .dt-paging .dt-paging-button {
+    border-radius: 0.5rem;
+}
+
+#areasTable_wrapper td.areas-nowrap-cell,
+#usersTable_wrapper td.users-nowrap-cell {
+    white-space: nowrap;
+}
+
+#areasTable_wrapper td.areas-actions-cell,
+#usersTable_wrapper td.users-actions-cell {
+    white-space: nowrap;
+    text-align: center;
+}
+
 @media (min-width: 640px) {
     #unitsByAreaTable_wrapper td.units-actions-cell {
-        min-width: 18rem;
+        min-width: 7rem;
     }
 }
 
 @media (min-width: 768px) {
     #resolTable_wrapper .dt-layout-cell,
     #respelTable_wrapper .dt-layout-cell,
-    #unitsByAreaTable_wrapper .dt-layout-cell {
+    #unitsByAreaTable_wrapper .dt-layout-cell,
+    #areasTable_wrapper .dt-layout-cell,
+    #usersTable_wrapper .dt-layout-cell {
         width: auto;
     }
 
@@ -285,7 +367,13 @@ div.dataTables_wrapper div.dataTables_paginate {
     #respelTable_wrapper .dt-paging,
     #unitsByAreaTable_wrapper .dt-length,
     #unitsByAreaTable_wrapper .dt-info,
-    #unitsByAreaTable_wrapper .dt-paging {
+    #unitsByAreaTable_wrapper .dt-paging,
+    #areasTable_wrapper .dt-length,
+    #usersTable_wrapper .dt-length,
+    #areasTable_wrapper .dt-info,
+    #usersTable_wrapper .dt-info,
+    #areasTable_wrapper .dt-paging,
+    #usersTable_wrapper .dt-paging {
         width: auto;
     }
 
@@ -304,7 +392,9 @@ div.dataTables_wrapper div.dataTables_paginate {
 
     #resolTable_wrapper .dt-paging,
     #respelTable_wrapper .dt-paging,
-    #unitsByAreaTable_wrapper .dt-paging {
+    #unitsByAreaTable_wrapper .dt-paging,
+    #areasTable_wrapper .dt-paging,
+    #usersTable_wrapper .dt-paging {
         justify-content: flex-end;
     }
 
