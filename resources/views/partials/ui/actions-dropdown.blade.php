@@ -14,7 +14,7 @@
     <button
         x-ref="trigger"
         type="button"
-        class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-slate-200 bg-white text-slate-600 hover:bg-slate-50 transition disabled:opacity-60 disabled:cursor-not-allowed"
+        class="inline-flex items-center justify-center w-9 h-9 rounded-lg border border-slate-200 bg-emerald-100  text-slate-700 hover:bg-emerald-400 transition disabled:opacity-60 disabled:cursor-not-allowed"
         :disabled="!hasActions()"
         :title="triggerTitle()"
         :aria-label="triggerTitle()"

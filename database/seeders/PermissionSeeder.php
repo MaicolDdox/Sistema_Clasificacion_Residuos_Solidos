@@ -142,12 +142,10 @@ class PermissionSeeder extends Seeder
         // El Líder puede: ver, crear, editar - NO puede eliminar
         $liderPermissions = Permission::where('name', 'not like', '%.destroy')
             ->where('name', 'not like', '%.destroy.confirm')
-            ->where('name', '=', 'roles.index')      // No puede gestionar roles
-            ->where('name', '!=', 'roles.create')
-            ->where('name', '!=', 'roles.store')
-            ->where('name', '!=', 'roles.edit')
-            ->where('name', '!=', 'roles.update')
-            ->where('name', '!=', 'roles.destroy')
+            ->where(function ($query) {
+                $query->where('name', 'not like', 'roles.%')
+                    ->orWhere('name', 'roles.index');
+            })
             ->get();
 
         $liderAmbiental->syncPermissions($liderPermissions);
@@ -184,6 +182,19 @@ class PermissionSeeder extends Seeder
 
         $this->command->info('Aprendiz: ' . $aprendiz->permissions->count() . ' permisos asignados (Lectura + CRUD residuos propios)');
 
+
+        // ========================================
+        // ROL 4: Invitado (Sin ningún permiso)
+        // ========================================
+
+        $guest = Role::firstOrCreate(['name' => 'Invitado']);
+        $guest->syncPermissions([]);
+
+        $this->command->info('Invitado: 0 permisos asignados (SIN ACCESO - pendiente de activación)');
+
+
+
+
         $this->command->newLine();
         $this->command->warn('RESUMEN DE PERMISOS:');
         $this->command->table(
@@ -192,6 +203,7 @@ class PermissionSeeder extends Seeder
                 ['Gestora Ambiental', $gestoraAmbiental->permissions->count(), 'TOTAL (CRUD completo)'],
                 ['Líder Ambiental', $liderAmbiental->permissions->count(), 'ALTO (Ver/Crear/Editar)'],
                 ['Aprendiz', $aprendiz->permissions->count(), 'BÁSICO (Lectura + residuos propios)'],
+                ['Invitado', $guest->permissions->count(), 'NO TIENE PERMISOS AL MOMENTO DE REGISTRARSE'],
             ]
         );
     }

@@ -12,9 +12,13 @@ class DashboardController extends Controller
 {
     public function index()
     {
+        if (auth()->user()->hasRole('Invitado')) {
+            return view('dashboard::welcome-guest');
+        }
+
         $totalResol = (int) Waste::query()->sum('amount');
         $totalRespel = (int) HazardouWaste::query()->sum('amount');
-        $totalUsersWithoutRole = User::query()->doesntHave('roles')->count();
+        $totalUsersWithoutRole = User::query()->role('Invitado')->count();
 
         $units = ProductiveUnit::query()
             ->select('id', 'name')

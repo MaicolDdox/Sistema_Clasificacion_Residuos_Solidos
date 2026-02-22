@@ -119,17 +119,31 @@
                         </a>
                     </li>
 
-                    {{-- CONTENIDO PARA AGREGAR LOS ITEMS DE AREAS --}}
-                    @include('components.layouts.app.menu.areas.area-list')
+                    @role('Invitado')
+                        {{-- Aviso de cuenta pendiente de activación --}}
+                        <li class="px-3 py-3 mt-1">
+                            <div class="rounded-xl border border-amber-200 bg-amber-50 px-3 py-3 space-y-1">
+                                <p class="text-xs font-semibold text-amber-700">Cuenta en espera</p>
+                                <p class="text-[11px] text-amber-600 leading-relaxed">
+                                    Tu cuenta aún no tiene módulos habilitados. Contacta a la Gestora Ambiental para que te asigne un rol.
+                                </p>
+                            </div>
+                        </li>
+                    @endrole
 
-                    {{-- CONTENIDO PARA AGREGAR LOS ITEMS DE UNIDADES PRODUCTIVAS --}}
-                    @include('components.layouts.app.menu.unidades.unidades-list')
+                    @unlessrole('Invitado')
+                        {{-- CONTENIDO PARA AGREGAR LOS ITEMS DE AREAS --}}
+                        @include('components.layouts.app.menu.areas.area-list')
 
-                    {{-- CONTENIO PARA AGREGAR LOS ITEMS DE RESIDUOS --}}
-                    @include('components.layouts.app.menu.residuos.residuos-list')
+                        {{-- CONTENIDO PARA AGREGAR LOS ITEMS DE UNIDADES PRODUCTIVAS --}}
+                        @include('components.layouts.app.menu.unidades.unidades-list')
 
-                    {{-- CONTENIDO PARA AGREGAR LOS ITEMS DE ROLES --}}
-                    @include('components.layouts.app.menu.roles.roles-list')
+                        {{-- CONTENIO PARA AGREGAR LOS ITEMS DE RESIDUOS --}}
+                        @include('components.layouts.app.menu.residuos.residuos-list')
+
+                        {{-- CONTENIDO PARA AGREGAR LOS ITEMS DE ROLES --}}
+                        @include('components.layouts.app.menu.roles.roles-list')
+                    @endunlessrole
                 </ul>
 
                 <!-- Divider -->
