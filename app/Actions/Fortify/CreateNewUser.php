@@ -36,8 +36,8 @@ class CreateNewUser implements CreatesNewUsers
             'password' => $input['password'],
         ]);
 
-        // Asignar rol "Aprendiz" por defecto a todos los nuevos usuarios
-        $user->assignRole('Aprendiz');
+        // Asignar rol "Invitado" por defecto a todos los nuevos usuarios
+        $user->assignRole('Invitado');
 
         return $user;
     }

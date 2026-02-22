@@ -184,6 +184,25 @@ class PermissionSeeder extends Seeder
 
         $this->command->info('Aprendiz: ' . $aprendiz->permissions->count() . ' permisos asignados (Lectura + CRUD residuos propios)');
 
+
+        /*
+        Creamos nuevo rol llamado "Invitado en la cual no tenga ningun permiso en el sistema 
+        */
+
+        $guest = Role::firstOrCreate(['name' => 'Invitado']);
+
+        $invitadoPermissions = Permission::where(function ($query) {
+            $query->where('name', 'not like', '%.index')
+            ->orWhere('name', '!=', 'wastes.navigator')
+            ->orWhere('name', '!=', '%.create')
+            ->orWhere('name', '!=', '%.edit')
+            ->orWhere('name', '!=', '%.destroy')
+            ->orWhere('name', '!=', '%.report.%');
+        })->get();
+
+        $guest->syncPermissions($invitadoPermissions);
+
+
         $this->command->newLine();
         $this->command->warn('RESUMEN DE PERMISOS:');
         $this->command->table(
