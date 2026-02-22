@@ -47,7 +47,7 @@ class AsigRoleController extends Controller
      */
     public function create()
     {
-        $users = User::all();
+        $users = User::role('Invitado')->get();
         $roles = Role::all();
 
         return view('roles.roles-create', compact('users', 'roles'));
