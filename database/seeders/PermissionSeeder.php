@@ -183,22 +183,16 @@ class PermissionSeeder extends Seeder
         $this->command->info('Aprendiz: ' . $aprendiz->permissions->count() . ' permisos asignados (Lectura + CRUD residuos propios)');
 
 
-        /*
-        Creamos nuevo rol llamado "Invitado en la cual no tenga ningun permiso en el sistema 
-        */
+        // ========================================
+        // ROL 4: Invitado (Sin ningún permiso)
+        // ========================================
 
         $guest = Role::firstOrCreate(['name' => 'Invitado']);
+        $guest->syncPermissions([]);
 
-        $invitadoPermissions = Permission::where(function ($query) {
-            $query->where('name', 'not like', '%.index')
-            ->orWhere('name', '!=', 'wastes.navigator')
-            ->orWhere('name', '!=', '%.create')
-            ->orWhere('name', '!=', '%.edit')
-            ->orWhere('name', '!=', '%.destroy')
-            ->orWhere('name', '!=', '%.report.%');
-        })->get();
+        $this->command->info('Invitado: 0 permisos asignados (SIN ACCESO - pendiente de activación)');
 
-        $guest->syncPermissions($invitadoPermissions);
+
 
 
         $this->command->newLine();
@@ -209,6 +203,7 @@ class PermissionSeeder extends Seeder
                 ['Gestora Ambiental', $gestoraAmbiental->permissions->count(), 'TOTAL (CRUD completo)'],
                 ['Líder Ambiental', $liderAmbiental->permissions->count(), 'ALTO (Ver/Crear/Editar)'],
                 ['Aprendiz', $aprendiz->permissions->count(), 'BÁSICO (Lectura + residuos propios)'],
+                ['Invitado', $guest->permissions->count(), 'NO TIENE PERMISOS AL MOMENTO DE REGISTRARSE'],
             ]
         );
     }
