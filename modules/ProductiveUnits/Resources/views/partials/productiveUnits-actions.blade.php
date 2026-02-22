@@ -1,88 +1,62 @@
-<div class="flex items-center space-x-2">
+@php
+    $menuId = 'productive-unit-'.$unit->id;
+    $wastesCount = (int) ($unit->wastes_count ?? 0);
+    $hazardouWastesCount = (int) ($unit->hazardou_wastes_count ?? 0);
+    $totalRelatedRecords = $wastesCount + $hazardouWastesCount;
+    $hasLinkedRecords = $totalRelatedRecords > 0;
 
-    {{-- Boton show --}}
-    <a
-        href="{{ route('productive-units.show', $unit) }}"
-        title="Ver detalles de la Unidad"
-        class="bg-blue-100 hover:bg-blue-200 text-blue-700
-        p-2 rounded-lg transition-colors duration-200 group">
+    $actions = [];
 
-        <svg
-            class="w-4 h-4 group-hover:scale-110
-            transition-transform duration-200"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24">
+    if (auth()->user()?->can('productive-units.show')) {
+        $actions[] = [
+            'label' => 'Ver detalles',
+            'href' => route('productive-units.show', $unit),
+            'variant' => 'info',
+            'icon' => 'eye',
+        ];
+    }
 
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+    if (auth()->user()?->can('productive-units.edit')) {
+        $actions[] = [
+            'label' => 'Editar',
+            'href' => route('productive-units.edit', $unit),
+            'variant' => 'warning',
+            'icon' => 'edit',
+        ];
+    }
 
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478
-                0 8.268 2.943 9.542 7-1.274 4.057-5.064
-                7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-        </svg>
-    </a>
+    if (auth()->user()?->can('productive-units.destroy')) {
+        if ($hasLinkedRecords) {
+            $actions[] = [
+                'label' => 'Eliminar',
+                'variant' => 'danger',
+                'icon' => 'trash',
+                'eventName' => 'ui:confirm-modal.open',
+                'eventDetail' => [
+                    'title' => 'No se puede eliminar la unidad',
+                    'message' => 'Esta unidad tiene '.$totalRelatedRecords.' registro(s) asociado(s): '.$wastesCount.' RESOL y '.$hazardouWastesCount.' RESPEL. Debes eliminarlos antes de continuar.',
+                    'confirmButtonText' => 'Entendido',
+                    'confirmVariant' => 'default',
+                    'hideCancel' => true,
+                ],
+            ];
+        } else {
+            $actions[] = [
+                'label' => 'Eliminar',
+                'href' => route('productive-units.destroy', $unit),
+                'method' => 'DELETE',
+                'variant' => 'danger',
+                'icon' => 'trash',
+                'confirm' => true,
+                'confirmTitle' => 'Confirmar eliminación',
+                'confirmMessage' => 'Esta acción eliminará la unidad productiva seleccionada.',
+                'confirmButtonText' => 'Eliminar',
+            ];
+        }
+    }
+@endphp
 
-    {{-- Boton Editar --}}
-    <a
-        href="{{ route('productive-units.edit', $unit) }}"
-        title="Editar Unidad"
-        class="bg-amber-100 hover:bg-amber-200 text-amber-700 p-2
-        rounded-lg transition-colors duration-200 group">
-
-        <svg
-            class="w-4 h-4 group-hover:scale-110
-            transition-transform duration-200"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24">
-
-            <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M11 5H6a2 2 0 00-2 2v11a2 2 0
-                002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2
-                0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-        </svg>
-    </a>
-
-    {{-- Boton Eliminar --}}
-    <form
-        action="{{ route('productive-units.destroy', $unit) }}"
-        method="POST"
-        class="inline"
-        onsubmit="return confirm('Seguro que deseas eliminar esta unidad productiva?');">
-        @csrf @method('DELETE')
-
-        <button
-            type="submit"
-            title="Eliminar Unidad"
-            class="bg-red-100 hover:bg-red-200 text-red-700
-            p-2 rounded-lg transition-colors duration-200 group">
-
-            <svg
-                class="w-4 h-4 group-hover:scale-110
-                transition-transform duration-200"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24">
-
-                <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138
-                    21H7.862a2 2 0 01-1.995-1.858L5 7m5
-                    4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-            </svg>
-        </button>
-    </form>
-</div>
+@include('partials.ui.actions-dropdown', [
+    'id' => $menuId,
+    'actions' => $actions,
+])
