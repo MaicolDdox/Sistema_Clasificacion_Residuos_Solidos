@@ -6,6 +6,7 @@
     'required' => false,
     'placeholder' => 'Seleccione...',
     'help' => null,
+    'useOptionKeys' => false,
 ])
 
 @php
@@ -39,7 +40,9 @@
 
         @foreach ($options as $optionValue => $optionLabel)
             @php
-                $resolvedValue = is_int($optionValue) ? $optionLabel : $optionValue;
+                $resolvedValue = $useOptionKeys
+                    ? $optionValue
+                    : (is_int($optionValue) ? $optionLabel : $optionValue);
             @endphp
             <option value="{{ $resolvedValue }}" @selected((string) $currentValue === (string) $resolvedValue)>
                 {{ $optionLabel }}

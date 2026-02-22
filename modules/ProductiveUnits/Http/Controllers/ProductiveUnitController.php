@@ -3,10 +3,11 @@
 namespace Modules\ProductiveUnits\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
-use Modules\ProductiveUnits\Models\ProductiveUnit;
 use Modules\Areas\Models\Area;
+use Modules\ProductiveUnits\Models\ProductiveUnit;
 
 class ProductiveUnitController extends Controller
 {
@@ -16,25 +17,33 @@ class ProductiveUnitController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $units = ProductiveUnit::with('area')->get()->map(function ($unit) {
-                $wasteTypeLabel = match($unit->waste_type) {
-                    'Residuos Solidos' => 'Residuos Solidos',
-                    'Residuos Peligrosos' => 'Residuos Peligrosos',
-                    'RESOL/RESPEL' => 'RESOL/RESPEL',
-                    default => 'No definido'
-                };
+            $units = ProductiveUnit::query()
+                ->with('area')
+                ->withCount(['wastes', 'hazardouWastes'])
+                ->orderBy('name')
+                ->get()
+                ->map(function ($unit) {
+                    $wasteTypeLabel = match($unit->waste_type) {
+                        'Residuos Solidos' => 'Residuos Solidos (RESOL)',
+                        'Residuos Peligrosos' => 'Residuos Peligrosos (RESPEL)',
+                        'RESOL/RESPEL' => 'Ambos (RESOL/RESPEL)',
+                        default => 'No definido',
+                    };
 
-                return [
-                    'id'          => $unit->id,
-                    'area'        => $unit->area?->name ?? 'Sin area',
-                    'name'        => Str::limit($unit->name, 40),
-                    'description' => Str::limit($unit->description, 60),
-                    'waste_type'  => $wasteTypeLabel,
-                    'created_at'  => $unit->created_at?->format('Y-m-d'),
-                    'updated_at'  => $unit->updated_at?->format('Y-m-d'),
-                    'acciones'    => view('productiveunits::partials.productiveUnits-actions', compact('unit'))->render(),
-                ];
-            });
+                    return [
+                        'id'          => $unit->id,
+                        'area'        => Str::limit($unit->area?->name ?? 'Sin area', 40),
+                        'name'        => Str::limit($unit->name, 40),
+                        'description' => Str::limit($unit->description, 60),
+                        'waste_type'  => $wasteTypeLabel,
+                        'created_at'  => $unit->created_at?->format('Y-m-d'),
+                        'updated_at'  => $unit->updated_at?->format('Y-m-d'),
+                        'mobile_info' => view('productiveunits::partials.productiveUnits-mobile-info', [
+                            'description' => Str::limit((string) $unit->description, 90),
+                        ])->render(),
+                        'acciones'    => view('productiveunits::partials.productiveUnits-actions', compact('unit'))->render(),
+                    ];
+                });
 
             return response()->json(['data' => $units]);
         }
@@ -110,9 +119,22 @@ class ProductiveUnitController extends Controller
      */
     public function destroy(ProductiveUnit $productiveUnit)
     {
-        $productiveUnit->delete();
+        $productiveUnit->loadCount(['wastes', 'hazardouWastes']);
+        $relatedRecordsCount = (int) $productiveUnit->wastes_count + (int) $productiveUnit->hazardou_wastes_count;
 
-        return redirect()->route('productive-units.index')
-            ->with('success', 'Unidad productiva eliminada exitosamente.');
+        if ($relatedRecordsCount > 0) {
+            return redirect()->route('productive-units.index')
+                ->with('error', 'No se puede eliminar la unidad porque tiene registros de residuos asociados.');
+        }
+
+        try {
+            $productiveUnit->delete();
+
+            return redirect()->route('productive-units.index')
+                ->with('success', 'Unidad productiva eliminada exitosamente.');
+        } catch (QueryException $exception) {
+            return redirect()->route('productive-units.index')
+                ->with('error', 'No se pudo eliminar la unidad porque tiene relaciones activas en el sistema.');
+        }
     }
 }
