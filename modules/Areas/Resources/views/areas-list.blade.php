@@ -4,40 +4,29 @@
     <div class="max-w-7xl mx-auto space-y-4 md:space-y-6 px-4 sm:px-6 lg:px-8">
 
         {{-- Encabezado --}}
-        <div class="bg-gradient-to-r from-emerald-50 via-white to-cyan-50 border border-emerald-100 rounded-xl md:rounded-2xl p-4 md:p-6 shadow-sm">
-            <div class="flex flex-col gap-3 md:gap-4 md:flex-row md:items-center md:justify-between">
-                <div class="space-y-2">
-                    <p class="inline-flex items-center text-xs font-semibold uppercase tracking-[0.2em] text-emerald-600 bg-emerald-50 rounded-full px-3 py-1">
-                        <span class="w-2 h-2 bg-emerald-500 rounded-full mr-2"></span>
-                        Catalogo
-                    </p>
+        <x-ui.page-header
+            eyebrow="Catalogo"
+            title="Gestion de Areas"
+            subtitle="Administra las Areas del Centro Agroindustrial con filtros y acciones rapidas."
+            eyebrowTone="emerald"
+        >
+            <x-slot:actions>
+                <div class="hidden lg:flex items-center gap-2 px-3 py-2 bg-white border border-emerald-100 rounded-xl shadow-sm">
+                    <span class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-sm">AR</span>
                     <div>
-                        <h1 class="text-2xl md:text-3xl font-bold text-slate-900 leading-tight">Gestion de Areas</h1>
-                        <p class="text-sm md:text-base text-slate-500">Administra las Areas del Centro Agroindustrial con filtros y acciones rapidas.</p>
+                        <p class="text-xs text-slate-400">Total registros</p>
+                        <p class="text-lg font-semibold text-slate-800" id="areasTotalCount">—</p>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 md:gap-3">
-                    <div class="hidden lg:flex items-center gap-2 px-3 py-2 bg-white border border-emerald-100 rounded-xl shadow-sm">
-                        <span class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-semibold text-sm">AR</span>
-                        <div>
-                            <p class="text-xs text-slate-400">Total registros</p>
-                            <p class="text-lg font-semibold text-slate-800" id="areasTotalCount">—</p>
-                        </div>
-                    </div>
-                    <a href="{{ route('areas.create') }}"
-                       class="inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap text-sm md:text-base">
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                  d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                        </svg>
-                        <span>Nueva Area</span>
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        {{-- Mensajes de confirmacion --}}
-        @include('partials.session-message')
+                <a href="{{ route('areas.create') }}"
+                    class="inline-flex items-center justify-center gap-2 bg-emerald-500 hover:bg-emerald-400 text-white px-4 py-2.5 rounded-xl font-medium transition-all duration-200 shadow-sm hover:shadow-md whitespace-nowrap text-sm md:text-base">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                    </svg>
+                    <span>Nueva Area</span>
+                </a>
+            </x-slot:actions>
+        </x-ui.page-header>
 
         {{-- Barra de herramientas --}}
         <div class="flex flex-col gap-3 md:gap-4 md:flex-row md:items-center md:justify-between bg-white border border-slate-200 rounded-xl px-3 md:px-4 py-3 shadow-sm">
@@ -244,65 +233,19 @@
                 dom: 'lrtip', // ocultar search box nativo (usamos el superior)
                 columns: [
                     { data: 'id', name: 'id' },
-                    {
-                        data: 'name',
-                        name: 'name',
-                        render: function(data) {
-                            return `
-                                <div class="flex items-center space-x-2">
-                                    <svg class="w-4 h-4 text-emerald-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7h16M4 12h10M4 17h7" />
-                                    </svg>
-                                    <span class="text-sm text-foreground">${data ?? ''}</span>
-                                </div>`;
-                        }
-                    },
-                    {
-                        data: 'description',
-                        name: 'description',
-                        render: function(data) {
-                            return `
-                                <div class="flex items-center space-x-2">
-                                    <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M8 9h8M8 13h5m-9 5h12a2 2 0 002-2V7a2 2 0 00-2-2H4a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                                    </svg>
-                                    <span class="text-sm text-foreground">${data ?? ''}</span>
-                                </div>`;
-                        }
-                    },
-                    {
-                        data: 'created_at',
-                        name: 'created_at',
-                        render: function(data) {
-                            return `
-                                <div class="flex items-center space-x-2">
-                                    <svg class="w-4 h-4 text-indigo-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                                    </svg>
-                                    <span class="text-sm text-foreground">${data ?? ''}</span>
-                                </div>`;
-                        }
-                    },
-                    {
-                        data: 'updated_at',
-                        name: 'updated_at',
-                        render: function(data) {
-                            return `
-                                <div class="flex items-center space-x-2">
-                                    <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                              d="M4 4v5h.582M20 20v-5h-.581M5.582 9A7 7 0 0112 5c2.761 0 5.112 1.59 6.418 3.922M18.418 15A7 7 0 0112 19a7 7 0 01-6.418-3.922" />
-                                    </svg>
-                                    <span class="text-sm text-foreground">${data ?? ''}</span>
-                                </div>`;
-                        }
-                    },
+                    { data: 'name', name: 'name' },
+                    { data: 'description', name: 'description' },
+                    { data: 'created_at', name: 'created_at' },
+                    { data: 'updated_at', name: 'updated_at' },
                     { data: 'acciones', name: 'acciones', orderable: false, searchable: false }
+                ],
+                columnDefs: [
+                    { targets: [0, 3, 4], className: 'areas-nowrap-cell' },
+                    { targets: [5], className: 'areas-actions-cell' },
                 ],
                 language: { url: '/i18n/es-ES.json' },
                 pageLength: 10,
+                autoWidth: false,
                 responsive: true
             });
 

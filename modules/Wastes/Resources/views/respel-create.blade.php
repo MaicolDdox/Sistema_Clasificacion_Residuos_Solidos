@@ -9,72 +9,48 @@
                 <input type="hidden" name="productive_unit_id" value="{{ $unit->id }}">
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <label class="text-sm font-medium text-slate-700">Fecha y hora de entrada</label>
-                        <input
-                            type="datetime-local"
-                            name="entry_date"
-                            required
-                            value="{{ old('entry_date') }}"
-                            class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
-                        >
-                    </div>
-                    <div class="space-y-2">
-                        <label class="text-sm font-medium text-slate-700">Tipo de residuo</label>
-                        <select
-                            name="waste_type"
-                            required
-                            class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
-                        >
-                            <option value="">Seleccione...</option>
-                            @foreach(['Residuo Quimico','Residuo Biologico','Residuo Organico Peligroso'] as $type)
-                                <option value="{{ $type }}" @selected(old('waste_type') === $type)>{{ $type }}</option>
-                            @endforeach
-                        </select>
-                    </div>
+                    @include('partials.ui.form.input', [
+                        'name' => 'entry_date',
+                        'label' => 'Fecha y hora de entrada',
+                        'type' => 'datetime-local',
+                        'required' => true,
+                    ])
+
+                    @include('partials.ui.form.select', [
+                        'name' => 'waste_type',
+                        'label' => 'Tipo de residuo',
+                        'required' => true,
+                        'options' => [
+                            'Residuo Quimico' => 'Residuo Quimico',
+                            'Residuo Biologico' => 'Residuo Biologico',
+                            'Residuo Organico Peligroso' => 'Residuo Organico Peligroso',
+                        ],
+                    ])
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-2">
-                        <label class="text-sm font-medium text-slate-700">Cantidad</label>
-                        <input
-                            type="number"
-                            min="1"
-                            name="amount"
-                            required
-                            value="{{ old('amount') }}"
-                            class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
-                        >
-                    </div>
+                    @include('partials.ui.form.input', [
+                        'name' => 'amount',
+                        'label' => 'Cantidad',
+                        'type' => 'number',
+                        'required' => true,
+                        'min' => 1,
+                    ])
                 </div>
 
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-slate-700">Observaciones</label>
-                    <textarea
-                        name="observations"
-                        rows="3"
-                        class="w-full rounded-lg border border-slate-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400"
-                    >{{ old('observations') }}</textarea>
-                </div>
+                @include('partials.ui.form.textarea', [
+                    'name' => 'observations',
+                    'label' => 'Observaciones',
+                    'rows' => 3,
+                ])
 
-                <div class="space-y-2">
-                    <label class="text-sm font-medium text-slate-700">Imagen de evidencia (opcional)</label>
-                    <input
-                        type="file"
-                        name="evidence_image"
-                        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp"
-                        class="w-full rounded-lg border @error('evidence_image') border-red-300 focus:ring-red-200 focus:border-red-400 @else border-slate-200 focus:ring-2 focus:ring-emerald-200 focus:border-emerald-400 @enderror px-3 py-2 text-sm bg-white"
-                    >
-                    <p class="text-xs text-slate-400">Formatos permitidos: JPG, JPEG, PNG, WEBP. Tamaño máximo: 5 MB.</p>
-                    @error('evidence_image')
-                        <p class="text-sm text-red-600 flex items-center gap-1">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                            </svg>
-                            {{ $message }}
-                        </p>
-                    @enderror
-                </div>
+                @include('partials.ui.form.input', [
+                    'name' => 'evidence_image',
+                    'label' => 'Imagen de evidencia (opcional)',
+                    'type' => 'file',
+                    'accept' => '.jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp',
+                    'help' => 'Formatos permitidos: JPG, JPEG, PNG, WEBP. Tamaño máximo: 5 MB.',
+                ])
 
                 <div class="flex items-center justify-end gap-3 pt-4">
                     <a href="{{ route('hazardou-wastes.byUnit', ['unit' => $unit->id]) }}" class="px-4 py-2 rounded-lg border border-slate-200 text-slate-700 hover:bg-slate-50 transition">Cancelar</a>

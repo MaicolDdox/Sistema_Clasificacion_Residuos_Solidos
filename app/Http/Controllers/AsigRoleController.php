@@ -23,7 +23,7 @@ class AsigRoleController extends Controller
                 $rolesNames = $user->roles->pluck('name')->toArray();
                 $rolesDisplay = !empty($rolesNames)
                     ? implode(', ', $rolesNames)
-                    : '<span class="text-slate-400 italic">Sin rol</span>';
+                    : 'Sin rol';
 
                 return [
                     'id'           => $user->id,

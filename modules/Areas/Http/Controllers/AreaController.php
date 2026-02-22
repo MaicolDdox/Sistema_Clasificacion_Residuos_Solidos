@@ -5,6 +5,8 @@ namespace Modules\Areas\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Modules\Areas\Http\Requests\StoreAreaRequest;
+use Modules\Areas\Http\Requests\UpdateAreaRequest;
 use Modules\Areas\Models\Area;
 
 class AreaController extends Controller
@@ -16,16 +18,21 @@ class AreaController extends Controller
     {
         // Si la petición es AJAX (desde DataTable)
         if ($request->ajax()) {
-            $areas = Area::all()->map(function ($area) {
-                return [
-                    'id'           => $area->id,
-                    'name'         => Str::limit($area->name, 30),
-                    'description'  => Str::limit($area->description, 60),
-                    'created_at'   => $area->created_at->format('Y-m-d'),
-                    'updated_at'   => $area->updated_at->format('Y-m-d'),
-                    'acciones'     => view('areas::partials.areas-actions', compact('area'))->render(),
-                ];
-            });
+            $areas = Area::query()
+                ->withCount('productiveUnits')
+                ->orderBy('name')
+                ->get()
+                ->map(function ($area) {
+                    return [
+                        'id' => $area->id,
+                        'name' => Str::limit($area->name, 30),
+                        'description' => Str::limit($area->description, 60),
+                        'created_at' => $area->created_at->format('Y-m-d'),
+                        'updated_at' => $area->updated_at->format('Y-m-d'),
+                        'productive_units_count' => $area->productive_units_count,
+                        'acciones' => view('areas::partials.areas-actions', compact('area'))->render(),
+                    ];
+                });
 
             return response()->json(['data' => $areas]);
         }
@@ -45,26 +52,19 @@ class AreaController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreAreaRequest $request)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:areas,name'],
-            'description' => ['nullable', 'string', 'max:1000'],
-        ], [
-            'name.required' => 'El nombre del área es obligatorio.',
-            'name.unique' => 'Ya existe un área con este nombre.',
-            'name.max' => 'El nombre no puede exceder 255 caracteres.',
-            'description.max' => 'La descripción no puede exceder 1000 caracteres.',
-        ]);
+        $validated = $request->validated();
 
         try {
             Area::create($validated);
+
             return redirect()->route('areas.index')
                 ->with('success', 'Área creada exitosamente.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Error al crear el área: ' . $e->getMessage());
+                ->with('error', 'Error al crear el área: '.$e->getMessage());
         }
     }
 
@@ -87,35 +87,20 @@ class AreaController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Area $area)
+    public function update(UpdateAreaRequest $request, Area $area)
     {
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255', 'unique:areas,name,' . $area->id],
-            'description' => ['nullable', 'string', 'max:1000'],
-        ], [
-            'name.required' => 'El nombre del área es obligatorio.',
-            'name.unique' => 'Ya existe un área con este nombre.',
-            'name.max' => 'El nombre no puede exceder 255 caracteres.',
-            'description.max' => 'La descripción no puede exceder 1000 caracteres.',
-        ]);
+        $validated = $request->validated();
 
         try {
             $area->update($validated);
+
             return redirect()->route('areas.index')
                 ->with('success', 'Área actualizada exitosamente.');
         } catch (\Exception $e) {
             return redirect()->back()
                 ->withInput()
-                ->with('error', 'Error al actualizar el área: ' . $e->getMessage());
+                ->with('error', 'Error al actualizar el área: '.$e->getMessage());
         }
-    }
-
-    /**
-     * Show the confirmation page for deleting the specified resource.
-     */
-    public function confirmDestroy(Area $area)
-    {
-        return view('areas::areas-delete', compact('area'));
     }
 
     /**
@@ -131,11 +116,12 @@ class AreaController extends Controller
             }
 
             $area->delete();
+
             return redirect()->route('areas.index')
                 ->with('success', 'Área eliminada exitosamente.');
         } catch (\Exception $e) {
             return redirect()->route('areas.index')
-                ->with('error', 'Error al eliminar el área: ' . $e->getMessage());
+                ->with('error', 'Error al eliminar el área: '.$e->getMessage());
         }
     }
 }
