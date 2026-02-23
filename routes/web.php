@@ -12,6 +12,10 @@ Route::get('/', function () {
     return view('welcome');
 })->name('home');
 
+Route::get('/desarrolladores', function(){     
+return view('credits');
+})->name('credits');
+
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 

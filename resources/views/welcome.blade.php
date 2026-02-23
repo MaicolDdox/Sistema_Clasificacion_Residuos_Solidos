@@ -192,7 +192,38 @@
                         </p>
                     </div>
                 </article>
+
+
+                <!-- Card 4: Desarrolladores -->
+                <article
+                    class="group bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-emerald-500/20 shadow-xl shadow-emerald-900/5 overflow-hidden hover:shadow-2xl hover:shadow-emerald-900/10 hover:-translate-y-2 transition-all duration-500 md:col-span-2 lg:col-span-1 lg:col-start-2"
+                    data-aos="fade-up"
+                    data-aos-delay="400"
+                >
+                    <div class="p-6 lg:p-8 flex flex-col items-center text-center gap-4">
+                        <div class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs font-semibold uppercase tracking-wider rounded-md group-hover:scale-105 transition-transform duration-300">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                            Desarrolladores
+                        </div>
+                        <p class="text-slate-600 text-sm leading-relaxed">
+                            Conoce al equipo de aprendices que desarrolló este sistema de gestión de residuos sólidos.
+                        </p>
+                        <a
+                            href="{{ route('credits') }}"
+                            class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold text-sm uppercase tracking-wider rounded-lg shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300"
+                        >
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
+                            </svg>
+                            Conocer al equipo
+                        </a>
+                    </div>
+                </article>
+
             </div>
+
         </section>
     </main>
 
