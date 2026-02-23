@@ -26,6 +26,7 @@
                         $user->id => $user->name.' ('.$user->email.')',
                     ])->toArray(),
                     'help' => 'Selecciona el usuario al que deseas asignar un rol.',
+                    'useOptionKeys' => true,
                 ])
 
                 @include('partials.ui.form.select', [
