@@ -1,9 +1,0 @@
-User-agent: *
-Allow: /
-Disallow: /dashboard
-Disallow: /settings
-Disallow: /roles
-Disallow: /login
-Disallow: /register
-
-Sitemap: https://ghostwhite-sheep-405277.hostingersite.com/sitemap.xml
