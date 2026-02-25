@@ -16,7 +16,7 @@ class ProductiveUnitSeeder extends Seeder
         $data = [
             'Area Agricola' => [
                 'Unidad aguacate',
-                'Unidad caco',
+                'Unidad cacao',
                 'Unidad citricos',
                 'Unidad guanabana',
                 'Unidad guayaba',
@@ -31,8 +31,8 @@ class ProductiveUnitSeeder extends Seeder
 
             'Area Ambiental' => [
                 'Unidad acantarillado y tratamiento',
-                'Unidad ambiental aacuicola',
-                'Unidad ambiental aagricola',
+                'Unidad ambiental acuicola',
+                'Unidad ambiental agricola',
                 'Unidad ambiental agroindustria',
                 'Unidad ambiental pecuario',
                 'Unidad compostaje',
@@ -42,7 +42,7 @@ class ProductiveUnitSeeder extends Seeder
                 'Unidad educación ambiental',
                 'Unidad monitoreo aire y ruido',
                 'Unidad platat de tratamiento residuos solidos',
-                'Unidad ptap acuedcto',
+                'Unidad ptap acueducto',
                 'Unidad de guada',
                 'Unidad zona agroecológica',
                 'Unidad zonas verdes',
