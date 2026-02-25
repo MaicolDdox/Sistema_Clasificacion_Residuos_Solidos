@@ -15,12 +15,11 @@ class ProductiveUnitSeeder extends Seeder
     {
         $data = [
             'Area Agricola' => [
-                'Unidad aguacate',
                 'Unidad cacao',
                 'Unidad citricos',
                 'Unidad guanabana',
                 'Unidad guayaba',
-                'Unidad hurrtaila',
+                'Unidad hurtaila',
                 'Unidad invernadero',
                 'Unidad jardin clonar',
                 'Unidad piña',
