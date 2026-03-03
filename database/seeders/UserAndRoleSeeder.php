@@ -38,5 +38,13 @@ class UserAndRoleSeeder extends Seeder
             'password' => bcrypt('aprendiz12345678'),
         ]);
         $aprendiz->assignRole('Aprendiz');
-    }
+
+        $belen = User::factory()->create([
+            'name' => 'Instructora Belen',
+            'email' => 'alexcequisena2023@gmail.com',
+            'password' => bcrypt('belen12345678'),
+        ]);
+        $belen->assignRole('Gestora Ambiental');
+
+        }
 }
