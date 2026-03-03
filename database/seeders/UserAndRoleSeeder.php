@@ -15,35 +15,28 @@ class UserAndRoleSeeder extends Seeder
     {
         //PARA CREAR USUARIOS DE PRUEBA
 
-        //creamos un rol Gestora Ambiental
-        $gestoraAmbiental = User::factory()->create([
-            'name' => 'Gestora Ambiental',
-            'email' => 'gestora_ambiental@gmail.com',
-            'password' => bcrypt('gestora_ambiental12345678'),
-        ]);
+        $gestoraAmbiental = User::firstOrCreate(
+            ['email' => 'gestora_ambiental@gmail.com'],
+            ['name' => 'Gestora Ambiental', 'password' => bcrypt('gestora_ambiental12345678')]
+        );
         $gestoraAmbiental->assignRole('Gestora Ambiental');
 
-        //creamos un rol Gestora Ambiental
-        $liderAmbiental = User::factory()->create([
-            'name' => 'Lider Ambiental',
-            'email' => 'lider_ambiental@gmail.com',
-            'password' => bcrypt('lider_ambiental12345678'),
-        ]);
+        $liderAmbiental = User::firstOrCreate(
+            ['email' => 'lider_ambiental@gmail.com'],
+            ['name' => 'Lider Ambiental', 'password' => bcrypt('lider_ambiental12345678')]
+        );
         $liderAmbiental->assignRole('Lider Ambiental');
 
-        //creamos un rol Gestora Ambiental
-        $aprendiz = User::factory()->create([
-            'name' => 'Aprendiz',
-            'email' => 'aprendiz@gmail.com',
-            'password' => bcrypt('aprendiz12345678'),
-        ]);
+        $aprendiz = User::firstOrCreate(
+            ['email' => 'aprendiz@gmail.com'],
+            ['name' => 'Aprendiz', 'password' => bcrypt('aprendiz12345678')]
+        );
         $aprendiz->assignRole('Aprendiz');
 
-        $belen = User::factory()->create([
-            'name' => 'Instructora Belen',
-            'email' => 'alexcequisena2023@gmail.com',
-            'password' => bcrypt('belen12345678'),
-        ]);
+        $belen = User::firstOrCreate(
+            ['email' => 'alexcequisena2023@gmail.com'],
+            ['name' => 'Instructora Belen', 'password' => bcrypt('belen12345678')]
+        );
         $belen->assignRole('Gestora Ambiental');
 
         }
