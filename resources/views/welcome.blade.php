@@ -196,7 +196,7 @@
 
                 <!-- Card 4: Desarrolladores -->
                 <article
-                    class="group bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-emerald-500/20 shadow-xl shadow-emerald-900/5 overflow-hidden hover:shadow-2xl hover:shadow-emerald-900/10 hover:-translate-y-2 transition-all duration-500 md:col-span-2 lg:col-span-1 lg:col-start-1"
+                    class="group bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-emerald-500/20 shadow-xl shadow-emerald-900/5 overflow-hidden hover:shadow-2xl hover:shadow-emerald-900/10 hover:-translate-y-2 transition-all duration-500 md:col-span-1 lg:col-span-1 lg:col-start-2"
                     data-aos="fade-up"
                     data-aos-delay="400"
                 >
@@ -237,52 +237,7 @@
         >
             <div class="grid grid-cols-1 lg:grid-cols-2 divide-y lg:divide-y-0 lg:divide-x divide-slate-200/60">
                 <!-- Soporte Form -->
-                <section class="p-6 lg:p-8">
-                    <h4 class="flex items-center gap-2 text-emerald-700 font-bold text-sm uppercase tracking-wider mb-6">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 5.636l-3.536 3.536m0 5.656l3.536 3.536M9.172 9.172L5.636 5.636m3.536 9.192l-3.536 3.536M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-5 0a4 4 0 11-8 0 4 4 0 018 0z"/>
-                        </svg>
-                        Soporte
-                    </h4>
-                    <form
-                        class="space-y-4"
-                        x-data="{ sending: false }"
-                        @submit.prevent="sending = true; setTimeout(() => sending = false, 2000)"
-                    >
-                        <input
-                            type="text"
-                            placeholder="Tu nombre"
-                            required
-                            class="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-300"
-                        />
-                        <input
-                            type="email"
-                            placeholder="Correo electrónico"
-                            required
-                            class="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-lg text-sm placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-300"
-                        />
-                        <textarea
-                            rows="3"
-                            placeholder="Tu comentario o consulta..."
-                            required
-                            class="w-full px-4 py-3 bg-slate-50/80 border border-slate-200 rounded-lg text-sm placeholder-slate-400 resize-none focus:outline-none focus:ring-2 focus:ring-emerald-500/30 focus:border-emerald-500 transition-all duration-300"
-                        ></textarea>
-                        <button
-                            type="submit"
-                            :disabled="sending"
-                            class="inline-flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold text-sm uppercase tracking-wider rounded-lg shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-0.5 disabled:opacity-70 disabled:cursor-not-allowed transition-all duration-300"
-                        >
-                            <svg x-show="!sending" class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"/>
-                            </svg>
-                            <svg x-show="sending" class="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                            </svg>
-                            <span x-text="sending ? 'Enviando...' : 'Enviar'"></span>
-                        </button>
-                    </form>
-                </section>
+
 
                 <!-- Contacto -->
                 <section class="p-6 lg:p-8">
