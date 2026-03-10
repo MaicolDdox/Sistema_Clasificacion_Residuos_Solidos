@@ -39,7 +39,7 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('/manuales/visualizar/tecnico', function () {
         return response()->file(public_path('pdfs/Manual_Tecnico_S.C.R.pdf'));
-    })->middleware(['role:Gestora Ambiental'])->name('manuales.view.tecnico')->name('manuales.view.tecnico');
+    })->middleware(['role:Gestora Ambiental'])->name('manuales.view.tecnico');
 
     Route::get('settings/profile', Profile::class)->name('profile.edit');
     Route::get('settings/password', Password::class)->name('user-password.edit');
