@@ -179,6 +179,7 @@
                         </a>
                     </li>
 
+                    @unlessrole('Invitado')
                     <li data-aos="fade-right" data-aos-duration="600" data-aos-delay="550">
                         <a
                             href="{{ route('manuales') }}"
@@ -192,6 +193,7 @@
                             <span class="text-sm font-medium">Manuales</span>
                         </a>
                     </li>
+                    @endunlessrole
                 </ul>
             </nav>
 

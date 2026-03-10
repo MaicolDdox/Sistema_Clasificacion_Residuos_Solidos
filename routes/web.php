@@ -21,17 +21,13 @@ Route::get('/desarrolladores', function(){
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
 
-    Route::get('/manual-usuario/descargar', function () {
-        return response()->download(public_path('pdfs/Manual_Usuario_SCR_v2.pdf'), 'Manual_Usuario_SCR_v2.pdf');
-    })->name('manual.download');
-
     Route::get('/manuales', function () {
         return view('manuales');
-    })->name('manuales');
+    })->middleware(['role:Gestora Ambiental|Lider Ambiental|Aprendiz'])->name('manuales');
 
     Route::get('/manuales/descargar/usuario', function () {
         return response()->download(public_path('pdfs/Manual_Usuario_SCR_v2.pdf'), 'Manual_Usuario_SCR_v2.pdf');
-    })->name('manuales.download.usuario');
+    })->middleware(['role:Gestora Ambiental|Lider Ambiental|Aprendiz'])->name('manuales.download.usuario');
 
     Route::get('/manuales/descargar/tecnico', function () {
         return response()->download(public_path('pdfs/Manual_Tecnico_S.C.R.pdf'), 'Manual_Tecnico_SCR.pdf');
