@@ -33,6 +33,14 @@ Route::middleware(['auth'])->group(function () {
         return response()->download(public_path('pdfs/Manual_Tecnico_S.C.R.pdf'), 'Manual_Tecnico_SCR.pdf');
     })->middleware(['role:Gestora Ambiental'])->name('manuales.download.tecnico');
 
+    Route::get('/manuales/visualizar/usuario', function () {
+        return response()->file(public_path('pdfs/Manual_Usuario_SCR_v2.pdf'));
+    })->middleware(['role:Gestora Ambiental|Lider Ambiental|Aprendiz'])->name('manuales.view.usuario');
+
+    Route::get('/manuales/visualizar/tecnico', function () {
+        return response()->file(public_path('pdfs/Manual_Tecnico_S.C.R.pdf'));
+    })->middleware(['role:Gestora Ambiental'])->name('manuales.view.tecnico')->name('manuales.view.tecnico');
+
     Route::get('settings/profile', Profile::class)->name('profile.edit');
     Route::get('settings/password', Password::class)->name('user-password.edit');
     Route::get('settings/appearance', Appearance::class)->name('appearance.edit');
