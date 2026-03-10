@@ -222,32 +222,6 @@
                     </div>
                 </article>
 
-                <article
-                    class="group bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-emerald-500/20 shadow-xl shadow-emerald-900/5 overflow-hidden hover:shadow-2xl hover:shadow-emerald-900/10 hover:-translate-y-2 transition-all duration-500 md:col-span-2 lg:col-span-1"
-                    data-aos="fade-up"
-                    data-aos-delay="500"
-                >
-                    <div class="p-6 lg:p-8 flex flex-col items-center text-center gap-4">
-                        <div class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs font-semibold uppercase tracking-wider rounded-md group-hover:scale-105 transition-transform duration-300">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
-                            </svg>
-                            Manual de Usuario
-                        </div>
-                        <p class="text-slate-600 text-sm leading-relaxed">
-                            Consulta o descarga el manual de usuario para comprender cómo funciona el sistema.
-                        </p>
-                        <a
-                            href="{{ route('manual') }}"
-                            class="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white font-semibold text-sm uppercase tracking-wider rounded-lg shadow-lg shadow-emerald-500/25 hover:shadow-xl hover:shadow-emerald-500/30 hover:-translate-y-0.5 transition-all duration-300"
-                        >
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/>
-                            </svg>
-                            Ver manual
-                        </a>
-                    </div>
-                </article>
 
             </div>
 
