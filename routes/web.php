@@ -16,16 +16,30 @@ Route::get('/desarrolladores', function(){
     return view('credits');
 })->name('credits');
 
-Route::get('/manual-usuario', function () {
-    return view('manual');
-})->name('manual');
 
-Route::get('/manual-usuario/descargar', function () {
-    return response()->download(public_path('pdfs/Manual_Usuario_SCR_v2.pdf'), 'Manual_Usuario_SCR_v2.pdf');
-})->name('manual.download');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
+
+    Route::get('/manuales', function () {
+        return view('manuales');
+    })->middleware(['role:Gestora Ambiental|Lider Ambiental|Aprendiz'])->name('manuales');
+
+    Route::get('/manuales/descargar/usuario', function () {
+        return response()->download(public_path('pdfs/Manual_Usuario_SCR_v2.pdf'), 'Manual_Usuario_SCR_v2.pdf');
+    })->middleware(['role:Gestora Ambiental|Lider Ambiental|Aprendiz'])->name('manuales.download.usuario');
+
+    Route::get('/manuales/descargar/tecnico', function () {
+        return response()->download(public_path('pdfs/Manual_Tecnico_S.C.R.pdf'), 'Manual_Tecnico_SCR.pdf');
+    })->middleware(['role:Gestora Ambiental'])->name('manuales.download.tecnico');
+
+    Route::get('/manuales/visualizar/usuario', function () {
+        return response()->file(public_path('pdfs/Manual_Usuario_SCR_v2.pdf'));
+    })->middleware(['role:Gestora Ambiental|Lider Ambiental|Aprendiz'])->name('manuales.view.usuario');
+
+    Route::get('/manuales/visualizar/tecnico', function () {
+        return response()->file(public_path('pdfs/Manual_Tecnico_S.C.R.pdf'));
+    })->middleware(['role:Gestora Ambiental'])->name('manuales.view.tecnico');
 
     Route::get('settings/profile', Profile::class)->name('profile.edit');
     Route::get('settings/password', Password::class)->name('user-password.edit');
