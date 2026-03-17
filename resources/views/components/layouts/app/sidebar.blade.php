@@ -54,8 +54,8 @@
 
         <!-- Sidebar -->
         <aside
-            class="w-72 bg-white border-r border-slate-200/80 flex flex-col fixed h-full z-50 transition-transform duration-300 -translate-x-full md:translate-x-0"
-            :style="sidebarOpen ? 'transform: translateX(0)' : ''"
+            class="w-72 bg-white border-r border-slate-200/80 flex flex-col fixed h-full z-50 transition-transform duration-300 md:translate-x-0"
+            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
         >
 
             <!-- Logo Section -->
