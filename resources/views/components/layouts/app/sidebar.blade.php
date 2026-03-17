@@ -45,6 +45,7 @@
 
         {{-- Overlay mobile --}}
         <div
+            x-cloak
             x-show="sidebarOpen"
             x-transition.opacity
             class="fixed inset-0 bg-slate-900/50 z-40 md:hidden"
@@ -53,8 +54,8 @@
 
         <!-- Sidebar -->
         <aside
-            class="w-72 bg-white border-r border-slate-200/80 flex flex-col fixed h-full z-50 transition-transform duration-300 md:translate-x-0"
-            :class="sidebarOpen ? 'translate-x-0' : '-translate-x-full'"
+            class="w-72 bg-white border-r border-slate-200/80 flex flex-col fixed h-full z-50 transition-transform duration-300 -translate-x-full md:translate-x-0"
+            :style="sidebarOpen ? 'transform: translateX(0)' : ''"
         >
 
             <!-- Logo Section -->
