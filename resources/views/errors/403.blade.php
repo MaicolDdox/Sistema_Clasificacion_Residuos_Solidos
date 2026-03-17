@@ -1,4 +1,4 @@
-<x-layouts.app :title="__('Acceso denegado')">
+<x-layouts.error :title="__('Acceso denegado')">
     <div class="max-w-2xl mx-auto mt-8 space-y-6">
 
         <div class="bg-white border border-slate-200 rounded-2xl p-8 shadow-sm text-center space-y-5">
@@ -47,4 +47,4 @@
         </div>
 
     </div>
-</x-layouts.app>
+</x-layouts.error>
