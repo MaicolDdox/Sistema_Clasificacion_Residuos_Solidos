@@ -16,7 +16,7 @@ class UpdateHazardouWasteRequest extends FormRequest
         return [
             'entry_date' => ['required', 'date'],
             'waste_type' => ['required', 'in:Residuo Quimico,Residuo Biologico,Residuo Organico Peligroso'],
-            'amount' => ['required', 'integer', 'min:1'],
+            'amount' => ['required', 'numeric', 'min:0.01'],
             'observations' => ['nullable', 'string'],
             'evidence_image' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:5120'],
         ];
@@ -30,8 +30,8 @@ class UpdateHazardouWasteRequest extends FormRequest
             'waste_type.required' => 'Debe seleccionar un tipo de residuo.',
             'waste_type.in' => 'El tipo de residuo seleccionado no es válido.',
             'amount.required' => 'Debe ingresar la cantidad.',
-            'amount.integer' => 'La cantidad debe ser un número entero.',
-            'amount.min' => 'La cantidad debe ser mayor o igual a 1.',
+            'amount.numeric' => 'La cantidad debe ser un número válido.',
+            'amount.min' => 'La cantidad debe ser mayor o igual a 0.01 kg.',
             'observations.string' => 'Las observaciones deben ser texto.',
             'evidence_image.image' => 'La imagen de evidencia debe ser un archivo de imagen válido.',
             'evidence_image.mimes' => 'La imagen de evidencia debe estar en formato jpeg, jpg, png o webp.',

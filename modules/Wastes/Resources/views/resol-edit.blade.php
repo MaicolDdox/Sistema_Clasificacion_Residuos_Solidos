@@ -33,11 +33,13 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                     @include('partials.ui.form.input', [
                         'name' => 'amount',
-                        'label' => 'Cantidad',
+                        'label' => 'Cantidad (kg)',
                         'type' => 'number',
                         'required' => true,
                         'value' => $waste->amount,
-                        'min' => 1,
+                        'min' => 0.01,
+                        'step' => '0.01',
+                        'placeholder' => 'Ej: 50.20, min: 1.00',
                     ])
                 </div>
 

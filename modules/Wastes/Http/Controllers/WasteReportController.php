@@ -90,26 +90,26 @@ class WasteReportController extends Controller
         return [
             'byDay' => [
                 'categories' => $byDay->keys()->values(),
-                'series' => $byDay->values()->map(fn ($v) => (int) $v),
+                'series' => $byDay->values()->map(fn ($v) => round((float) $v, 2)),
             ],
             'byType' => [
                 'labels' => $byType->keys()->values(),
-                'series' => $byType->values()->map(fn ($v) => (int) $v),
+                'series' => $byType->values()->map(fn ($v) => round((float) $v, 2)),
             ],
             'byWeek' => [
                 'categories' => $byWeek->keys()->map(function ($key) {
                     [$start, $end] = explode('|', $key);
                     return 'Semana '.$start.' al '.$end;
                 })->values(),
-                'series' => $byWeek->values()->map(fn ($v) => (int) $v),
+                'series' => $byWeek->values()->map(fn ($v) => round((float) $v, 2)),
             ],
             'byMonth' => [
                 'categories' => $byMonth->keys()->values(),
-                'series' => $byMonth->values()->map(fn ($v) => (int) $v),
+                'series' => $byMonth->values()->map(fn ($v) => round((float) $v, 2)),
             ],
             'byUser' => [
                 'labels' => $byUser->keys()->values(),
-                'series' => $byUser->values()->map(fn ($v) => (int) $v),
+                'series' => $byUser->values()->map(fn ($v) => round((float) $v, 2)),
             ],
         ];
     }

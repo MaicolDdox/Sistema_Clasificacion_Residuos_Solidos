@@ -14,13 +14,13 @@
             <article class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
                 <p class="text-xs uppercase tracking-[0.2em] text-emerald-600 font-semibold">RESOL</p>
                 <h2 class="mt-2 text-sm font-medium text-slate-500">Cantidad total</h2>
-                <p class="mt-3 text-3xl font-bold text-slate-900">{{ number_format($totalResol) }} KG</p>
+                <p class="mt-3 text-3xl font-bold text-slate-900">{{ number_format($totalResol, 2) }} KG</p>
             </article>
 
             <article class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
                 <p class="text-xs uppercase tracking-[0.2em] text-rose-600 font-semibold">RESPEL</p>
                 <h2 class="mt-2 text-sm font-medium text-slate-500">Cantidad total</h2>
-                <p class="mt-3 text-3xl font-bold text-slate-900">{{ number_format($totalRespel) }} KG</p>
+                <p class="mt-3 text-3xl font-bold text-slate-900">{{ number_format($totalRespel, 2) }} KG</p>
             </article>
 
             <article class="bg-white border border-slate-200 rounded-2xl p-5 shadow-sm">
