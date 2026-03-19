@@ -194,7 +194,7 @@
                         <!-- Foto -->
                         <div class="w-28 h-28 rounded-full overflow-hidden border-4 border-emerald-200 shadow-lg shadow-emerald-500/20 mx-auto mb-4">
                             <img
-                                src="{{ asset('apprentices/imagen_3.png') }}"
+                                src="{{ asset('apprentices/imagen_3.png') }}?v={{ filemtime(public_path('apprentices/imagen_3.png')) }}"
                                 alt="Juan Pablo Motta"
                                 class="w-full h-full object-cover"
                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
