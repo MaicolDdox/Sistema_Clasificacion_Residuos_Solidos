@@ -43,6 +43,8 @@
             value="{{ old($name, $value) }}"
             @if($required) required @endif
             placeholder="{{ $placeholder }}"
+            @isset($min) min="{{ $min }}" @endisset
+            @isset($step) step="{{ $step }}" @endisset
             {{ $attributes->class($inputClasses) }}
         >
     @endif

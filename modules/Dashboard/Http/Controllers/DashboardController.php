@@ -16,8 +16,8 @@ class DashboardController extends Controller
             return view('dashboard::welcome-guest');
         }
 
-        $totalResol = (int) Waste::query()->sum('amount');
-        $totalRespel = (int) HazardouWaste::query()->sum('amount');
+        $totalResol = round((float) Waste::query()->sum('amount'), 2);
+        $totalRespel = round((float) HazardouWaste::query()->sum('amount'), 2);
         $totalUsersWithoutRole = User::query()->role('Invitado')->count();
 
         $units = ProductiveUnit::query()
@@ -29,11 +29,11 @@ class DashboardController extends Controller
 
         $unitLabels = $units->pluck('name')->values()->all();
         $resolByUnitSeries = $units
-            ->map(fn (ProductiveUnit $unit): int => (int) ($unit->resol_total_amount ?? 0))
+            ->map(fn (ProductiveUnit $unit): float => round((float) ($unit->resol_total_amount ?? 0), 2))
             ->values()
             ->all();
         $respelByUnitSeries = $units
-            ->map(fn (ProductiveUnit $unit): int => (int) ($unit->respel_total_amount ?? 0))
+            ->map(fn (ProductiveUnit $unit): float => round((float) ($unit->respel_total_amount ?? 0), 2))
             ->values()
             ->all();
         $pieSeries = [$totalResol, $totalRespel];
