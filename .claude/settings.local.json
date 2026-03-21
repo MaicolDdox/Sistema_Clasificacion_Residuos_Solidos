@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(grep -r class.*Handler /c/laragon/www/SCR/app --include=*.php)"
-    ]
-  }
-}
