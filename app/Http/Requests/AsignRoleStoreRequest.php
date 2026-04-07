@@ -34,7 +34,7 @@ class AsignRoleStoreRequest extends FormRequest
             'user_id.required' => 'Debe seleccionar un usuario.',
             'user_id.exists'   => 'El usuario seleccionado no existe en el sistema.',
             'role.required'    => 'Debe seleccionar un rol.',
-            'role.exists'      => 'El rol seleccionado no existe en el sistema.',
+            'role.exits' => 'El rol seleccionado debe existir en nuestro sistema.'
         ];
     }
 }
