@@ -18,6 +18,7 @@ class DatabaseSeeder extends Seeder
             ProductiveUnitSeeder::class,
             PermissionSeeder::class,  // Crear roles, permisos y asignarlos
             UserAndRoleSeeder::class,
+            //WasteSampleSeeder::class
         ]);
     }
 

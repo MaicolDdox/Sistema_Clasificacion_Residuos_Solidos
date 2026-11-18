@@ -548,4 +548,4 @@ $gestora->permissions->count(); // Debe ser 45+
 
 Si tienes dudas o problemas con el sistema de permisos, consulta esta guía o contacta al equipo de desarrollo.
 
-✅ **Sistema implementado y funcionando correctamente**
+
